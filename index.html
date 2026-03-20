@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔥 Dados de Pareja</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: linear-gradient(135deg, #1a1a1a, #330000);
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+h1 {
+  font-size: 28px;
+}
+
+button {
+  margin-top: 30px;
+  padding: 20px;
+  font-size: 20px;
+  border: none;
+  border-radius: 15px;
+  background: #ff2e63;
+  color: white;
+  width: 80%;
+  max-width: 300px;
+}
+
+.resultado {
+  margin-top: 40px;
+  font-size: 22px;
+  line-height: 1.6;
+}
+
+.card {
+  background: rgba(255,255,255,0.1);
+  padding: 20px;
+  border-radius: 15px;
+  margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🔥 Dados Hot 🔥</h1>
+<p>Toca el botón y deja que el juego decida 😏</p>
+
+<button onclick="tirarDados()">🎲 Lanzar Dados</button>
+
+<div class="resultado" id="resultado"></div>
+
+<script>
+const acciones = [
+  "Besa lentamente el cuello",
+  "Recorre con tus manos todo el cuerpo",
+  "Susurra algo provocativo",
+  "Da besos suaves por todo el cuerpo",
+  "Acércate lentamente y provoca sin tocar",
+  "Mírale fijamente mientras te acercas"
+];
+
+const tiempos = [
+  "1 minuto",
+  "3 minutos",
+  "5 minutos",
+  "7 minutos",
+  "10 minutos"
+];
+
+const intensidad = [
+  "Muy suave 😌",
+  "Romántico ❤️",
+  "Intenso 🔥",
+  "Dominante 😈",
+  "Sin reglas 😏"
+];
+
+function tirarDados() {
+  const a = acciones[Math.floor(Math.random() * acciones.length)];
+  const t = tiempos[Math.floor(Math.random() * tiempos.length)];
+  const i = intensidad[Math.floor(Math.random() * intensidad.length)];
+
+  document.getElementById("resultado").innerHTML = `
+    <div class="card">🔥 Acción: ${a}</div>
+    <div class="card">⏱️ Tiempo: ${t}</div>
+    <div class="card">⚡ Intensidad: ${i}</div>
+  `;
+}
+</script>
+
+</body>
+</html>
