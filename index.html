@@ -5,39 +5,46 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>🔥 Paulo & Fernanda 🔥</title>
 
-<link rel="manifest" href="manifest.json">
-
 <style>
 body {
   margin: 0;
   font-family: Arial;
-  background: black;
+  background: #000;
   color: white;
   text-align: center;
+  padding: 15px;
 }
+
+h1 { font-size: 24px; }
 
 button {
   margin: 10px;
   padding: 18px;
   font-size: 20px;
   border: none;
-  border-radius: 15px;
+  border-radius: 12px;
   background: #ff0033;
   color: white;
   width: 90%;
 }
 
-.dice {
-  font-size: 80px;
+#dice {
+  font-size: 70px;
   margin: 20px;
   transition: transform 0.5s;
 }
 
 .card {
   background: rgba(255,255,255,0.1);
-  margin: 10px;
   padding: 15px;
+  margin-top: 10px;
   border-radius: 15px;
+}
+
+#timer {
+  font-size: 35px;
+  margin-top: 15px;
+  color: #ff4d6d;
 }
 </style>
 </head>
@@ -48,79 +55,108 @@ button {
 
 <div id="turno"></div>
 
-<div class="dice" id="dice">🎲</div>
+<div id="dice">🎲</div>
 
 <button onclick="tirar()">🎲 LANZAR</button>
-<button onclick="modoExtremo()">🎮 RETO O CASTIGO</button>
+<button onclick="modoExtremo()">😈 RETO / CASTIGO</button>
 
 <div id="resultado"></div>
+<div id="timer"></div>
+
+<audio id="audio">
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+</audio>
 
 <script>
 let turno = 1;
 let nivel = 0;
+let timerInterval;
 
 const nombres = ["Paulo", "Fernanda"];
 
-const retos = [
-  "Toma el control completamente 😈",
-  "Guía el ritmo sin detenerte",
-  "Provoca lentamente sin dejar avanzar",
-  "Haz que pierda el control poco a poco"
+const acciones = [
+  "Acércate lentamente 😏",
+  "Mantén contacto cercano 🔥",
+  "Provoca sin tocar 😈",
+  "Guía el ritmo poco a poco",
+  "Movimiento lento y constante"
 ];
 
 const castigos = [
-  "Obedeces todo sin decidir 😈",
-  "No puedes detenerte",
-  "Sin hablar durante el turno",
-  "Tu pareja controla todo"
+  "Obedeces sin decidir 😈",
+  "No puedes hablar",
+  "Tu pareja controla todo",
+  "Mantén el ritmo sin parar",
+  "Pierdes el control"
 ];
+
+const tiempos = [60, 120, 180, 300];
 
 function actualizarTurno() {
   document.getElementById("turno").innerText =
     "Turno: " + nombres[turno - 1];
 }
 
-function animarDado() {
-  const dice = document.getElementById("dice");
-  dice.style.transform = "rotate(720deg)";
+function vibrar() {
+  if (navigator.vibrate) {
+    navigator.vibrate(200);
+  }
+}
+
+function iniciarTimer(segundos) {
+  clearInterval(timerInterval);
+
+  timerInterval = setInterval(() => {
+    let min = Math.floor(segundos / 60);
+    let sec = segundos % 60;
+
+    document.getElementById("timer").innerText =
+      `${min}:${sec < 10 ? "0" : ""}${sec}`;
+
+    if (segundos <= 0) {
+      clearInterval(timerInterval);
+      document.getElementById("timer").innerText = "🔥 CAMBIO 🔥";
+
+      vibrar();
+      speechSynthesis.speak(new SpeechSynthesisUtterance("Cambio"));
+    }
+
+    segundos--;
+  }, 1000);
 }
 
 function tirar() {
   nivel++;
-  animarDado();
 
-  let intensidad = "🔥";
-  if(nivel > 5) intensidad = "😈🔥";
+  const dice = document.getElementById("dice");
+  dice.style.transform = "rotate(720deg)";
+
+  const accion = acciones[Math.floor(Math.random()*acciones.length)];
+  const tiempo = tiempos[Math.floor(Math.random()*tiempos.length)];
 
   document.getElementById("resultado").innerHTML = `
-    <div class="card">Nivel: ${intensidad}</div>
+    <div class="card">🔥 ${accion}</div>
+    <div class="card">⏱️ ${tiempo/60} min</div>
+    <div class="card">Nivel: ${nivel}</div>
   `;
+
+  document.getElementById("audio").play().catch(()=>{});
+
+  vibrar();
+  iniciarTimer(tiempo);
 
   turno = turno === 1 ? 2 : 1;
   actualizarTurno();
 }
 
 function modoExtremo() {
-  animarDado();
+  const c = castigos[Math.floor(Math.random()*castigos.length)];
 
-  let tipo = Math.random() > 0.5 ? "reto" : "castigo";
+  document.getElementById("resultado").innerHTML += `
+    <div class="card">😈 ${c}</div>
+  `;
 
-  if(tipo === "reto") {
-    let r = retos[Math.floor(Math.random()*retos.length)];
-    document.getElementById("resultado").innerHTML = `
-      <div class="card">🔥 RETO: ${r}</div>
-    `;
-  } else {
-    let c = castigos[Math.floor(Math.random()*castigos.length)];
-    document.getElementById("resultado").innerHTML = `
-      <div class="card">😈 CASTIGO: ${c}</div>
-    `;
-  }
-}
-
-// registrar service worker
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js');
+  vibrar();
 }
 
 actualizarTurno();
