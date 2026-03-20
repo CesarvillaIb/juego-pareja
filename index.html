@@ -3,95 +3,126 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🔥 Dados de Pareja</title>
+<title>🔥 Paulo & Fernanda 🔥</title>
 
 <style>
 body {
   margin: 0;
   font-family: Arial;
-  background: linear-gradient(135deg, #1a1a1a, #330000);
+  background: linear-gradient(135deg, #000, #3a0000);
   color: white;
   text-align: center;
   padding: 20px;
 }
 
 h1 {
-  font-size: 28px;
+  font-size: 26px;
 }
 
 button {
-  margin-top: 30px;
-  padding: 20px;
-  font-size: 20px;
+  margin: 10px;
+  padding: 15px;
+  font-size: 18px;
   border: none;
-  border-radius: 15px;
-  background: #ff2e63;
+  border-radius: 12px;
+  background: #ff0033;
   color: white;
   width: 80%;
-  max-width: 300px;
-}
-
-.resultado {
-  margin-top: 40px;
-  font-size: 22px;
-  line-height: 1.6;
+  max-width: 320px;
 }
 
 .card {
   background: rgba(255,255,255,0.1);
-  padding: 20px;
+  margin-top: 15px;
+  padding: 15px;
   border-radius: 15px;
-  margin-top: 20px;
+  font-size: 20px;
+}
+
+.dado {
+  font-size: 60px;
+  margin: 20px;
+  transition: transform 0.5s;
 }
 </style>
 </head>
 
 <body>
 
-<h1>🔥 Dados Hot 🔥</h1>
-<p>Toca el botón y deja que el juego decida 😏</p>
+<h1>🔥 Juego de Paulo & Fernanda 🔥</h1>
 
-<button onclick="tirarDados()">🎲 Lanzar Dados</button>
+<div id="turno"></div>
 
-<div class="resultado" id="resultado"></div>
+<div class="dado" id="dado">🎲</div>
+
+<button onclick="tirar()">🎲 Lanzar</button>
+<button onclick="castigo()">😈 Castigo</button>
+
+<div id="resultado"></div>
 
 <script>
+let turno = 1;
+let nivel = 0;
+
+const nombres = ["Paulo", "Fernanda"];
+
 const acciones = [
-  "Besa lentamente el cuello",
-  "Recorre con tus manos todo el cuerpo",
-  "Susurra algo provocativo",
-  "Da besos suaves por todo el cuerpo",
-  "Acércate lentamente y provoca sin tocar",
-  "Mírale fijamente mientras te acercas"
+  "Empieza con besos lentos y provocativos",
+  "Recorre el cuerpo con tus manos sin prisa",
+  "Acércate lentamente sin tocar",
+  "Susurra algo atrevido al oído",
+  "Mantén contacto visual sin romperlo",
+  "Explora con besos suaves",
+  "Provoca sin dejar que termine fácil",
+  "Domina el ritmo lentamente 😈"
 ];
 
-const tiempos = [
-  "1 minuto",
-  "3 minutos",
-  "5 minutos",
-  "7 minutos",
-  "10 minutos"
+const tiempos = ["1 min","3 min","5 min","7 min","10 min"];
+
+const castigos = [
+  "Pierdes el control por esta ronda",
+  "Obedeces todo sin decidir 😈",
+  "No puedes hablar por 2 turnos",
+  "Tu pareja decide todo",
+  "Mantén el control sin rendirte",
+  "No puedes usar las manos"
 ];
 
-const intensidad = [
-  "Muy suave 😌",
-  "Romántico ❤️",
-  "Intenso 🔥",
-  "Dominante 😈",
-  "Sin reglas 😏"
-];
+function actualizarTurno() {
+  document.getElementById("turno").innerText = "Turno: " + nombres[turno - 1];
+}
 
-function tirarDados() {
-  const a = acciones[Math.floor(Math.random() * acciones.length)];
-  const t = tiempos[Math.floor(Math.random() * tiempos.length)];
-  const i = intensidad[Math.floor(Math.random() * intensidad.length)];
+function tirar() {
+  nivel++;
+
+  const dado = document.getElementById("dado");
+  dado.style.transform = "rotate(360deg)";
+
+  const accion = acciones[Math.floor(Math.random()*acciones.length)];
+  const tiempo = tiempos[Math.floor(Math.random()*tiempos.length)];
+
+  let intensidad = "Suave 😌";
+  if(nivel > 3) intensidad = "Intenso 🔥";
+  if(nivel > 6) intensidad = "Muy intenso 😈";
 
   document.getElementById("resultado").innerHTML = `
-    <div class="card">🔥 Acción: ${a}</div>
-    <div class="card">⏱️ Tiempo: ${t}</div>
-    <div class="card">⚡ Intensidad: ${i}</div>
+    <div class="card">🔥 Acción: ${accion}</div>
+    <div class="card">⏱️ Tiempo: ${tiempo}</div>
+    <div class="card">⚡ Nivel: ${intensidad}</div>
+  `;
+
+  turno = turno === 1 ? 2 : 1;
+  actualizarTurno();
+}
+
+function castigo() {
+  const c = castigos[Math.floor(Math.random()*castigos.length)];
+  document.getElementById("resultado").innerHTML += `
+    <div class="card">😈 Castigo: ${c}</div>
   `;
 }
+
+actualizarTurno();
 </script>
 
 </body>
