@@ -1,166 +1,191 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🔥 Paulo & Fernanda 🔥</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔥 Paulo & Fernanda 🔥</title>
+    <style>
+        :root {
+            --primary: #ff0033;
+            --secondary: #ff4d6d;
+            --bg: #0a0a0a;
+        }
 
-<style>
-body {
-  margin: 0;
-  font-family: Arial;
-  background: #000;
-  color: white;
-  text-align: center;
-  padding: 15px;
-}
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-h1 { font-size: 24px; }
+        h1 { font-size: 28px; text-shadow: 0 0 10px var(--primary); }
 
-button {
-  margin: 10px;
-  padding: 18px;
-  font-size: 20px;
-  border: none;
-  border-radius: 12px;
-  background: #ff0033;
-  color: white;
-  width: 90%;
-}
+        #turno {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
 
-#dice {
-  font-size: 70px;
-  margin: 20px;
-  transition: transform 0.5s;
-}
+        button {
+            margin: 10px;
+            padding: 18px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 15px;
+            background: var(--primary);
+            color: white;
+            width: 100%;
+            max-width: 300px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 0, 51, 0.4);
+            transition: transform 0.1s;
+        }
 
-.card {
-  background: rgba(255,255,255,0.1);
-  padding: 15px;
-  margin-top: 10px;
-  border-radius: 15px;
-}
+        button:active { transform: scale(0.95); }
 
-#timer {
-  font-size: 35px;
-  margin-top: 15px;
-  color: #ff4d6d;
-}
-</style>
+        #dice {
+            font-size: 80px;
+            margin: 20px;
+            display: inline-block;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(5px);
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 15px;
+            border-left: 4px solid var(--primary);
+            width: 90%;
+            max-width: 320px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        #timer {
+            font-size: 45px;
+            font-weight: bold;
+            margin-top: 20px;
+            color: var(--secondary);
+            font-variant-numeric: tabular-nums;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
-
 <body>
 
-<h1>🔥 Paulo & Fernanda 🔥</h1>
+    <h1>🔥 Paulo & Fernanda 🔥</h1>
+    
+    <div id="turno"></div>
+    <div id="dice">🎲</div>
 
-<div id="turno"></div>
+    <button onclick="tirar()">🎲 LANZAR DADO</button>
+    <button onclick="modoExtremo()" style="background: #4a00e0;">😈 RETO / CASTIGO</button>
 
-<div id="dice">🎲</div>
+    <div id="resultado"></div>
+    <div id="timer">00:00</div>
 
-<button onclick="tirar()">🎲 LANZAR</button>
-<button onclick="modoExtremo()">😈 RETO / CASTIGO</button>
+    <audio id="audio" preload="auto">
+        <source src="https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3" type="audio/mpeg">
+    </audio>
 
-<div id="resultado"></div>
-<div id="timer"></div>
+    <script>
+        let turno = 1;
+        let nivel = 0;
+        let timerInterval;
+        let rotation = 0;
 
-<audio id="audio">
-  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-</audio>
+        const nombres = ["Paulo", "Fernanda"];
+        const acciones = [
+            "Acércate lentamente 😏",
+            "Mantén contacto cercano 🔥",
+            "Provoca sin tocar 😈",
+            "Guía el ritmo poco a poco",
+            "Movimiento lento y constante",
+            "Susurra algo al oído..."
+        ];
 
-<script>
-let turno = 1;
-let nivel = 0;
-let timerInterval;
+        const castigos = [
+            "Obedeces sin decidir 😈",
+            "No puedes hablar por 2 min",
+            "Tu pareja controla todo",
+            "Mantén el ritmo sin parar",
+            "Cierra los ojos hasta que el timer termine"
+        ];
 
-const nombres = ["Paulo", "Fernanda"];
+        const tiempos = [60, 120, 180, 240];
 
-const acciones = [
-  "Acércate lentamente 😏",
-  "Mantén contacto cercano 🔥",
-  "Provoca sin tocar 😈",
-  "Guía el ritmo poco a poco",
-  "Movimiento lento y constante"
-];
+        function actualizarTurno() {
+            document.getElementById("turno").innerText = "Turno de: " + nombres[turno - 1];
+        }
 
-const castigos = [
-  "Obedeces sin decidir 😈",
-  "No puedes hablar",
-  "Tu pareja controla todo",
-  "Mantén el ritmo sin parar",
-  "Pierdes el control"
-];
+        function vibrar() {
+            if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+        }
 
-const tiempos = [60, 120, 180, 300];
+        function iniciarTimer(segundos) {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                let min = Math.floor(segundos / 60);
+                let sec = segundos % 60;
+                document.getElementById("timer").innerText = `${min}:${sec < 10 ? "0" : ""}${sec}`;
 
-function actualizarTurno() {
-  document.getElementById("turno").innerText =
-    "Turno: " + nombres[turno - 1];
-}
+                if (segundos <= 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById("timer").innerText = "🔥 CAMBIO 🔥";
+                    vibrar();
+                    const msg = new SpeechSynthesisUtterance("Tiempo cumplido, cambio");
+                    window.speechSynthesis.speak(msg);
+                }
+                segundos--;
+            }, 1000);
+        }
 
-function vibrar() {
-  if (navigator.vibrate) {
-    navigator.vibrate(200);
-  }
-}
+        function tirar() {
+            nivel++;
+            rotation += 360;
+            const dice = document.getElementById("dice");
+            dice.style.transform = `rotate(${rotation}deg)`;
 
-function iniciarTimer(segundos) {
-  clearInterval(timerInterval);
+            const accion = acciones[Math.floor(Math.random() * acciones.length)];
+            const tiempo = tiempos[Math.floor(Math.random() * tiempos.length)];
 
-  timerInterval = setInterval(() => {
-    let min = Math.floor(segundos / 60);
-    let sec = segundos % 60;
+            document.getElementById("resultado").innerHTML = `
+                <div class="card"><strong>Acción:</strong><br>${accion}</div>
+                <div class="card"><strong>Duración:</strong> ${tiempo/60} min</div>
+                <div class="card"><strong>Intensidad:</strong> Nivel ${nivel}</div>
+            `;
 
-    document.getElementById("timer").innerText =
-      `${min}:${sec < 10 ? "0" : ""}${sec}`;
+            const audio = document.getElementById("audio");
+            audio.play().catch(() => console.log("Audio bloqueado por el navegador"));
 
-    if (segundos <= 0) {
-      clearInterval(timerInterval);
-      document.getElementById("timer").innerText = "🔥 CAMBIO 🔥";
+            vibrar();
+            iniciarTimer(tiempo);
 
-      vibrar();
-      speechSynthesis.speak(new SpeechSynthesisUtterance("Cambio"));
-    }
+            turno = (turno === 1) ? 2 : 1;
+            actualizarTurno();
+        }
 
-    segundos--;
-  }, 1000);
-}
+        function modoExtremo() {
+            const c = castigos[Math.floor(Math.random() * castigos.length)];
+            const res = document.getElementById("resultado");
+            res.innerHTML += `<div class="card" style="border-left-color: #4a00e0;">😈 <strong>RETO:</strong> ${c}</div>`;
+            vibrar();
+        }
 
-function tirar() {
-  nivel++;
-
-  const dice = document.getElementById("dice");
-  dice.style.transform = "rotate(720deg)";
-
-  const accion = acciones[Math.floor(Math.random()*acciones.length)];
-  const tiempo = tiempos[Math.floor(Math.random()*tiempos.length)];
-
-  document.getElementById("resultado").innerHTML = `
-    <div class="card">🔥 ${accion}</div>
-    <div class="card">⏱️ ${tiempo/60} min</div>
-    <div class="card">Nivel: ${nivel}</div>
-  `;
-
-  document.getElementById("audio").play().catch(()=>{});
-
-  vibrar();
-  iniciarTimer(tiempo);
-
-  turno = turno === 1 ? 2 : 1;
-  actualizarTurno();
-}
-
-function modoExtremo() {
-  const c = castigos[Math.floor(Math.random()*castigos.length)];
-
-  document.getElementById("resultado").innerHTML += `
-    <div class="card">😈 ${c}</div>
-  `;
-
-  vibrar();
-}
-
-actualizarTurno();
-</script>
-
+        actualizarTurno();
+    </script>
 </body>
 </html>
