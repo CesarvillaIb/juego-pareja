@@ -9,14 +9,10 @@
 body {
   margin: 0;
   font-family: Arial;
-  background: linear-gradient(135deg, #000, #3a0000);
+  background: linear-gradient(135deg, #000, #2b0000);
   color: white;
   text-align: center;
   padding: 20px;
-}
-
-h1 {
-  font-size: 26px;
 }
 
 button {
@@ -27,8 +23,7 @@ button {
   border-radius: 12px;
   background: #ff0033;
   color: white;
-  width: 80%;
-  max-width: 320px;
+  width: 85%;
 }
 
 .card {
@@ -36,80 +31,109 @@ button {
   margin-top: 15px;
   padding: 15px;
   border-radius: 15px;
-  font-size: 20px;
 }
 
 .dado {
   font-size: 60px;
   margin: 20px;
-  transition: transform 0.5s;
+}
+
+#timer {
+  font-size: 30px;
+  margin-top: 20px;
+  color: #ff4d6d;
 }
 </style>
 </head>
 
 <body>
 
-<h1>🔥 Juego de Paulo & Fernanda 🔥</h1>
+<h1>🔥 Paulo & Fernanda 🔥</h1>
 
 <div id="turno"></div>
-
-<div class="dado" id="dado">🎲</div>
+<div class="dado">🎲</div>
 
 <button onclick="tirar()">🎲 Lanzar</button>
 <button onclick="castigo()">😈 Castigo</button>
 
 <div id="resultado"></div>
+<div id="timer"></div>
 
 <script>
 let turno = 1;
 let nivel = 0;
+let countdown;
 
 const nombres = ["Paulo", "Fernanda"];
 
-const acciones = [
-  "Empieza con besos lentos y provocativos",
-  "Recorre el cuerpo con tus manos sin prisa",
-  "Acércate lentamente sin tocar",
-  "Susurra algo atrevido al oído",
-  "Mantén contacto visual sin romperlo",
-  "Explora con besos suaves",
-  "Provoca sin dejar que termine fácil",
-  "Domina el ritmo lentamente 😈"
+const posiciones = [
+  {nombre:"Cercanos 🔥", desc:"Mantengan contacto cercano y ritmo constante."},
+  {nombre:"Cara a cara 😏", desc:"Movimiento sincronizado con contacto visual."},
+  {nombre:"Dominio 😈", desc:"Uno guía completamente el ritmo."},
+  {nombre:"Lento 🔥", desc:"Todo se hace sin prisa, aumentando tensión."},
+  {nombre:"Intenso 😏", desc:"Sube la energía y el ritmo progresivamente."}
 ];
 
-const tiempos = ["1 min","3 min","5 min","7 min","10 min"];
+const tiempos = [60,180,300,420,600]; // segundos
 
 const castigos = [
-  "Pierdes el control por esta ronda",
-  "Obedeces todo sin decidir 😈",
-  "No puedes hablar por 2 turnos",
-  "Tu pareja decide todo",
-  "Mantén el control sin rendirte",
-  "No puedes usar las manos"
+  "Tu pareja tiene el control total 😈",
+  "No puedes detenerte hasta terminar",
+  "Sin hablar durante el turno",
+  "Obedeces sin decidir",
+  "Mantén el ritmo sin fallar"
 ];
 
 function actualizarTurno() {
   document.getElementById("turno").innerText = "Turno: " + nombres[turno - 1];
 }
 
+function iniciarTimer(segundos) {
+  clearInterval(countdown);
+  
+  countdown = setInterval(() => {
+    let min = Math.floor(segundos / 60);
+    let sec = segundos % 60;
+
+    document.getElementById("timer").innerText =
+      `${min}:${sec < 10 ? "0" : ""}${sec}`;
+
+    if (segundos <= 0) {
+      clearInterval(countdown);
+      document.getElementById("timer").innerText = "🔥 CAMBIO 🔥";
+
+      // Vibración (celular)
+      if (navigator.vibrate) {
+        navigator.vibrate([300, 100, 300]);
+      }
+
+      // Voz
+      let msg = new SpeechSynthesisUtterance("Tiempo terminado, cambien");
+      speechSynthesis.speak(msg);
+    }
+
+    segundos--;
+  }, 1000);
+}
+
 function tirar() {
   nivel++;
 
-  const dado = document.getElementById("dado");
-  dado.style.transform = "rotate(360deg)";
-
-  const accion = acciones[Math.floor(Math.random()*acciones.length)];
+  const pos = posiciones[Math.floor(Math.random()*posiciones.length)];
   const tiempo = tiempos[Math.floor(Math.random()*tiempos.length)];
 
   let intensidad = "Suave 😌";
   if(nivel > 3) intensidad = "Intenso 🔥";
-  if(nivel > 6) intensidad = "Muy intenso 😈";
+  if(nivel > 6) intensidad = "Sin control 😈";
 
   document.getElementById("resultado").innerHTML = `
-    <div class="card">🔥 Acción: ${accion}</div>
-    <div class="card">⏱️ Tiempo: ${tiempo}</div>
-    <div class="card">⚡ Nivel: ${intensidad}</div>
+    <div class="card">💃 Posición: ${pos.nombre}</div>
+    <div class="card">📝 ${pos.desc}</div>
+    <div class="card">⏱️ ${tiempo/60} min</div>
+    <div class="card">⚡ ${intensidad}</div>
   `;
+
+  iniciarTimer(tiempo);
 
   turno = turno === 1 ? 2 : 1;
   actualizarTurno();
