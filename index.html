@@ -3,136 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔥 Paulo & Fernanda 🔥</title>
+    <title>🔥 Paulo & Fernanda: Fuego Inmediato 🔥</title>
     <style>
         :root {
             --primary: #ff0033;
-            --secondary: #ff4d6d;
-            --bg: #0a0a0a;
+            --climax: #8a2be2;
+            --bg: #030303; /* Aún más oscuro */
         }
-
         body {
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--bg);
-            color: white;
-            text-align: center;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
+            margin: 0; font-family: 'Helvetica Neue', sans-serif;
+            background: var(--bg); color: white; text-align: center;
+            padding: 20px; display: flex; flex-direction: column; align-items: center;
         }
-
-        h1 { font-size: 28px; text-shadow: 0 0 10px var(--primary); }
-
-        #turno {
-            font-size: 20px;
-            font-weight: bold;
-            color: var(--secondary);
-            margin-bottom: 10px;
+        h1 { color: var(--primary); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 15px rgba(255,0,51,0.7); }
+        #nivel-display { font-size: 18px; color: #ffcccc; margin-bottom: 5px; font-weight: bold; }
+        #turno { font-size: 24px; font-weight: bold; margin-bottom: 20px; color: #fff; }
+        
+        .btn {
+            margin: 10px; padding: 20px; font-size: 18px; font-weight: bold;
+            border: none; border-radius: 50px; color: white; width: 90%; max-width: 350px;
+            cursor: pointer; transition: 0.3s;
         }
-
-        button {
-            margin: 10px;
-            padding: 18px;
-            font-size: 18px;
-            font-weight: bold;
-            border: none;
-            border-radius: 15px;
-            background: var(--primary);
-            color: white;
-            width: 100%;
-            max-width: 300px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255, 0, 51, 0.4);
-            transition: transform 0.1s;
-        }
-
-        button:active { transform: scale(0.95); }
-
-        #dice {
-            font-size: 80px;
-            margin: 20px;
-            display: inline-block;
-            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
+        .btn-lanzar { background: linear-gradient(45deg, #ff0033, #8a2be2); box-shadow: 0 0 25px rgba(255,0,51,0.6); }
+        .btn-extremo { background: linear-gradient(45deg, #4a00e0, #1a1a1a); margin-top: 5px; border: 1px solid #4a00e0; }
+        
+        #dice { font-size: 80px; margin: 15px; transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); filter: drop-shadow(0 0 10px var(--primary)); }
+        
         .card {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(5px);
-            padding: 15px;
-            margin-top: 10px;
-            border-radius: 15px;
-            border-left: 4px solid var(--primary);
-            width: 90%;
-            max-width: 320px;
-            animation: fadeIn 0.5s ease;
+            background: rgba(10, 10, 10, 0.95); border: 2px solid #333;
+            padding: 20px; margin-top: 15px; border-radius: 20px;
+            width: 85%; max-width: 350px; animation: slideIn 0.4s ease-out;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.8);
         }
+        .card-titulo { font-size: 14px; color: var(--primary); margin-bottom: 8px; text-transform: uppercase; font-weight: bold; }
+        .card-texto { font-size: 22px; font-weight: 600; line-height: 1.3; color: #fff; }
 
-        #timer {
-            font-size: 45px;
-            font-weight: bold;
-            margin-top: 20px;
-            color: var(--secondary);
-            font-variant-numeric: tabular-nums;
-        }
+        #timer { font-size: 55px; font-weight: bold; margin-top: 25px; color: var(--primary); text-shadow: 0 0 15px rgba(255,0,51,0.8); font-variant-numeric: tabular-nums; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes slideIn { from { opacity: 0; transform: scale(0.8) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
     </style>
 </head>
 <body>
 
-    <h1>🔥 Paulo & Fernanda 🔥</h1>
+    <h1>🔥 P & F 🔥</h1>
+    <div id="nivel-display">Fase: Fuego Inicial</div>
+    <div id="turno">Cargando...</div>
     
-    <div id="turno"></div>
     <div id="dice">🎲</div>
 
-    <button onclick="tirar()">🎲 LANZAR DADO</button>
-    <button onclick="modoExtremo()" style="background: #4a00e0;">😈 RETO / CASTIGO</button>
+    <button class="btn btn-lanzar" onclick="tirar()">🎲 SUBIR LA TEMPERATURA</button>
+    <button class="btn btn-extremo" onclick="modoExtremo()">😈 RETO SUCIO</button>
 
     <div id="resultado"></div>
     <div id="timer">00:00</div>
 
-    <audio id="audio" preload="auto">
-        <source src="https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3" type="audio/mpeg">
-    </audio>
-
     <script>
-        let turno = 1;
-        let nivel = 0;
+        let turno = 0;
+        let nivel = 1;
         let timerInterval;
         let rotation = 0;
-
         const nombres = ["Paulo", "Fernanda"];
-        const acciones = [
-            "Acércate lentamente 😏",
-            "Mantén contacto cercano 🔥",
-            "Provoca sin tocar 😈",
-            "Guía el ritmo poco a poco",
-            "Movimiento lento y constante",
-            "Susurra algo al oído..."
-        ];
+
+        // Fases de intensidad REAJUSTADAS (Más fuertes desde el inicio)
+        const fases = {
+            fuegoInicial: [ // Niveles 1-3: Contacto físico directo y lascivo
+                "Beso francés profundo y agresivo durante 1 minuto",
+                "Muerde y lame el cuello de tu pareja dejando marca",
+                "Usa tus manos para explorar intensamente *bajo la ropa* de tu pareja",
+                "Susurra la cosa más sucia que quieres hacerle *ahora mismo*"
+            ],
+            calorIntermedio: [ // Niveles 4-6: Semidesnudez y contacto genital
+                "Quítale la ropa interior a tu pareja... usando solo los dientes",
+                "Frótate intensamente contra los genitales de tu pareja (con o sin ropa)",
+                "Pega tu cuerpo al de tu pareja y acaricia su zona más íntima",
+                "Recorre con tu lengua el cuerpo de tu pareja hasta llegar a su entrepierna"
+            ],
+            climaxTotal: [ // Niveles 7+: Sexo explícito y posiciones
+                "Posición de 'La Araña': Paulo abajo, Fernanda arriba. ¡A disfrutar! 🔥",
+                "Sexo oral intenso e ininterrumpido hasta que el timer termine",
+                "Perrito salvaje: Controla el ritmo y haz que tu pareja grite",
+                "Elige tu posición favorita y haz que tu pareja llegue al clímax"
+            ]
+        };
 
         const castigos = [
-            "Obedeces sin decidir 😈",
-            "No puedes hablar por 2 min",
-            "Tu pareja controla todo",
-            "Mantén el ritmo sin parar",
-            "Cierra los ojos hasta que el timer termine"
+            "Venda en los ojos: Solo puedes sentir cómo te tocan",
+            "Manos atadas a la espalda: No puedes usarlas para tocar",
+            "Sumisión total: Obedece *cualquier* orden de tu pareja ahora",
+            "Sin censura: Toca a tu pareja donde quieras, como quieras"
         ];
 
-        const tiempos = [60, 120, 180, 240];
-
         function actualizarTurno() {
-            document.getElementById("turno").innerText = "Turno de: " + nombres[turno - 1];
-        }
-
-        function vibrar() {
-            if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+            document.getElementById("turno").innerText = "Turno: " + nombres[turno];
+            let faseNombre = "Fuego Inicial 🔥";
+            let faseColor = "#ffcccc";
+            if(nivel > 3) { faseNombre = "Calor Intermedio 😈"; faseColor = "#ff4d6d"; }
+            if(nivel > 6) { faseNombre = "CLÍMAX TOTAL 💦"; faseColor = var(--climax); }
+            
+            const nivelDisp = document.getElementById("nivel-display");
+            nivelDisp.innerText = faseNombre;
+            nivelDisp.style.color = faseColor;
         }
 
         function iniciarTimer(segundos) {
@@ -141,48 +111,54 @@
                 let min = Math.floor(segundos / 60);
                 let sec = segundos % 60;
                 document.getElementById("timer").innerText = `${min}:${sec < 10 ? "0" : ""}${sec}`;
-
                 if (segundos <= 0) {
                     clearInterval(timerInterval);
-                    document.getElementById("timer").innerText = "🔥 CAMBIO 🔥";
-                    vibrar();
-                    const msg = new SpeechSynthesisUtterance("Tiempo cumplido, cambio");
-                    window.speechSynthesis.speak(msg);
+                    document.getElementById("timer").innerText = "💦 CAMBIO 💦";
+                    if (navigator.vibrate) navigator.vibrate([300, 100, 300]);
                 }
                 segundos--;
             }, 1000);
         }
 
         function tirar() {
-            nivel++;
-            rotation += 360;
+            rotation += 720; // Giro más rápido
             const dice = document.getElementById("dice");
             dice.style.transform = `rotate(${rotation}deg)`;
 
-            const accion = acciones[Math.floor(Math.random() * acciones.length)];
-            const tiempo = tiempos[Math.floor(Math.random() * tiempos.length)];
+            let listaActual;
+            if (nivel <= 3) listaActual = fases.fuegoInicial;
+            else if (nivel <= 6) listaActual = fases.calorIntermedio;
+            else listaActual = fases.climaxTotal;
+
+            const accion = listaActual[Math.floor(Math.random() * listaActual.length)];
+            
+            // Tiempos más largos para disfrutar
+            let tiempo = 120; // 2 min inicial
+            if (nivel > 3) tiempo = 180; // 3 min intermedio
+            if (nivel > 6) tiempo = 600; // 10 min clímax
 
             document.getElementById("resultado").innerHTML = `
-                <div class="card"><strong>Acción:</strong><br>${accion}</div>
-                <div class="card"><strong>Duración:</strong> ${tiempo/60} min</div>
-                <div class="card"><strong>Intensidad:</strong> Nivel ${nivel}</div>
+                <div class="card">
+                    <div class="card-titulo">ACCIÓN NIVEL ${nivel}</div>
+                    <div class="card-texto">${accion}</div>
+                </div>
             `;
 
-            const audio = document.getElementById("audio");
-            audio.play().catch(() => console.log("Audio bloqueado por el navegador"));
-
-            vibrar();
             iniciarTimer(tiempo);
-
-            turno = (turno === 1) ? 2 : 1;
+            nivel++;
+            turno = (turno === 0) ? 1 : 0;
             actualizarTurno();
         }
 
         function modoExtremo() {
             const c = castigos[Math.floor(Math.random() * castigos.length)];
-            const res = document.getElementById("resultado");
-            res.innerHTML += `<div class="card" style="border-left-color: #4a00e0;">😈 <strong>RETO:</strong> ${c}</div>`;
-            vibrar();
+            document.getElementById("resultado").innerHTML += `
+                <div class="card" style="border-color: var(--climax); box-shadow: 0 0 15px rgba(138, 43, 226, 0.5);">
+                    <div class="card-titulo" style="color: var(--climax)">RETO SUCIO</div>
+                    <div class="card-texto">${c}</div>
+                </div>
+            `;
+            if (navigator.vibrate) navigator.vibrate(500); // Vibración larga para reto
         }
 
         actualizarTurno();
