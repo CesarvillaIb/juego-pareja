@@ -5,24 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🔥 P & F: La Escalada 🔥</title>
     <style>
-        :root { --accent: #00f2ff; --bg: #050505; }
+        :root { --accent: #00f2ff; --bg: #050505; --gold: #ffd700; }
         body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; text-align: center; overflow-x: hidden; padding-bottom: 50px; }
         
         .header { padding: 20px; background: linear-gradient(to bottom, #111, transparent); }
         h1 { font-size: 20px; letter-spacing: 3px; margin: 0; color: #fff; text-shadow: 0 0 10px var(--accent); }
         #fase-tag { font-size: 12px; font-weight: bold; color: var(--accent); margin-top: 5px; text-transform: uppercase; }
 
+        /* Selector de Modo */
+        .mode-selector { display: flex; justify-content: center; gap: 10px; margin: 10px 0; }
+        .mode-btn { padding: 8px 15px; border: 1px solid #444; background: #111; color: #888; border-radius: 20px; font-size: 12px; cursor: pointer; transition: 0.3s; }
+        .mode-btn.active { border-color: var(--accent); color: white; box-shadow: 0 0 10px var(--accent); }
+
         /* Contenedor del Dado */
         .dice-container {
-            margin: 30px auto;
-            width: 120px; height: 120px;
+            margin: 20px auto;
+            width: 110px; height: 110px;
             border-radius: 50%;
             border: 4px double var(--accent);
             display: flex; align-items: center; justify-content: center;
             box-shadow: 0 0 20px var(--accent);
             transition: 0.5s;
         }
-        #dice { font-size: 60px; transition: 0.6s cubic-bezier(.47,1.64,.41,.8); }
+        #dice { font-size: 55px; transition: 0.6s cubic-bezier(.47,1.64,.41,.8); }
 
         .btn {
             width: 85%; max-width: 350px; padding: 20px; border: none; border-radius: 15px;
@@ -30,6 +35,7 @@
             margin: 10px 0; transition: 0.2s;
         }
         .btn-main { background: linear-gradient(45deg, #ff0033, #8a2be2); box-shadow: 0 5px 15px rgba(255,0,51,0.4); }
+        .btn-challenge { background: linear-gradient(45deg, #444, #000); border: 1px solid var(--gold); color: var(--gold); display: none; }
         .btn-main:active { transform: scale(0.95); }
         
         /* Resultados */
@@ -39,10 +45,10 @@
             padding: 20px; border-radius: 15px; text-align: left;
             animation: slideIn 0.5s ease;
         }
-        .card-title { font-size: 22px; font-weight: bold; margin-bottom: 10px; display: block; }
-        .card-desc { font-size: 16px; color: #ccc; line-height: 1.5; }
+        .card-title { font-size: 20px; font-weight: bold; margin-bottom: 10px; display: block; text-transform: uppercase; }
+        .card-desc { font-size: 15px; color: #ccc; line-height: 1.5; }
 
-        #timer { font-size: 70px; font-weight: bold; margin: 20px 0; font-family: monospace; color: #fff; }
+        #timer { font-size: 65px; font-weight: bold; margin: 15px 0; font-family: monospace; color: #fff; }
 
         @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
         @keyframes shake { 0% { transform: rotate(0); } 25% { transform: rotate(10deg); } 75% { transform: rotate(-10deg); } 100% { transform: rotate(0); } }
@@ -52,6 +58,10 @@
 
     <div class="header">
         <h1>PAULO & FERNANDA</h1>
+        <div class="mode-selector">
+            <div id="m-esc" class="mode-btn active" onclick="setModo('escalada')">MODO ESCALADA</div>
+            <div id="m-des" class="mode-btn" onclick="setModo('desafio')">RETOS DE NOCHE</div>
+        </div>
         <div id="fase-tag">Fase: Calentamiento</div>
         <div id="turno" style="margin-top:10px; font-weight: bold;">Turno: Paulo</div>
     </div>
@@ -60,7 +70,8 @@
         <div id="dice">🎲</div>
     </div>
 
-    <button class="btn btn-main" onclick="jugar()">🔥 SIGUIENTE NIVEL</button>
+    <button id="btn-escalada" class="btn btn-main" onclick="jugar()">🔥 SIGUIENTE NIVEL</button>
+    <button id="btn-desafio" class="btn btn-challenge" onclick="lanzarReto()">🃏 LANZAR RETO LOCO</button>
     
     <div id="timer">00:00</div>
     <div id="resultado"></div>
@@ -68,25 +79,26 @@
     <script>
         let nivel = 1;
         let turno = 0;
+        let modoActual = 'escalada';
         let timerInterval;
         const nombres = ["Paulo", "Fernanda"];
 
         const acciones = {
-            fase1: [ // NIVEL 1-3: Calentamiento Fuerte
+            fase1: [
                 { t: "LENGUA Y CUELLO", d: "Lame y muerde el cuello de tu pareja con fuerza mientras tus manos aprietan sus glúteos.", s: 60 },
                 { t: "EXPLORACIÓN INTERNA", d: "Paulo, mete dos dedos en la vagina de Fernanda. Fernanda, guía el ritmo con tus caderas.", s: 300 },
-              
                 { t: "ORAL AGRESIVO", d: "El que recibe se sienta, el otro usa lengua y garganta con intensidad máxima.", s: 120 },
-                { t: "MANOS ATADAS", d: "Sujeta las manos de tu pareja sobre su cabeza y bésala salvajemente.", s: 60 }
+                { t: "MANOS ATADAS", d: "Sujeta las manos de tu pareja sobre su cabeza y bésala salvajemente.", s: 60 },
+                { t: "MASAJE ERÓTICO RÁPIDO", d: "Usa tus labios para recorrer desde su ombligo hasta su cuello sin despegarte.", s: 60 }
             ],
-            fase2: [ // NIVEL 4-6: Acción Kamasutra
+            fase2: [
                 { t: "PERRITO SALVAJE", d: "Fernanda en cuatro, Paulo la sujeta del cabello o cintura. Ritmo fuerte y seco.", s: 120 },
                 { t: "MISIONERO PIERNAS ARRIBA", d: "Fernanda sube las piernas hasta los hombros de Paulo. Penetración máxima.", s: 180 },
                 { t: "LA SILLA", d: "Paulo sentado, Fernanda sobre él de frente. Abrácense y muévanse con fuerza.", s: 180 },
                 { t: "CABALGAR (DE ESPALDAS)", d: "Paulo acostado, Fernanda arriba dándole la espalda. Baja con todo tu peso.", s: 180 },
                 { t: "MANDÍBULA DE ORO", d: "Sexo oral profundo. El que da debe intentar llegar lo más profundo posible.", s: 120 }
             ],
-            fase3: [ // NIVEL 7+: Clímax
+            fase3: [
                 { t: "LA ARAÑA", d: "Sentados frente a frente, piernas entrelazadas. Movimientos cortos, lentos y muy profundos.", s: 300 },
                 { t: "EL MOLINILLO", d: "Fernanda sobre Paulo de espaldas, inclinada hacia adelante. Paulo la penetra desde abajo con fuerza.", s: 300 },
                 { t: "EL TRIÁNGULO", d: "Fernanda apoya las manos en el suelo y los pies en los hombros de Paulo. ¡Pura potencia!", s: 120 },
@@ -95,16 +107,43 @@
             ]
         };
 
+        const retosLocos = [
+            { t: "¡NALGADA!", d: "Paulo debe darle 5 nalgadas fuertes a Fernanda mientras la besa.", s: 30 },
+            { t: "EL HIELO (O MANO FRÍA)", d: "Recorre con algo frío (o tu mano) sus partes íntimas por 1 minuto.", s: 60 },
+            { t: "SIN MANOS", d: "Debes dar placer solo con la boca durante este tiempo. Manos a la espalda.", s: 60 },
+            { t: "SUSURRO SUCIO", d: "Dile al oído la fantasía más puerca que quieres cumplirle ahora mismo.", s: 30 },
+            { t: "EL MORDISCO", d: "Muerde suavemente sus glúteos o muslos internos.", s: 60 },
+            { t: "ROL DE PODER", d: "Fernanda toma el control total. Paulo no puede moverse por 2 minutos.", s: 120 }
+        ];
+
+        function setModo(modo) {
+            modoActual = modo;
+            document.getElementById('m-esc').classList.toggle('active', modo === 'escalada');
+            document.getElementById('m-des').classList.toggle('active', modo === 'desafio');
+            document.getElementById('btn-escalada').style.display = modo === 'escalada' ? 'inline-block' : 'none';
+            document.getElementById('btn-desafio').style.display = modo === 'desafio' ? 'inline-block' : 'none';
+            
+            const diceContainer = document.querySelector('.dice-container');
+            if(modo === 'desafio') {
+                diceContainer.style.borderColor = "var(--gold)";
+                diceContainer.style.boxShadow = "0 0 20px var(--gold)";
+                document.getElementById('dice').innerText = "🃏";
+            } else {
+                actualizarInterfaz();
+                document.getElementById('dice').innerText = "🎲";
+            }
+        }
+
         function hablar(texto) {
             const msg = new SpeechSynthesisUtterance(texto);
-            msg.lang = 'es-ES';
-            msg.rate = 1.1;
+            msg.lang = 'es-ES'; msg.rate = 1.1;
             window.speechSynthesis.speak(msg);
         }
 
         function actualizarInterfaz() {
+            if(modoActual !== 'escalada') return;
             const tag = document.getElementById("fase-tag");
-            const box = document.getElementById("dice-box");
+            const diceBox = document.getElementById("dice-box");
             document.getElementById("turno").innerText = "Turno: " + nombres[turno];
 
             if(nivel <= 3) {
@@ -117,6 +156,8 @@
                 document.documentElement.style.setProperty('--accent', '#bc00ff');
                 tag.innerText = "Fase: CLÍMAX TOTAL 😈";
             }
+            diceBox.style.borderColor = "var(--accent)";
+            diceBox.style.boxShadow = `0 0 20px var(--accent)`;
         }
 
         function iniciarTimer(segundos) {
@@ -127,38 +168,47 @@
                 document.getElementById("timer").innerText = `${min}:${sec < 10 ? "0" : ""}${sec}`;
                 if (segundos <= 0) {
                     clearInterval(timerInterval);
-                    document.getElementById("timer").innerText = "💦 SIGUIENTE";
-                    hablar("Tiempo terminado. Cambien de posición ahora.");
+                    document.getElementById("timer").innerText = "💦 CAMBIO";
+                    hablar("Tiempo terminado. Cambien ahora.");
                 }
                 segundos--;
             }, 1000);
         }
 
         function jugar() {
-            // Animación del dado
             const dice = document.getElementById("dice");
             dice.style.animation = "shake 0.3s infinite";
-            
             setTimeout(() => {
                 dice.style.animation = "none";
-                dice.style.transform = `rotate(${nivel * 360}deg) scale(1.2)`;
-                
+                dice.style.transform = `rotate(${nivel * 360}deg) scale(1.1)`;
                 let lista = nivel <= 3 ? acciones.fase1 : (nivel <= 6 ? acciones.fase2 : acciones.fase3);
                 const item = lista[Math.floor(Math.random() * lista.length)];
-
-                document.getElementById("resultado").innerHTML = `
-                    <div class="card">
-                        <span class="card-title">${item.t}</span>
-                        <div class="card-desc">${item.d}</div>
-                    </div>
-                `;
-
-                hablar(item.t);
-                iniciarTimer(item.s);
+                mostrarResultado(item);
                 nivel++;
-                turno = (turno === 0) ? 1 : 0;
+                turno = 1 - turno;
                 actualizarInterfaz();
             }, 500);
+        }
+
+        function lanzarReto() {
+            const dice = document.getElementById("dice");
+            dice.style.transform = "rotate(720deg)";
+            const item = retosLocos[Math.floor(Math.random() * retosLocos.length)];
+            setTimeout(() => {
+                dice.style.transform = "rotate(0deg)";
+                mostrarResultado(item, true);
+            }, 400);
+        }
+
+        function mostrarResultado(item, esReto = false) {
+            document.getElementById("resultado").innerHTML = `
+                <div class="card" style="border-color: ${esReto ? 'var(--gold)' : 'var(--accent)'}">
+                    <span class="card-title">${item.t}</span>
+                    <div class="card-desc">${item.d}</div>
+                </div>
+            `;
+            hablar(item.t);
+            iniciarTimer(item.s);
         }
 
         actualizarInterfaz();
