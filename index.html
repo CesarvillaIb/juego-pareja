@@ -5,43 +5,39 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>🔥 Paulo & Fernanda 🔥</title>
 
+<link rel="manifest" href="manifest.json">
+
 <style>
 body {
   margin: 0;
   font-family: Arial;
-  background: linear-gradient(135deg, #000, #2b0000);
+  background: black;
   color: white;
   text-align: center;
-  padding: 20px;
 }
 
 button {
   margin: 10px;
-  padding: 15px;
-  font-size: 18px;
+  padding: 18px;
+  font-size: 20px;
   border: none;
-  border-radius: 12px;
+  border-radius: 15px;
   background: #ff0033;
   color: white;
-  width: 85%;
+  width: 90%;
+}
+
+.dice {
+  font-size: 80px;
+  margin: 20px;
+  transition: transform 0.5s;
 }
 
 .card {
   background: rgba(255,255,255,0.1);
-  margin-top: 15px;
+  margin: 10px;
   padding: 15px;
   border-radius: 15px;
-}
-
-.dado {
-  font-size: 60px;
-  margin: 20px;
-}
-
-#timer {
-  font-size: 30px;
-  margin-top: 20px;
-  color: #ff4d6d;
 }
 </style>
 </head>
@@ -51,99 +47,80 @@ button {
 <h1>🔥 Paulo & Fernanda 🔥</h1>
 
 <div id="turno"></div>
-<div class="dado">🎲</div>
 
-<button onclick="tirar()">🎲 Lanzar</button>
-<button onclick="castigo()">😈 Castigo</button>
+<div class="dice" id="dice">🎲</div>
+
+<button onclick="tirar()">🎲 LANZAR</button>
+<button onclick="modoExtremo()">🎮 RETO O CASTIGO</button>
 
 <div id="resultado"></div>
-<div id="timer"></div>
 
 <script>
 let turno = 1;
 let nivel = 0;
-let countdown;
 
 const nombres = ["Paulo", "Fernanda"];
 
-const posiciones = [
-  {nombre:"Cercanos 🔥", desc:"Mantengan contacto cercano y ritmo constante."},
-  {nombre:"Cara a cara 😏", desc:"Movimiento sincronizado con contacto visual."},
-  {nombre:"Dominio 😈", desc:"Uno guía completamente el ritmo."},
-  {nombre:"Lento 🔥", desc:"Todo se hace sin prisa, aumentando tensión."},
-  {nombre:"Intenso 😏", desc:"Sube la energía y el ritmo progresivamente."}
+const retos = [
+  "Toma el control completamente 😈",
+  "Guía el ritmo sin detenerte",
+  "Provoca lentamente sin dejar avanzar",
+  "Haz que pierda el control poco a poco"
 ];
 
-const tiempos = [60,180,300,420,600]; // segundos
-
 const castigos = [
-  "Tu pareja tiene el control total 😈",
-  "No puedes detenerte hasta terminar",
+  "Obedeces todo sin decidir 😈",
+  "No puedes detenerte",
   "Sin hablar durante el turno",
-  "Obedeces sin decidir",
-  "Mantén el ritmo sin fallar"
+  "Tu pareja controla todo"
 ];
 
 function actualizarTurno() {
-  document.getElementById("turno").innerText = "Turno: " + nombres[turno - 1];
+  document.getElementById("turno").innerText =
+    "Turno: " + nombres[turno - 1];
 }
 
-function iniciarTimer(segundos) {
-  clearInterval(countdown);
-  
-  countdown = setInterval(() => {
-    let min = Math.floor(segundos / 60);
-    let sec = segundos % 60;
-
-    document.getElementById("timer").innerText =
-      `${min}:${sec < 10 ? "0" : ""}${sec}`;
-
-    if (segundos <= 0) {
-      clearInterval(countdown);
-      document.getElementById("timer").innerText = "🔥 CAMBIO 🔥";
-
-      // Vibración (celular)
-      if (navigator.vibrate) {
-        navigator.vibrate([300, 100, 300]);
-      }
-
-      // Voz
-      let msg = new SpeechSynthesisUtterance("Tiempo terminado, cambien");
-      speechSynthesis.speak(msg);
-    }
-
-    segundos--;
-  }, 1000);
+function animarDado() {
+  const dice = document.getElementById("dice");
+  dice.style.transform = "rotate(720deg)";
 }
 
 function tirar() {
   nivel++;
+  animarDado();
 
-  const pos = posiciones[Math.floor(Math.random()*posiciones.length)];
-  const tiempo = tiempos[Math.floor(Math.random()*tiempos.length)];
-
-  let intensidad = "Suave 😌";
-  if(nivel > 3) intensidad = "Intenso 🔥";
-  if(nivel > 6) intensidad = "Sin control 😈";
+  let intensidad = "🔥";
+  if(nivel > 5) intensidad = "😈🔥";
 
   document.getElementById("resultado").innerHTML = `
-    <div class="card">💃 Posición: ${pos.nombre}</div>
-    <div class="card">📝 ${pos.desc}</div>
-    <div class="card">⏱️ ${tiempo/60} min</div>
-    <div class="card">⚡ ${intensidad}</div>
+    <div class="card">Nivel: ${intensidad}</div>
   `;
-
-  iniciarTimer(tiempo);
 
   turno = turno === 1 ? 2 : 1;
   actualizarTurno();
 }
 
-function castigo() {
-  const c = castigos[Math.floor(Math.random()*castigos.length)];
-  document.getElementById("resultado").innerHTML += `
-    <div class="card">😈 Castigo: ${c}</div>
-  `;
+function modoExtremo() {
+  animarDado();
+
+  let tipo = Math.random() > 0.5 ? "reto" : "castigo";
+
+  if(tipo === "reto") {
+    let r = retos[Math.floor(Math.random()*retos.length)];
+    document.getElementById("resultado").innerHTML = `
+      <div class="card">🔥 RETO: ${r}</div>
+    `;
+  } else {
+    let c = castigos[Math.floor(Math.random()*castigos.length)];
+    document.getElementById("resultado").innerHTML = `
+      <div class="card">😈 CASTIGO: ${c}</div>
+    `;
+  }
+}
+
+// registrar service worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js');
 }
 
 actualizarTurno();
