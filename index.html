@@ -2,221 +2,168 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>P & F: PRO INTERFACE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔥 P & F: Hardcore & Slow Burn 🔥</title>
     <style>
-        :root {
-            --accent: #00f2ff;
-            --bg: #000000;
-            --gold: #ffd700;
-            --deep-red: #ff0033;
-            --neon-green: #39ff14;
-            --glass: rgba(255, 255, 255, 0.08);
-        }
-
-        body {
-            margin: 0; font-family: 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg); color: white;
-            display: flex; flex-direction: column; align-items: center;
-            min-height: 100vh; overflow-x: hidden; -webkit-tap-highlight-color: transparent;
-        }
-
-        /* UI PRO ELEMENTS */
-        .top-bar { width: 100%; padding: 20px 0; background: #0a0a0a; border-bottom: 1px solid #222; text-align: center; }
-        .top-bar h1 { font-size: 18px; letter-spacing: 5px; margin: 0; font-weight: 300; color: #fff; }
-
-        .selector { display: flex; gap: 10px; margin: 20px; width: 92%; }
-        .mode-btn { 
-            flex: 1; padding: 15px 5px; background: #111; border: 1px solid #333; 
-            color: #666; border-radius: 15px; font-size: 11px; font-weight: bold; transition: 0.4s;
-        }
-        .mode-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(0, 242, 255, 0.05); box-shadow: 0 0 20px rgba(0, 242, 255, 0.1); }
-
-        /* ESCENA DADOS 3D PRO */
-        .dice-scene { display: flex; gap: 45px; perspective: 1000px; margin: 35px 0; height: 80px; }
-        .cube {
-            width: 70px; height: 70px; position: relative; transform-style: preserve-3d;
-            transition: transform 1.8s cubic-bezier(0.2, 0.8, 0.3, 1);
-        }
-        .face {
-            position: absolute; width: 70px; height: 70px; background: #151515;
-            border: 2.5px solid var(--accent); border-radius: 15px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 28px; color: var(--accent); box-shadow: inset 0 0 20px rgba(0,242,255,0.15);
-        }
-        .front  { transform: rotateY(0deg) translateZ(35px); }
-        .back   { transform: rotateY(180deg) translateZ(35px); }
-        .right  { transform: rotateY(90deg) translateZ(35px); }
-        .left   { transform: rotateY(-90deg) translateZ(35px); }
-        .top    { transform: rotateX(90deg) translateZ(35px); }
-        .bottom { transform: rotateX(-90deg) translateZ(35px); }
-
-        /* BUTTONS */
-        .main-button {
-            width: 88%; padding: 22px; border-radius: 20px; border: none;
-            font-size: 17px; font-weight: 800; text-transform: uppercase;
-            letter-spacing: 2px; cursor: pointer; transition: 0.3s; margin-bottom: 10px;
-        }
-        .btn-roll { background: #fff; color: #000; box-shadow: 0 10px 25px rgba(255,255,255,0.1); }
-        .btn-roll:active { transform: scale(0.96); }
-
-        #timer { font-size: 75px; font-weight: 100; margin: 10px 0; color: #fff; font-family: 'Courier New', monospace; }
-
-        .btn-start { 
-            background: transparent; border: 2px solid var(--neon-green); color: var(--neon-green);
-            display: none; animation: pulseGlow 1.5s infinite;
-        }
-
-        @keyframes pulseGlow { 
-            0% { box-shadow: 0 0 5px var(--neon-green); transform: scale(1); }
-            50% { box-shadow: 0 0 30px var(--neon-green); transform: scale(1.02); }
-            100% { box-shadow: 0 0 5px var(--neon-green); transform: scale(1); }
-        }
-
-        /* RESULT CARD GLASS */
-        #resultado { width: 92%; margin-bottom: 30px; }
-        .card {
-            background: var(--glass); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 25px;
-            padding: 30px; text-align: left; animation: slideUp 0.7s ease-out;
-        }
-        .card-t { color: var(--accent); font-size: 20px; font-weight: 800; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
-        .role { margin: 15px 0; font-size: 15px; line-height: 1.5; border-left: 3px solid #333; padding-left: 15px; }
-        .p-txt { border-color: #3498db; }
-        .f-txt { border-color: #e74c3c; }
-        .role b { display: block; font-size: 11px; margin-bottom: 4px; color: #888; letter-spacing: 1px; }
-
-        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        :root { --accent: #00f2ff; --bg: #050505; --gold: #ffd700; --deep-red: #ff0033; --green: #2ecc71; }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; text-align: center; padding-bottom: 50px; }
+        .header { padding: 15px; background: #111; border-bottom: 2px solid var(--deep-red); }
+        .mode-selector { display: flex; justify-content: center; gap: 5px; margin: 10px 0; }
+        .mode-btn { padding: 10px; border: 1px solid #333; background: #000; color: #666; border-radius: 10px; font-size: 11px; cursor: pointer; flex: 1; max-width: 150px; }
+        .mode-btn.active { border-color: var(--accent); color: white; box-shadow: 0 0 10px var(--accent); }
+        .dice-container { margin: 20px auto; width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--accent); display: flex; align-items: center; justify-content: center; transition: 0.5s; }
+        #dice { font-size: 50px; }
+        .btn { width: 90%; max-width: 350px; padding: 20px; border: none; border-radius: 15px; font-size: 18px; font-weight: bold; color: white; cursor: pointer; margin: 10px 0; transition: 0.3s; }
+        .btn-main { background: linear-gradient(45deg, var(--deep-red), #8a2be2); }
+        .btn-challenge { background: linear-gradient(45deg, #444, #111); border: 1px solid var(--gold); color: var(--gold); }
+        .btn-start { background: var(--green); display: none; box-shadow: 0 0 20px var(--green); margin-top: 10px; }
+        #timer { font-size: 75px; font-weight: bold; margin: 10px 0; font-family: monospace; color: #fff; }
+        #resultado { width: 92%; margin: 0 auto; }
+        .card { background: #111; border-left: 5px solid var(--accent); padding: 20px; border-radius: 15px; text-align: left; margin-bottom: 15px; animation: slideIn 0.5s ease; }
+        .card-t { font-size: 19px; font-weight: bold; color: var(--accent); text-transform: uppercase; }
+        .card-d { font-size: 15px; color: #ccc; margin-top: 10px; line-height: 1.4; border-bottom: 1px solid #222; padding-bottom: 10px; }
+        .role-box { margin-top: 12px; font-size: 14px; }
+        .role-p { color: #3498db; margin-bottom: 6px; }
+        .role-f { color: #e74c3c; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-<div class="top-bar"><h1>PAULO & FERNANDA</h1></div>
-
-<div class="selector">
-    <button id="m-esc" class="mode-btn active" onclick="cambiarModo('escalada')">MODO ESCALADA</button>
-    <button id="m-des" class="mode-btn" onclick="cambiarModo('desafio')">10 RETOS FUERTES</button>
-</div>
-
-<div class="dice-scene">
-    <div id="cube1" class="cube">
-        <div class="face front">⚀</div><div class="face back">⚅</div>
-        <div class="face right">⚁</div><div class="face left">⚄</div>
-        <div class="face top">⚂</div><div class="face bottom">⚃</div>
+    <div class="header">
+        <h1>PAULO & FERNANDA</h1>
+        <div class="mode-selector">
+            <div id="m-esc" class="mode-btn active" onclick="setModo('escalada')">MODO ESCALADA (LENTO)</div>
+            <div id="m-des" class="mode-btn" onclick="setModo('desafio')">10 RETOS FUERTES</div>
+        </div>
+        <div id="fase-tag" style="font-size: 12px; color: var(--accent);">NIVEL 1: CALENTAMIENTO</div>
     </div>
-    <div id="cube2" class="cube">
-        <div class="face front">⚀</div><div class="face back">⚅</div>
-        <div class="face right">⚁</div><div class="face left">⚄</div>
-        <div class="face top">⚂</div><div class="face bottom">⚃</div>
-    </div>
-</div>
 
-<button class="main-button btn-roll" onclick="lanzarDados()">GIRAR DADOS</button>
-<div id="timer">00:00</div>
-<button id="btn-start" class="main-button btn-start" onclick="iniciarConteo()">⚡ EMPEZAR AHORA</button>
+    <div class="dice-container" id="dice-box"><div id="dice">🎲</div></div>
 
-<div id="resultado"></div>
+    <button id="btn-escalada" class="btn btn-main" onclick="jugar()">🔥 GIRAR DADO</button>
+    <button id="btn-desafio" class="btn btn-challenge" style="display:none;" onclick="lanzarReto()">😈 RETO EXTREMO</button>
+    
+    <div id="timer">00:00</div>
+    <button id="btn-iniciar-timer" class="btn btn-start" onclick="activarReloj()">▶️ EMPEZAR AHORA</button>
 
-<script>
-    let nivel = 1; let clicks = 0; let sPendientes = 0; let timerInterval;
+    <div id="resultado"></div>
 
-    const acciones = {
-        fase1: [
-            { t: "MASAJE CON LENGUA", p: "Lame desde su nuca hasta el coxis lentamente.", f: "Arquea la espalda y guía su cabeza.", s: 120 },
-            { t: "SUCCIÓN DE PEZONES", p: "Succiona y muerde suavemente sus pezones.", f: "Masturba a Paulo con ritmo constante.", s: 180 },
-            { t: "DEDOS EXPLORADORES", p: "Mete 3 dedos palma arriba y presiona el punto G.", f: "Aprieta tus músculos sobre sus dedos.", s: 240 },
-            { t: "MORDISCO EN MUSLOS", p: "Da mordiscos firmes en la entrepierna de ella.", f: "Abre bien las piernas y míralo a los ojos.", s: 90 },
-            { t: "ACICALAMIENTO", p: "Besa sus labios vaginales solo con la boca.", f: "Sostén su cabeza si quieres que se quede ahí.", s: 120 }
-        ],
-        fase2: [
-            { t: "PERRITO DE RODILLAS", p: "Arrodillado erguido, empuja fuerte y profundo.", f: "Baja los codos, trasero lo más arriba posible.", s: 180 },
-            { t: "MISIONERO ELEVADO", p: "Sujeta sus tobillos cerca de tus orejas al entrar.", f: "Pon almohadas bajo tu cadera y déjate llevar.", s: 240 },
-            { t: "LA SILLA CABALGANTE", p: "Sentado, sujeta su cintura para marcar el ritmo.", f: "Sube y baja con todo tu peso sobre él.", s: 180 },
-            { t: "CUCHARITA PROFUNDA", p: "Entra despacio pero llega al fondo cada vez.", f: "Empuja tu cadera hacia atrás para recibirlo todo.", s: 180 }
-        ],
-        fase3: [
-            { t: "LA ARAÑA", p: "Sentado, balancéate de lado a lado dentro de ella.", f: "Cruza piernas en su espalda y aprieta fuerte.", s: 300 },
-            { t: "EL MOLINILLO", p: "Sujeta sus nalgas y búscala con fuerza desde abajo.", f: "De espaldas sobre él, inclínate hasta tocar tus pies.", s: 300 },
-            { t: "EL TRIÁNGULO", p: "Penetra con potencia máxima, pies de ella al hombro.", f: "Manos al suelo para equilibrio.", s: 200 },
-            { t: "CLÍMAX LIBRE", p: "Termina con ella en la posición que quieras.", f: "Grita y disfruta el final.", s: 600 }
-        ]
-    };
+    <script>
+        let clicksEnNivel = 0;
+        let nivel = 1;
+        let timerInterval;
+        let segundosPendientes = 0;
 
-    const retos = [
-        { t: "GARGANTA PROFUNDA (PAULO RECIBE)", p: "No te muevas, deja que ella controle la profundidad.", f: "Mete TODO a la boca y aguanta la respiración lo más que puedas sin sacarlo.", s: 120 },
-        { t: "RESISTENCIA (FERNANDA RECIBE)", p: "Lame su clítoris con mucha intensidad sin parar.", f: "Aguanta la respiración 15 segundos mientras él lo hace. Repite.", s: 120 },
-        { t: "PAULO: COCINA EXTREMA", p: "Cárgala contra el mostrador y dale fuerte 60 seg.", f: "Envuélvelo con tus piernas y aguanta el ritmo.", s: 60 },
-        { t: "TRABALENGUAS PENETRADA", p: "Penétrala lo más rápido y fuerte que puedas.", f: "Di 'Tres tristes tigres' sin equivocarte.", s: 60 },
-        { t: "TODO ADENTRO (ORDEÑO)", p: "Mete todo y quédate inmóvil.", f: "Intenta sacarlo usando solo tus músculos.", s: 90 },
-        { t: "NALGADAS RÍTMICAS", p: "Da una nalgada fuerte en cada embestida profunda.", f: "Cuenta las nalgadas en voz alta.", s: 150 },
-        { t: "EL MUÑECO DE TRAPO", p: "Levántala contra la pared y penétrala en el aire.", f: "Sujétate de su cuello y no toques el suelo.", s: 120 },
-        { t: "SUMISIÓN: BOCA ABAJO", p: "Ponla boca abajo. 10 nalgadas antes de entrar.", f: "Mantente quieta y acepta el castigo.", s: 180 },
-        { t: "SILLA: EL CABALLITO", p: "Siéntate en la silla. Deja que ella tome el control.", f: "Siéntate sobre él de frente y bota con fuerza.", s: 150 },
-        { t: "RESISTENCIA FINAL", p: "Dale a máxima velocidad por 2 minutos.", f: "Mantenlas piernas abiertas al máximo.", s: 120 }
-    ];
+        const acciones = {
+            fase1: [
+                { t: "MASAJE CON LENGUA", p: "Paulo: Lame desde su nuca hasta el coxis lentamente.", f: "Fernanda: Arquea la espalda y guía su cabeza.", s: 120 },
+                { t: "SUCCIÓN DE PEZONES", p: "Paulo: Succiona y muerde suavemente sus pezones.", f: "Fernanda: Masturba a Paulo con ritmo constante.", s: 180 },
+                { t: "DEDOS EXPLORADORES", p: "Paulo: Mete 3 dedos palma arriba y presiona el punto G.", f: "Fernanda: Aprieta tus músculos sobre sus dedos.", s: 240 },
+                { t: "MORDISCO EN MUSLOS", p: "Paulo: Da mordiscos firmes en la entrepierna de ella.", f: "Fernanda: Abre bien las piernas y míralo a los ojos.", s: 90 },
+                { t: "ACICALAMIENTO", p: "Paulo: Besa sus labios vaginales solo con la boca.", f: "Fernanda: Sostén su cabeza si quieres que se quede ahí.", s: 120 }
+            ],
+            fase2: [
+                { t: "PERRITO DE RODILLAS", p: "Paulo: Arrodillado erguido, empuja fuerte y profundo.", f: "Fernanda: Baja los codos, trasero lo más arriba posible.", s: 180 },
+                { t: "MISIONERO ELEVADO", p: "Paulo: Sujeta sus tobillos cerca de tus orejas al entrar.", f: "Fernanda: Pon almohadas bajo tu cadera y déjate llevar.", s: 240 },
+                { t: "LA SILLA CABALGANTE", p: "Paulo: Sentado, sujeta su cintura para marcar el ritmo.", f: "Fernanda: Sube y baja con todo tu peso sobre él.", s: 180 },
+                { t: "CUCHARITA PROFUNDA", p: "Paulo: Entra despacio pero llega al fondo cada vez.", f: "Fernanda: Empuja tu cadera hacia atrás para recibirlo todo.", s: 180 }
+            ],
+            fase3: [
+                { t: "LA ARAÑA", p: "Paulo: Sentado, balancéate de lado a lado dentro de ella.", f: "Fernanda: Cruza piernas en su espalda y aprieta fuerte.", s: 300 },
+                { t: "EL MOLINILLO", p: "Paulo: Sujeta sus nalgas y búscala con fuerza desde abajo.", f: "Fernanda: De espaldas sobre él, inclínate hasta tocar tus pies.", s: 300 },
+                { t: "EL TRIÁNGULO", p: "Paulo: Penetra con potencia máxima, pies de ella al hombro.", f: "Fernanda: Manos al suelo para equilibrio.", s: 200 },
+                { t: "CLÍMAX LIBRE", p: "Paulo: Termina con ella en la posición que quieras.", f: "Fernanda: Grita y disfruta el final.", s: 600 }
+            ]
+        };
 
-    function cambiarModo(m) {
-        document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-        event.target.classList.add('active');
-        resetUI();
-    }
+        const retos = [
+            { t: "GARGANTA PROFUNDA (PAULO RECIBE)", d: "Reto de resistencia oral extrema.", p: "Paulo: No te muevas, deja que ella controle la profundidad.", f: "Fernanda: Mete TODO a la boca y aguanta la respiración lo más que puedas sin sacarlo.", s: 120 },
+            { t: "RESISTENCIA (FERNANDA RECIBE)", d: "Reto de aguante sensorial.", p: "Paulo: Lame su clítoris con mucha intensidad sin parar.", f: "Fernanda: Aguanta la respiración 15 segundos mientras él lo hace. Repite.", s: 120 },
+            { t: "PAULO: COCINA EXTREMA", d: "Penetración en la cocina por 1 minuto.", p: "Paulo: Cárgala contra el mostrador y métela por completo durante 60 segundos sin parar.", f: "Fernanda: Envuélvelo con tus piernas y aguanta el ritmo fuerte.", s: 60 },
+            { t: "TRABALENGUAS PENETRADA", d: "Mente vs Placer.", p: "Paulo: Penétrala lo más rápido y fuerte que puedas.", f: "Fernanda: Di 'Tres tristes tigres' sin equivocarte mientras él te da duro.", s: 60 },
+            { t: "TODO ADENTRO (ORDEÑO)", d: "Control muscular interno.", p: "Paulo: Mete todo y quédate inmóvil.", f: "Fernanda: Intenta sacarlo usando solo tus músculos internos.", s: 90 },
+            { t: "NALGADAS RÍTMICAS", d: "Castigo y placer.", p: "Paulo: Da una nalgada fuerte cada vez que entres al fondo.", f: "Fernanda: Cuenta las nalgadas en voz alta sin perder el hilo.", s: 150 },
+            { t: "EL MUÑECO DE TRAPO", d: "Fuerza de Paulo.", p: "Paulo: Levántala contra la pared y penétrala sin que ella toque el suelo.", f: "Fernanda: Sujétate de su cuello y aprieta con tus piernas.", s: 120 },
+            { t: "SUMISIÓN: BOCA ABAJO", d: "Paulo toma el control total.", p: "Paulo: Ponla boca abajo, nalgas arriba. 10 nalgadas antes de entrar.", f: "Fernanda: Mantente quieta y acepta el castigo.", s: 180 },
+            { t: "SILLA: EL CABALLITO", d: "Reto en silla de cocina.", p: "Paulo: Siéntate en la silla. Deja que ella tome el control total.", f: "Fernanda: Siéntate sobre él de frente y bota con fuerza.", s: 150 },
+            { t: "RESISTENCIA FINAL", d: "Velocidad máxima.", p: "Paulo: Dale a máxima velocidad por 2 minutos.", f: "Fernanda: No puedes cerrar las piernas, mantenlas abiertas al máximo.", s: 120 }
+        ];
 
-    function resetUI() {
-        clearInterval(timerInterval);
-        document.getElementById('timer').innerText = "00:00";
-        document.getElementById('btn-start').style.display = "none";
-        document.getElementById('resultado').innerHTML = "";
-    }
+        function setModo(m) {
+            document.getElementById('m-esc').className = 'mode-btn ' + (m=='escalada'?'active':'');
+            document.getElementById('m-des').className = 'mode-btn ' + (m=='desafio'?'active':'');
+            document.getElementById('btn-escalada').style.display = m=='escalada'?'inline-block':'none';
+            document.getElementById('btn-desafio').style.display = m=='desafio'?'inline-block':'none';
+            resetUI();
+        }
 
-    function lanzarDados() {
-        resetUI();
-        const c1 = document.getElementById('cube1');
-        const c2 = document.getElementById('cube2');
-        
-        const rX = Math.floor(Math.random() * 5) * 90 + 720;
-        const rY = Math.floor(Math.random() * 5) * 90 + 720;
-        c1.style.transform = `rotateX(${rX}deg) rotateY(${rY}deg)`;
-        c2.style.transform = `rotateX(${rY}deg) rotateY(${rX}deg)`;
+        function resetUI() {
+            clearInterval(timerInterval);
+            document.getElementById('timer').innerText = "00:00";
+            document.getElementById('btn-iniciar-timer').style.display = "none";
+            document.getElementById('resultado').innerHTML = "";
+        }
 
-        setTimeout(() => {
-            let modo = document.getElementById('m-esc').classList.contains('active') ? 'esc' : 'des';
-            let item;
-            if(modo === 'esc') {
-                clicks++; if(clicks > 4) { nivel++; clicks = 0; }
-                let lista = nivel <= 2 ? acciones.fase1 : (nivel <= 4 ? acciones.fase2 : acciones.fase3);
-                item = lista[Math.floor(Math.random() * lista.length)];
-            } else {
-                item = retos[Math.floor(Math.random() * retos.length)];
-            }
-            mostrarResultado(item);
-        }, 1800);
-    }
+        function hablar(texto) {
+            window.speechSynthesis.cancel();
+            const msg = new SpeechSynthesisUtterance(texto);
+            msg.lang = 'es-ES';
+            window.speechSynthesis.speak(msg);
+        }
 
-    function mostrarResultado(item) {
-        sPendientes = item.s;
-        document.getElementById('resultado').innerHTML = `
-            <div class="card">
-                <div class="card-t">${item.t}</div>
-                <div class="role p-txt"><b>♂ PAULO</b>${item.p}</div>
-                <div class="role f-txt"><b>♀ FERNANDA</b>${item.f}</div>
-            </div>
-        `;
-        document.getElementById('btn-start').style.display = "block";
-        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-    }
+        function jugar() {
+            clicksEnNivel++;
+            if(clicksEnNivel > 4) { nivel++; clicksEnNivel = 0; } 
+            let lista = nivel <= 2 ? acciones.fase1 : (nivel <= 4 ? acciones.fase2 : acciones.fase3);
+            const item = lista[Math.floor(Math.random() * lista.length)];
+            mostrar(item, '#00f2ff');
+            document.getElementById('fase-tag').innerText = "NIVEL " + nivel;
+        }
 
-    function iniciarConteo() {
-        document.getElementById('btn-start').style.display = "none";
-        let s = sPendientes;
-        timerInterval = setInterval(() => {
-            let m = Math.floor(s/60); let r = s%60;
-            document.getElementById('timer').innerText = `${m}:${r<10?'0':''}${r}`;
-            if(s-- <= 0) { 
-                clearInterval(timerInterval); 
-                document.getElementById('timer').innerText = "DONE"; 
-            }
-        }, 1000);
-    }
-</script>
+        function lanzarReto() {
+            const item = retos[Math.floor(Math.random() * retos.length)];
+            mostrar(item, '#ffd700');
+        }
+
+        function mostrar(item, color) {
+            resetUI();
+            document.getElementById('dice').style.transform = "rotate(720deg)";
+            segundosPendientes = item.s;
+            setTimeout(() => {
+                document.getElementById('resultado').innerHTML = `
+                    <div class="card" style="border-color:${color}">
+                        <div class="card-t">${item.t}</div>
+                        ${item.d ? `<div class="card-d">${item.d}</div>` : ''}
+                        <div class="role-box">
+                            <div class="role-p"><b>♂ PAULO:</b> ${item.p}</div>
+                            <div class="role-f"><b>♀ FERNANDA:</b> ${item.f}</div>
+                        </div>
+                    </div>
+                `;
+                hablar(item.t + ". Acomódense y pulsen empezar.");
+                document.getElementById('btn-iniciar-timer').style.display = "inline-block";
+                document.getElementById('dice').style.transform = "rotate(0deg)";
+            }, 500);
+        }
+
+        function activarReloj() {
+            document.getElementById('btn-iniciar-timer').style.display = "none";
+            iniciarTimer(segundosPendientes);
+            hablar("¡Tiempo en marcha!");
+        }
+
+        function iniciarTimer(s) {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                let m = Math.floor(s/60); let r = s%60;
+                document.getElementById('timer').innerText = `${m}:${r<10?'0':''}${r}`;
+                if(s-- <= 0) { 
+                    clearInterval(timerInterval); 
+                    hablar("¡Tiempo fuera!"); 
+                }
+            }, 1000);
+        }
+    </script>
 </body>
 </html>
