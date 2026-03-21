@@ -2,38 +2,83 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>🔥 P & F: Mega Hardcore Edition 🔥</title>
     <style>
         :root { --accent: #00f2ff; --bg: #050505; --gold: #ffd700; --deep-red: #ff0033; --green: #2ecc71; --pink: #ff1493; }
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; text-align: center; padding-bottom: 50px; }
-        .header { padding: 15px; background: #111; border-bottom: 2px solid var(--deep-red); }
-        .mode-selector { display: flex; justify-content: center; gap: 5px; margin: 10px 0; }
-        .mode-btn { padding: 10px; border: 1px solid #333; background: #000; color: #666; border-radius: 10px; font-size: 11px; cursor: pointer; flex: 1; max-width: 150px; }
+        
+        /* Ajuste para iPhone: evita el zoom y mejora el scroll */
+        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+        
+        body { 
+            margin: 0; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            background: var(--bg); 
+            color: white; 
+            text-align: center; 
+            padding-bottom: env(safe-area-inset-bottom, 50px); 
+            padding-top: env(safe-area-inset-top, 10px);
+            overflow-x: hidden;
+        }
+
+        .header { padding: 20px 15px; background: #111; border-bottom: 2px solid var(--deep-red); }
+        h1 { font-size: 22px; margin: 0 0 10px 0; }
+
+        .mode-selector { display: flex; justify-content: center; gap: 8px; margin: 15px 10px; }
+        .mode-btn { 
+            padding: 12px 8px; 
+            border: 1px solid #333; 
+            background: #000; 
+            color: #666; 
+            border-radius: 12px; 
+            font-size: 10px; 
+            font-weight: bold;
+            cursor: pointer; 
+            flex: 1; 
+            text-transform: uppercase;
+        }
         .mode-btn.active { border-color: var(--accent); color: white; box-shadow: 0 0 10px var(--accent); }
+
+        /* Contenedores de visualización */
+        .dice-container { margin: 25px auto; width: 110px; height: 110px; border-radius: 50%; border: 4px solid var(--accent); display: flex; align-items: center; justify-content: center; background: rgba(0,242,255,0.05); }
+        #dice { font-size: 55px; transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: inline-block; }
+
+        #roulette-box { display: none; width: 140px; height: 140px; border-radius: 50%; border: 5px solid white; margin: 25px auto; position: relative; transition: transform 3.2s cubic-bezier(0.1, 0, 0.2, 1); background: conic-gradient(var(--pink) 0% 50%, #3498db 50% 100%); box-shadow: 0 0 20px rgba(255,255,255,0.2); }
+        .pointer { display: none; width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 25px solid white; margin: 0 auto; position: relative; z-index: 10; top: 15px; filter: drop-shadow(0 2px 5px black); }
+
+        /* Botones optimizados para pulgar iPhone */
+        .btn { 
+            width: 92%; 
+            max-width: 380px; 
+            padding: 18px; 
+            border: none; 
+            border-radius: 18px; 
+            font-size: 17px; 
+            font-weight: 800; 
+            color: white; 
+            cursor: pointer; 
+            margin: 8px auto; 
+            display: block;
+            transition: transform 0.1s;
+        }
+        .btn:active { transform: scale(0.96); opacity: 0.9; }
         
-        .dice-container { margin: 20px auto; width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--accent); display: flex; align-items: center; justify-content: center; }
-        #dice { font-size: 50px; transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: inline-block; }
-
-        /* NUEVA RULETA */
-        #roulette-box { display: none; width: 140px; height: 140px; border-radius: 50%; border: 5px solid white; margin: 20px auto; position: relative; transition: transform 3s cubic-bezier(0.1, 0, 0.2, 1); background: conic-gradient(var(--pink) 0% 50%, #3498db 50% 100%); }
-        .pointer { display: none; width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 25px solid white; margin: 0 auto; position: relative; z-index: 10; top: 10px; }
-
-        .btn { width: 90%; max-width: 350px; padding: 20px; border: none; border-radius: 15px; font-size: 18px; font-weight: bold; color: white; cursor: pointer; margin: 8px 0; transition: 0.3s; }
-        .btn-main { background: linear-gradient(45deg, var(--deep-red), #8a2be2); }
-        .btn-challenge { background: linear-gradient(45deg, #444, #111); border: 1px solid var(--gold); color: var(--gold); }
+        .btn-main { background: linear-gradient(45deg, var(--deep-red), #8a2be2); box-shadow: 0 4px 15px rgba(255, 0, 51, 0.3); }
+        .btn-challenge { background: #111; border: 2px solid var(--gold); color: var(--gold); }
         .btn-punish { background: linear-gradient(45deg, #ff8c00, var(--pink)); border: 2px solid white; box-shadow: 0 0 15px var(--pink); }
-        .btn-start { background: var(--green); display: none; box-shadow: 0 0 20px var(--green); margin-top: 10px; }
+        .btn-start { background: var(--green); display: none; box-shadow: 0 0 20px var(--green); margin-top: 15px; }
+
+        #timer { font-size: 85px; font-weight: 900; margin: 15px 0; font-family: 'Courier New', monospace; color: #fff; letter-spacing: -2px; }
         
-        #timer { font-size: 75px; font-weight: bold; margin: 10px 0; font-family: monospace; color: #fff; }
-        #resultado { width: 92%; margin: 0 auto; }
-        .card { background: #111; border-left: 5px solid var(--accent); padding: 20px; border-radius: 15px; text-align: left; margin-bottom: 15px; animation: slideIn 0.5s ease; }
-        .card-t { font-size: 19px; font-weight: bold; color: var(--accent); text-transform: uppercase; }
-        .card-d { font-size: 14px; color: var(--gold); margin: 8px 0; font-style: italic; border-bottom: 1px solid #222; padding-bottom: 8px; }
-        .role-box { margin-top: 12px; font-size: 14px; line-height: 1.5; }
-        .role-p { color: #3498db; margin-bottom: 12px; }
-        .role-f { color: #e74c3c; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        #resultado { width: 92%; margin: 20px auto; padding-bottom: 30px; }
+        .card { background: #111; border-left: 6px solid var(--accent); padding: 20px; border-radius: 18px; text-align: left; margin-bottom: 20px; animation: slideIn 0.5s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .card-t { font-size: 20px; font-weight: 900; color: var(--accent); text-transform: uppercase; margin-bottom: 5px; }
+        .card-d { font-size: 14px; color: var(--gold); margin: 10px 0; font-style: italic; border-bottom: 1px solid #222; padding-bottom: 10px; line-height: 1.3; }
+        .role-box { margin-top: 15px; font-size: 15px; line-height: 1.5; }
+        .role-p { color: #5dade2; margin-bottom: 15px; }
+        .role-f { color: #ec7063; }
+
+        @keyframes slideIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -41,19 +86,21 @@
     <div class="header">
         <h1>PAULO & FERNANDA</h1>
         <div class="mode-selector">
-            <div id="m-esc" class="mode-btn active" onclick="setModo('escalada')">MODO ESCALADA (LENTO)</div>
-            <div id="m-des" class="mode-btn" onclick="setModo('desafio')">RETOS EXTREMOS (+15)</div>
+            <div id="m-esc" class="mode-btn active" onclick="setModo('escalada')">MODO ESCALADA</div>
+            <div id="m-des" class="mode-btn" onclick="setModo('desafio')">RETOS EXTREMOS</div>
         </div>
-        <div id="fase-tag" style="font-size: 12px; color: var(--accent);">NIVEL 1: CALENTAMIENTO</div>
+        <div id="fase-tag" style="font-size: 12px; color: var(--accent); font-weight: bold; letter-spacing: 1px;">NIVEL 1: CALENTAMIENTO</div>
     </div>
 
     <div class="pointer" id="pointer"></div>
     <div id="roulette-box"></div>
     <div class="dice-container" id="dice-box"><div id="dice">🎲</div></div>
 
-    <button id="btn-escalada" class="btn btn-main" onclick="jugar()">🔥 GIRAR DADO</button>
-    <button id="btn-desafio" class="btn btn-challenge" style="display:none;" onclick="lanzarReto()">😈 RETO ALEATORIO</button>
-    <button id="btn-punish" class="btn btn-punish" onclick="girarRuleta()">🎡 RULETA DE CASTIGOS</button>
+    <div style="padding: 0 10px;">
+        <button id="btn-escalada" class="btn btn-main" onclick="jugar()">🔥 GIRAR DADO</button>
+        <button id="btn-desafio" class="btn btn-challenge" style="display:none;" onclick="lanzarReto()">😈 RETO ALEATORIO</button>
+        <button id="btn-punish" class="btn btn-punish" onclick="girarRuleta()">🎡 RULETA DE CASTIGOS</button>
+    </div>
     
     <div id="timer">00:00</div>
     <button id="btn-iniciar-timer" class="btn btn-start" onclick="activarReloj()">▶️ EMPEZAR AHORA</button>
@@ -88,28 +135,28 @@
         };
 
         const retos = [
-            { t: "EL 69 (ESTIMULACIÓN MUTUA)", d: "Placer dual invertido.", p: "Paulo: Acuéstate boca arriba. Fernanda se coloca sobre ti pero al revés, con su cara en tu entrepierna.", f: "Fernanda: Tu cara en su entrepierna, tu sexo sobre su boca. Ambos trabajen con la lengua al mismo tiempo.", s: 180 },
-            { t: "MISIONERO: TOBILLOS AL HOMBRO", d: "Ángulo de penetración extrema.", p: "Paulo: En posición misionero, sube sus pies hasta tus hombros. Esto permitirá que entres más profundo que nunca.", f: "Fernanda: Sujeta las manos de Paulo con fuerza. Levanta la pelvis para recibir cada embestida al fondo.", s: 150 },
-            { t: "LA POSICIÓN 'W'", d: "Apertura total de caderas.", p: "Paulo: Arrodíllate frente a ella. Penétrala mientras ella dobla sus rodillas hacia afuera al máximo.", f: "Fernanda: Piernas abiertas, rodillas dobladas hacia tus costados formando una W. Deja el camino totalmente libre para él.", s: 150 },
-            { t: "LA FUSIÓN (ABRAZO SEXUAL)", d: "Sexo sentado con cercanía total.", p: "Paulo: Siéntate con las piernas cruzadas. Fernanda se sienta sobre tu regazo envolviéndote con sus piernas.", f: "Fernanda: Abraza a Paulo por el cuello, pecho con pecho. Muévete subiendo y bajando mientras se besan.", s: 180 },
-            { t: "VAQUERA EN CUCLILLAS", d: "Control total de Fernanda.", p: "Paulo: Acostado boca arriba. Mantén tus manos en sus caderas para ayudarla a bajar con fuerza.", f: "Fernanda: Ponte sobre él pero apóyate solo en tus pies (en cuclillas), subiendo y bajando con un ritmo rápido.", s: 150 },
-            { t: "VAQUERA INVERTIDA INCLINADA", d: "Placer visual y profundidad.", p: "Paulo: Mira cómo su espalda se arquea dándote la espalda.", f: "Fernanda: De espaldas a Paulo, siéntate sobre él e inclina tu cuerpo hacia adelante para cambiar el ángulo interno.", s: 150 },
-            { t: "GARGANTA PROFUNDA (RETO)", d: "Entrega total oral.", p: "Paulo: Siéntate quieto. No te muevas, deja que ella decida hasta dónde llegar.", f: "Fernanda: Introduce su miembro lo más profundo posible, controlando la respiración y manteniendo la succión.", s: 120 },
-            { t: "RESISTENCIA (FERNANDA RECIBE)", d: "Reto de aguante sensorial.", p: "Paulo: Lame su clítoris con una velocidad constante y frenética sin parar ni un segundo.", f: "Fernanda: No puedes cerrar las piernas ni apartar a Paulo. Debes aguantar el placer intenso sin moverte.", s: 120 },
-            { t: "PAULO: COCINA EXTREMA", d: "Sexo en el mostrador.", p: "Paulo: Cárgala y siéntala en el mostrador de la cocina. Penétrala con fuerza bruta por un minuto entero.", f: "Fernanda: Cruza tus piernas con fuerza en su espalda para no caerte y disfruta el cambio de lugar.", s: 60 },
-            { t: "TRABALENGUAS PENETRADA", d: "Mente vs Cuerpo.", p: "Paulo: Dale con tu máximo ritmo y fuerza en posición perrito.", f: "Fernanda: Di 'Tres tristes tigres' en voz alta sin equivocarte mientras sientes sus embestidas.", s: 60 },
-            { t: "TODO ADENTRO (ORDEÑO)", d: "Succión vaginal.", p: "Paulo: Introduce todo tu miembro y quédate 100% inmóvil.", f: "Fernanda: Intenta 'ordeñar' su miembro usando solo tus músculos internos para apretarlo y tratar de sacarlo.", s: 90 },
-            { t: "NALGADAS RÍTMICAS", d: "Estímulo sonoro y físico.", p: "Paulo: Da una nalgada fuerte cada vez que entres al fondo en posición de perrito.", f: "Fernanda: Cuenta las nalgadas en voz alta. Si pierdes la cuenta, Paulo te da 5 extras.", s: 150 },
-            { t: "EL MUÑECO DE TRAPO", d: "Paulo toma el mando.", p: "Paulo: Levántala contra la pared y penétrala sin que sus pies toquen el suelo en ningún momento.", f: "Fernanda: Sujétate de su cuello. Debes mantenerte en el aire usando solo la fuerza de tus piernas sobre él.", s: 120 },
-            { t: "SUMISIÓN: BOCA ABAJO", d: "Control total de Paulo.", p: "Paulo: Ponla boca abajo, nalgas arriba. Dale 10 nalgadas antes de entrar sin avisar.", f: "Fernanda: Mantén la cara contra la almohada. Acepta el ritmo que Paulo decida imponer.", s: 180 },
-            { t: "SILLA: EL CABALLITO", d: "Vaquera rítmica.", p: "Paulo: Siéntate en una silla firme. Deja que ella tome el control del movimiento.", f: "Fernanda: Siéntate sobre él mirando hacia adelante y rebota con fuerza usando tus pies como resorte.", s: 150 },
-            { t: "RESISTENCIA FINAL", d: "Velocidad máxima.", p: "Paulo: Dale a máxima velocidad por 2 minutos sin detenerte por nada.", f: "Fernanda: No puedes cerrar las piernas, mantenlas abiertas al máximo para recibir todo el impacto.", s: 120 }
+            { t: "EL 69", d: "Placer dual invertido.", p: "Paulo: Acuéstate boca arriba. Fernanda se coloca sobre ti pero al revés.", f: "Fernanda: Tu cara en su entrepierna, tu sexo sobre su boca. Trabajen juntos.", s: 180 },
+            { t: "MISIONERO: TOBILLOS AL HOMBRO", d: "Ángulo de penetración extrema.", p: "Paulo: Sube sus pies hasta tus hombros. Esto permitirá entrar más profundo.", f: "Fernanda: Sujeta sus manos. Levanta la pelvis para recibir cada embestida.", s: 150 },
+            { t: "LA POSICIÓN 'W'", d: "Apertura total de caderas.", p: "Paulo: Penétrala mientras ella dobla sus rodillas hacia afuera al máximo.", f: "Fernanda: Piernas abiertas en W. Deja el camino totalmente libre.", s: 150 },
+            { t: "LA FUSIÓN", d: "Sexo sentado con cercanía total.", p: "Paulo: Siéntate con las piernas cruzadas. Ella se sienta sobre tu regazo.", f: "Fernanda: Abrázalo por el cuello. Muévete subiendo y bajando.", s: 180 },
+            { t: "VAQUERA EN CUCLILLAS", d: "Control total de Fernanda.", p: "Paulo: Acostado. Manos en sus caderas para ayudarla a bajar con fuerza.", f: "Fernanda: Ponte en cuclillas sobre él, subiendo y bajando rápido.", s: 150 },
+            { t: "VAQUERA INVERTIDA", d: "Placer visual y profundidad.", p: "Paulo: Disfruta del espectáculo de su espalda arqueándose.", f: "Fernanda: De espaldas a Paulo, siéntate e inclina tu cuerpo hacia adelante.", s: 150 },
+            { t: "GARGANTA PROFUNDA (RETO)", d: "Entrega total oral.", p: "Paulo: Quédate quieto. Deja que ella decida hasta dónde llegar.", f: "Fernanda: Introduce su miembro lo más profundo posible.", s: 120 },
+            { t: "RESISTENCIA (FERNANDA RECIBE)", d: "Reto de aguante sensorial.", p: "Paulo: Lame su clítoris con velocidad constante y frenética.", f: "Fernanda: No cierres las piernas. Aguanta el placer sin moverte.", s: 120 },
+            { t: "PAULO: COCINA EXTREMA", d: "Sexo en el mostrador.", p: "Paulo: Cárgala y siéntala en el mostrador. Dale con fuerza bruta.", f: "Fernanda: Cruza tus piernas con fuerza en su espalda.", s: 60 },
+            { t: "TRABALENGUAS PENETRADA", d: "Mente vs Cuerpo.", p: "Paulo: Dale con tu máximo ritmo en posición perrito.", f: "Fernanda: Di 'Tres tristes tigres' sin equivocarte mientras te penetra.", s: 60 },
+            { t: "TODO ADENTRO (ORDEÑO)", d: "Succión vaginal.", p: "Paulo: Introduce todo tu miembro y quédate 100% inmóvil.", f: "Fernanda: Intenta 'ordeñarlo' usando solo tus músculos internos.", s: 90 },
+            { t: "NALGADAS RÍTMICAS", d: "Estímulo sonoro y físico.", p: "Paulo: Da una nalgada fuerte cada vez que entres al fondo.", f: "Fernanda: Cuenta las nalgadas en voz alta.", s: 150 },
+            { t: "EL MUÑECO DE TRAPO", d: "Paulo toma el mando.", p: "Paulo: Levántala contra la pared y penétrala sin que toque el suelo.", f: "Fernanda: Sujétate de su cuello. Mantente en el aire con tus piernas.", s: 120 },
+            { t: "SUMISIÓN: BOCA ABAJO", d: "Control total de Paulo.", p: "Paulo: Ponla boca abajo, nalgas arriba. 10 nalgadas y entra sin avisar.", f: "Fernanda: Cara contra la almohada. Acepta su ritmo.", s: 180 },
+            { t: "SILLA: EL CABALLITO", d: "Vaquera rítmica.", p: "Paulo: Siéntate en una silla firme.", f: "Fernanda: Siéntate sobre él mirando hacia adelante y rebota con fuerza.", s: 150 },
+            { t: "RESISTENCIA FINAL", d: "Velocidad máxima.", p: "Paulo: Dale a máxima velocidad por 2 minutos sin detenerte.", f: "Fernanda: Piernas abiertas al máximo para recibir todo el impacto.", s: 120 }
         ];
 
         const castigosP = [
-            { t: "CASTIGO PAULO: ESCLAVO DEL CLÍTORIS", d: "Adoración total.", p: "Paulo: Solo lengua y labios. Círculos rápidos y firmes por 5 min. Manos atrás.", f: "Fernanda: Siéntate en su cara. Tú mandas el ritmo. Si para, nalgada.", s: 300 },
+            { t: "CASTIGO PAULO: ESCLAVO DEL CLÍTORIS", d: "Adoración total.", p: "Paulo: Solo lengua y labios. Círculos rápidos por 5 min. Manos atrás.", f: "Fernanda: Siéntate en su cara. Tú mandas el ritmo.", s: 300 },
             { t: "CASTIGO PAULO: LA SILLA DE PLACER", d: "Servicio oral.", p: "Paulo: Arrodillado. Úsala oralmente con intensidad buscando su clímax.", f: "Fernanda: Sujétalo del cabello para marcar la velocidad.", s: 300 },
-            { t: "CASTIGO PAULO: PENETRACIÓN DEDOS", d: "Punto G al límite.", p: "Paulo: 2 dedos palma arriba (ven aquí) rítmicamente sin parar.", f: "Fernanda: Tócate el clítoris mientras Paulo te penetra con dedos.", s: 300 }
+            { t: "CASTIGO PAULO: PENETRACIÓN DEDOS", d: "Punto G al límite.", p: "Paulo: 2 dedos palma arriba rítmicamente sin parar.", f: "Fernanda: Tócate el clítoris mientras Paulo te penetra con dedos.", s: 300 }
         ];
 
         const castigosF = [
@@ -141,8 +188,8 @@
         function setModo(m) {
             document.getElementById('m-esc').className = 'mode-btn ' + (m=='escalada'?'active':'');
             document.getElementById('m-des').className = 'mode-btn ' + (m=='desafio'?'active':'');
-            document.getElementById('btn-escalada').style.display = m=='escalada'?'inline-block':'none';
-            document.getElementById('btn-desafio').style.display = m=='desafio'?'inline-block':'none';
+            document.getElementById('btn-escalada').style.display = m=='escalada'?'block':'none';
+            document.getElementById('btn-desafio').style.display = m=='desafio'?'block':'none';
             resetUI();
         }
 
@@ -158,22 +205,27 @@
         }
 
         function hablar(texto) {
-            window.speechSynthesis.cancel();
-            const msg = new SpeechSynthesisUtterance(texto);
-            msg.lang = 'es-ES';
-            window.speechSynthesis.speak(msg);
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const msg = new SpeechSynthesisUtterance(texto);
+                msg.lang = 'es-ES';
+                msg.rate = 0.9;
+                window.speechSynthesis.speak(msg);
+            }
         }
 
         function jugar() {
             clicksEnNivel++;
             if(clicksEnNivel > 4) { nivel++; clicksEnNivel = 0; } 
             let lista = nivel <= 2 ? acciones.fase1 : (nivel <= 4 ? acciones.fase2 : acciones.fase3);
-            mostrar(lista[Math.floor(Math.random() * lista.length)], '#00f2ff');
+            const item = lista[Math.floor(Math.random() * lista.length)];
+            mostrar(item, '#00f2ff');
             document.getElementById('fase-tag').innerText = "NIVEL " + (nivel > 3 ? 3 : nivel);
         }
 
         function lanzarReto() {
-            mostrar(retos[Math.floor(Math.random() * retos.length)], '#ffd700');
+            const item = retos[Math.floor(Math.random() * retos.length)];
+            mostrar(item, '#ffd700');
         }
 
         function mostrar(item, color) {
@@ -191,14 +243,15 @@
                     </div>
                 `;
                 hablar(item.t);
-                document.getElementById('btn-iniciar-timer').style.display = "inline-block";
+                document.getElementById('btn-iniciar-timer').style.display = "block";
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
             }, 600);
         }
 
         function activarReloj() {
             document.getElementById('btn-iniciar-timer').style.display = "none";
             let s = segundosPendientes;
-            hablar("¡Tiempo iniciado!");
+            hablar("Tiempo iniciado");
             clearInterval(timerInterval);
             timerInterval = setInterval(() => {
                 let m = Math.floor(s/60); let r = s%60;
