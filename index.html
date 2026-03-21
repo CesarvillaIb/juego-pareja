@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔥 P & F: Master Edition 🔥</title>
+    <title>🔥 P & F: Master Edition V2 🔥</title>
     <style>
-        :root { --accent: #00f2ff; --bg: #050505; --gold: #ffd700; --deep-red: #ff0033; }
+        :root { --accent: #00f2ff; --bg: #050505; --gold: #ffd700; --deep-red: #ff0033; --green: #2ecc71; }
         body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; text-align: center; padding-bottom: 50px; }
         
         .header { padding: 15px; background: #111; border-bottom: 2px solid var(--deep-red); }
@@ -19,14 +19,18 @@
         .btn { width: 90%; max-width: 350px; padding: 20px; border: none; border-radius: 15px; font-size: 18px; font-weight: bold; color: white; cursor: pointer; margin: 10px 0; }
         .btn-main { background: linear-gradient(45deg, var(--deep-red), #8a2be2); }
         .btn-challenge { background: linear-gradient(45deg, #444, #111); border: 1px solid var(--gold); color: var(--gold); }
+        .btn-start { background: var(--green); display: none; margin-top: 10px; box-shadow: 0 0 15px var(--green); }
 
         #timer { font-size: 70px; font-weight: bold; margin: 10px 0; font-family: monospace; color: #fff; }
         #resultado { width: 92%; margin: 0 auto; }
         
         .card { background: #111; border-left: 5px solid var(--accent); padding: 20px; border-radius: 15px; text-align: left; margin-bottom: 15px; }
         .card-t { font-size: 18px; font-weight: bold; color: var(--accent); text-transform: uppercase; }
-        .card-d { font-size: 15px; color: #ccc; margin-top: 10px; line-height: 1.4; }
-        .kamasutra-tip { font-size: 13px; color: #888; border-top: 1px solid #222; margin-top: 10px; padding-top: 10px; font-style: italic; }
+        .card-d { font-size: 15px; color: #ccc; margin-top: 10px; line-height: 1.4; border-bottom: 1px solid #222; padding-bottom: 10px; }
+        .role-box { margin-top: 10px; font-size: 14px; }
+        .role-p { color: #3498db; margin-bottom: 5px; }
+        .role-f { color: #e74c3c; }
+        .kamasutra-tip { font-size: 13px; color: var(--gold); margin-top: 10px; font-style: italic; }
     </style>
 </head>
 <body>
@@ -42,48 +46,41 @@
 
     <div class="dice-container" id="dice-box"><div id="dice">🎲</div></div>
 
-    <button id="btn-escalada" class="btn btn-main" onclick="jugar()">🔥 SIGUIENTE ACCIÓN</button>
+    <button id="btn-escalada" class="btn btn-main" onclick="jugar()">🔥 GIRAR DADO</button>
     <button id="btn-desafio" class="btn btn-challenge" style="display:none;" onclick="lanzarReto()">😈 RETO EXTREMO</button>
     
     <div id="timer">00:00</div>
+    <button id="btn-iniciar-timer" class="btn btn-start" onclick="activarReloj()">▶️ EMPEZAR RETO</button>
+
     <div id="resultado"></div>
 
     <script>
         let clicksEnNivel = 0;
         let nivel = 1;
         let timerInterval;
-        const nombres = ["Paulo", "Fernanda"];
+        let segundosPendientes = 0;
 
         const acciones = {
             fase1: [
-                { t: "MASAJE CON LENGUA", d: "Paulo recorre la espalda de Fernanda con la punta de la lengua hasta llegar a su zona íntima.", s: 120 },
-                { t: "SUCCIÓN DE PEZONES", d: "El que tenga el turno succiona fuerte mientras estimula el clítoris o pene con la mano.", s: 180 },
-                { t: "DEDOS EXPLORADORES", d: "Introduce 3 dedos y busca el punto G con movimientos de 'ven aquí'. Ritmo rápido.", s: 300 },
-                { t: "MORDISCO EN MUSLOS", d: "Muerde la parte interna de los muslos sin llegar a la penetración aún.", s: 60 },
-                { t: "ACICALAMIENTO", d: "Usa solo los labios para besar cada centímetro de su zona genital.", s: 120 }
+                { t: "CAMINO DE SALIVA", d: "Recorrido erótico de espalda.", p: "Paulo: Recorre con tu lengua desde su nuca hasta sus glúteos.", f: "Fernanda: Relájate y gime lo que sientes.", s: 120 },
+                { t: "SUCCIÓN Y ROCE", d: "Estimulación oral y manual combinada.", p: "Paulo: Succiona sus pezones con fuerza.", f: "Fernanda: Usa tus manos para masajear el pene de Paulo al mismo ritmo.", s: 180 },
+                { t: "EL PUNTO G", d: "Búsqueda de placer interno.", p: "Paulo: Introduce 2 dedos palma arriba y haz el gesto de 'ven aquí'.", f: "Fernanda: Mueve tu cadera hacia sus dedos para aumentar la presión.", s: 240 }
             ],
             fase2: [
-                { t: "PERRITO DE RODILLAS", d: "Fernanda en 4, pero Paulo se mantiene de rodillas rectas para entrar más profundo.", s: 180, k: "Tip: Paulo, sujeta sus caderas y tira de ellas hacia ti mientras empujas." },
-                { t: "EL MISIONERO ELEVADO", d: "Pon almohadas bajo la cadera de Fernanda. Paulo entra con las piernas de ella en su pecho.", s: 240, k: "Tip: Esto cambia el ángulo y permite rozar el punto G en cada entrada." },
-                { t: "LA SILLA CABALGANTE", d: "Paulo sentado, Fernanda se sienta sobre él dándole la cara. Muévanse como si bailaran.", s: 180, k: "Tip: Fernanda, apóyate en sus hombros para subir y bajar con fuerza." },
-                { t: "CUCHARITA PROFUNDA", d: "Ambos de lado, Paulo detrás de Fernanda. Penetra despacio pero hasta el fondo.", s: 180 }
+                { t: "PERRITO DE PODER", d: "Penetración desde atrás.", p: "Paulo: Arrodillado, sujeta con fuerza el cabello o cintura de Fernanda.", f: "Fernanda: Apoya los codos en la cama y baja el pecho.", k: "Tip: Paulo, empuja con ritmo seco.", s: 180 },
+                { t: "MISIONERO CON APOYO", d: "Ángulo de entrada máxima.", p: "Paulo: Pon almohadas bajo su cadera y entra lo más profundo que puedas.", f: "Fernanda: Cruza tus piernas detrás de la espalda de Paulo.", s: 240 }
             ],
             fase3: [
-                { t: "LA ARAÑA (KAMASUTRA)", d: "Sentados frente a frente, piernas entrelazadas. Abrácense fuerte y rotas las caderas.", s: 300, k: "Tip: No es entrar y salir, es rotar y exprimir. Contacto total de piel." },
-                { t: "EL MOLINILLO", d: "Fernanda sobre Paulo de espaldas, inclinada hacia adelante tocando sus pies.", s: 300, k: "Tip: Paulo, agarra sus nalgas y ayúdala a bajar con violencia." },
-                { t: "EL TRIÁNGULO DE HIERRO", d: "Fernanda con manos en el suelo y pies al hombro de Paulo. Paulo de pie o rodillas.", s: 200, k: "Tip: La gravedad ayuda a que Paulo entre al máximo. ¡Dale duro!" },
-                { t: "CLÍMAX LIBRE", d: "Elijan la que más les duela de placer y terminen ahora mismo.", s: 600 }
+                { t: "LA ARAÑA (KAMASUTRA)", d: "Contacto total frente a frente.", p: "Paulo: Sentado, deja que ella te envuelva. Mantén la penetración fija.", f: "Fernanda: Sobre él, rodea su cintura con tus piernas y haz círculos con tu cadera.", k: "Tip: Abrácense fuerte.", s: 300 },
+                { t: "CLÍMAX LIBRE", d: "Final del juego.", p: "Paulo: Elige la posición que más te guste.", f: "Fernanda: No pares hasta que ambos terminen.", s: 600 }
             ]
         };
 
         const retos = [
-            { t: "RESISTENCIA ORAL (FERNANDA)", d: "Paulo recibe sexo oral. Fernanda debe meterse TODO a la boca y aguantar lo más posible sin sacarla.", s: 120 },
-            { t: "RESISTENCIA ORAL (PAULO)", d: "Fernanda recibe. Paulo debe lamer intensamente mientras Fernanda aguanta la respiración por intervalos de 15 segundos.", s: 120 },
-            { t: "MISIÓN: COCINA", d: "¡VAYAN A LA COCINA! Paulo la penetra contra el mostrador por 1 minuto exacto. ¡CORRAN!", s: 60 },
-            { t: "EL TRABALENGUAS SUCIO", d: "Fernanda debe decir: 'Tres tristes tigres tragaban trigo' mientras Paulo la penetra lo más rápido que pueda.", s: 60 },
-            { t: "DIME MI NOMBRE", d: "Paulo debe decir el nombre completo de Fernanda al revés mientras le da placer oral.", s: 45 },
-            { t: "NALGADAS RÍTMICAS", d: "Paulo da una nalgada cada vez que entra. Cada vez más fuerte.", s: 120 },
-            { t: "TODO ADENTRO", d: "Paulo mete todo y se queda inmóvil adentro. Fernanda debe intentar sacarlo solo usando sus músculos internos.", s: 90 }
+            { t: "GARGANTA PROFUNDA (PAULO RECIBE)", d: "Reto de resistencia oral extrema.", p: "Paulo: No te muevas, deja que ella controle la profundidad.", f: "Fernanda: Mete TODO a la boca y aguanta la respiración lo más que puedas sin sacarlo.", s: 120 },
+            { t: "RESISTENCIA (FERNANDA RECIBE)", d: "Reto de aguante sensorial.", p: "Paulo: Lame su clítoris con mucha intensidad sin parar.", f: "Fernanda: Aguanta la respiración 15 segundos mientras él lo hace. Repite.", s: 120 },
+            { t: "MISIÓN COCINA", d: "Sexo express en lugar prohibido.", p: "Paulo: Levántala contra el mostrador de la cocina.", f: "Fernanda: Cruza tus piernas en su cintura y busca el clímax rápido.", s: 90 },
+            { t: "EL TRABALENGUAS", d: "Concentración bajo presión.", p: "Paulo: Penetra a Fernanda lo más rápido que puedas.", f: "Fernanda: Debes decir 'Tres tristes tigres' sin equivocarte mientras él te da duro.", s: 60 }
         ];
 
         function setModo(m) {
@@ -91,7 +88,14 @@
             document.getElementById('m-des').className = 'mode-btn ' + (m=='desafio'?'active':'');
             document.getElementById('btn-escalada').style.display = m=='escalada'?'inline-block':'none';
             document.getElementById('btn-desafio').style.display = m=='desafio'?'inline-block':'none';
-            document.getElementById('dice').innerText = m=='escalada'?'🎲':'😈';
+            resetUI();
+        }
+
+        function resetUI() {
+            clearInterval(timerInterval);
+            document.getElementById('timer').innerText = "00:00";
+            document.getElementById('btn-iniciar-timer').style.display = "none";
+            document.getElementById('resultado').innerHTML = "";
         }
 
         function hablar(texto) {
@@ -103,34 +107,43 @@
 
         function jugar() {
             clicksEnNivel++;
-            if(clicksEnNivel > 2) { nivel++; clicksEnNivel = 0; } // Sube cada 3 acciones
-            
-            let lista = nivel <= 3 ? acciones.fase1 : (nivel <= 6 ? acciones.fase2 : acciones.fase3);
-            const item = lista[Math.floor(Math.random() * lista.length)];
-            
-            mostrar(item, '#00f2ff');
-            document.getElementById('fase-tag').innerText = "NIVEL " + nivel + (nivel < 4 ? ": CALOR" : ": ACCIÓN");
+            if(clicksEnNivel > 3) { nivel++; clicksEnNivel = 0; } 
+            let lista = nivel <= 2 ? acciones.fase1 : (nivel <= 4 ? acciones.fase2 : acciones.fase3);
+            mostrar(lista[Math.floor(Math.random() * lista.length)], '#00f2ff');
+            document.getElementById('fase-tag').innerText = "NIVEL " + nivel;
         }
 
         function lanzarReto() {
-            const item = retos[Math.floor(Math.random() * retos.length)];
-            mostrar(item, '#ffd700');
+            mostrar(retos[Math.floor(Math.random() * retos.length)], '#ffd700');
         }
 
         function mostrar(item, color) {
+            resetUI();
             document.getElementById('dice').style.transform = "rotate(360deg)";
+            segundosPendientes = item.s;
+            
             setTimeout(() => {
                 document.getElementById('resultado').innerHTML = `
                     <div class="card" style="border-color:${color}">
                         <div class="card-t">${item.t}</div>
                         <div class="card-d">${item.d}</div>
-                        ${item.k ? `<div class="kamasutra-tip"><b>Kamasutra:</b> ${item.k}</div>` : ''}
+                        <div class="role-box">
+                            <div class="role-p"><b>♂ Paulo:</b> ${item.p}</div>
+                            <div class="role-f"><b>♀ Fernanda:</b> ${item.f}</div>
+                        </div>
+                        ${item.k ? `<div class="kamasutra-tip">💡 ${item.k}</div>` : ''}
                     </div>
                 `;
-                hablar(item.t);
-                iniciarTimer(item.s);
+                hablar(item.t + ". Lean sus instrucciones y pulsen empezar.");
+                document.getElementById('btn-iniciar-timer').style.display = "inline-block";
                 document.getElementById('dice').style.transform = "rotate(0deg)";
             }, 300);
+        }
+
+        function activarReloj() {
+            document.getElementById('btn-iniciar-timer').style.display = "none";
+            iniciarTimer(segundosPendientes);
+            hablar("¡Tiempo en marcha! ¡A darle!");
         }
 
         function iniciarTimer(s) {
@@ -138,7 +151,11 @@
             timerInterval = setInterval(() => {
                 let m = Math.floor(s/60); let r = s%60;
                 document.getElementById('timer').innerText = `${m}:${r<10?'0':''}${r}`;
-                if(s-- <= 0) { clearInterval(timerInterval); hablar("Tiempo fuera. ¿Siguen vivos?"); }
+                if(s-- <= 0) { 
+                    clearInterval(timerInterval); 
+                    hablar("Tiempo terminado. ¿Quieren más?"); 
+                    document.getElementById('timer').innerText = "DONE!";
+                }
             }, 1000);
         }
     </script>
