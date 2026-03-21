@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔥 P & F: Hardcore & Slow Burn 🔥</title>
+    <title>🔥 P & F: Mega Hardcore Edition 🔥</title>
     <style>
         :root { --accent: #00f2ff; --bg: #050505; --gold: #ffd700; --deep-red: #ff0033; --green: #2ecc71; }
         body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; text-align: center; padding-bottom: 50px; }
@@ -12,7 +12,6 @@
         .mode-btn { padding: 10px; border: 1px solid #333; background: #000; color: #666; border-radius: 10px; font-size: 11px; cursor: pointer; flex: 1; max-width: 150px; }
         .mode-btn.active { border-color: var(--accent); color: white; box-shadow: 0 0 10px var(--accent); }
         
-        /* AQUÍ ESTÁ EL ARREGLO DEL DADO */
         .dice-container { 
             margin: 20px auto; 
             width: 100px; 
@@ -25,7 +24,7 @@
         }
         #dice { 
             font-size: 50px; 
-            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Animación suave con rebote */
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
             display: inline-block;
         }
 
@@ -37,10 +36,10 @@
         #resultado { width: 92%; margin: 0 auto; }
         .card { background: #111; border-left: 5px solid var(--accent); padding: 20px; border-radius: 15px; text-align: left; margin-bottom: 15px; animation: slideIn 0.5s ease; }
         .card-t { font-size: 19px; font-weight: bold; color: var(--accent); text-transform: uppercase; }
-        .card-d { font-size: 15px; color: #ccc; margin-top: 10px; line-height: 1.4; border-bottom: 1px solid #222; padding-bottom: 10px; }
+        .card-d { font-size: 14px; color: var(--gold); margin: 8px 0; font-style: italic; border-bottom: 1px solid #222; padding-bottom: 8px; }
         .role-box { margin-top: 12px; font-size: 14px; }
-        .role-p { color: #3498db; margin-bottom: 6px; }
-        .role-f { color: #e74c3c; }
+        .role-p { color: #3498db; margin-bottom: 12px; line-height: 1.4; }
+        .role-f { color: #e74c3c; line-height: 1.4; }
         @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -50,7 +49,7 @@
         <h1>PAULO & FERNANDA</h1>
         <div class="mode-selector">
             <div id="m-esc" class="mode-btn active" onclick="setModo('escalada')">MODO ESCALADA (LENTO)</div>
-            <div id="m-des" class="mode-btn" onclick="setModo('desafio')">10 RETOS FUERTES</div>
+            <div id="m-des" class="mode-btn" onclick="setModo('desafio')">RETOS EXTREMOS (+15)</div>
         </div>
         <div id="fase-tag" style="font-size: 12px; color: var(--accent);">NIVEL 1: CALENTAMIENTO</div>
     </div>
@@ -58,7 +57,7 @@
     <div class="dice-container" id="dice-box"><div id="dice">🎲</div></div>
 
     <button id="btn-escalada" class="btn btn-main" onclick="jugar()">🔥 GIRAR DADO</button>
-    <button id="btn-desafio" class="btn btn-challenge" style="display:none;" onclick="lanzarReto()">😈 RETO EXTREMO</button>
+    <button id="btn-desafio" class="btn btn-challenge" style="display:none;" onclick="lanzarReto()">😈 RETO ALEATORIO</button>
     
     <div id="timer">00:00</div>
     <button id="btn-iniciar-timer" class="btn btn-start" onclick="activarReloj()">▶️ EMPEZAR AHORA</button>
@@ -73,37 +72,41 @@
 
         const acciones = {
             fase1: [
-                { t: "MASAJE CON LENGUA", p: "Paulo: Lame desde su nuca hasta el coxis lentamente.", f: "Fernanda: Arquea la espalda y guía su cabeza.", s: 120 },
-                { t: "SUCCIÓN DE PEZONES", p: "Paulo: Succiona y muerde suavemente sus pezones.", f: "Fernanda: Masturba a Paulo con ritmo constante.", s: 180 },
-                { t: "DEDOS EXPLORADORES", p: "Paulo: Mete 3 dedos palma arriba y presiona el punto G.", f: "Fernanda: Aprieta tus músculos sobre sus dedos.", s: 240 },
-                { t: "MORDISCO EN MUSLOS", p: "Paulo: Da mordiscos firmes en la entrepierna de ella.", f: "Fernanda: Abre bien las piernas y míralo a los ojos.", s: 90 },
-                { t: "ACICALAMIENTO", p: "Paulo: Besa sus labios vaginales solo con la boca.", f: "Fernanda: Sostén su cabeza si quieres que se quede ahí.", s: 120 }
+                { t: "MASAJE CON LENGUA", d: "Exploración sensorial de la espalda.", p: "Paulo: Fernanda boca abajo. Lame desde su nuca, bajando por cada vértebra hasta el coxis, alternando besos húmedos con soplos de aire.", f: "Fernanda: Mantén los brazos estirados hacia adelante, cierra los ojos y arquea la espalda lentamente al sentir su lengua.", s: 120 },
+                { t: "SUCCIÓN DE PEZONES", d: "Estimulación de puntos altos.", p: "Paulo: Succiona un pezón con suavidad mientras masajeas el otro con los dedos. Aumenta la intensidad y muerde muy levemente.", f: "Fernanda: Cruza tus piernas sobre la espalda de Paulo y mastúrbalo con un ritmo constante mientras él te saborea.", s: 180 },
+                { t: "DEDOS EXPLORADORES (PUNTO G)", d: "Búsqueda del placer interno.", p: "Paulo: Introduce dos dedos con la palma hacia arriba. Haz el movimiento de 'ven aquí' buscando la zona rugosa superior interna.", f: "Fernanda: Aprieta tus músculos vaginales sobre sus dedos cada vez que él presione. No dejes de mirarlo.", s: 240 },
+                { t: "MORDISCO EN MUSLOS", d: "Apertura y control.", p: "Paulo: Sujeta sus rodillas y ábrelas al máximo. Da mordiscos firmes en la cara interna del muslo, acercándote a su entrepierna sin tocarla aún.", f: "Fernanda: Agárrate de las sábanas, respira fuerte y mantén el contacto visual con Paulo mientras él te marca.", s: 120 },
+                { t: "LENGUA MARIPOSA", d: "Roce externo ultra sensible.", p: "Paulo: Usa la punta de tu lengua solo en el clítoris, con movimientos rápidos y suaves como el aleteo de una mariposa.", f: "Fernanda: Guía la cabeza de Paulo con tus manos si necesitas más o menos presión. No cierres las piernas.", s: 150 }
             ],
             fase2: [
-                { t: "PERRITO DE RODILLAS", p: "Paulo: Arrodillado erguido, empuja fuerte y profundo.", f: "Fernanda: Baja los codos, trasero lo más arriba posible.", s: 180 },
-                { t: "MISIONERO ELEVADO", p: "Paulo: Sujeta sus tobillos cerca de tus orejas al entrar.", f: "Fernanda: Pon almohadas bajo tu cadera y déjate llevar.", s: 240 },
-                { t: "LA SILLA CABALGANTE", p: "Paulo: Sentado, sujeta su cintura para marcar el ritmo.", f: "Fernanda: Sube y baja con todo tu peso sobre él.", s: 180 },
-                { t: "CUCHARITA PROFUNDA", p: "Paulo: Entra despacio pero llega al fondo cada vez.", f: "Fernanda: Empuja tu cadera hacia atrás para recibirlo todo.", s: 180 }
+                { t: "PERRITO DE RODILLAS", d: "Penetración profunda y animal.", p: "Paulo: Arrodillado erguido detrás de ella. Penétrala con empujes largos, llegando al fondo en cada movimiento.", f: "Fernanda: Apoya los codos en la cama y baja el pecho. Sube el trasero lo más que puedas para facilitar la entrada profunda.", s: 180 },
+                { t: "MISIONERO ELEVADO", d: "Conexión total y visual.", p: "Paulo: Colócate sobre ella. Sujeta sus tobillos y súbelos hasta que sus rodillas queden cerca de sus orejas antes de entrar.", f: "Fernanda: Pon almohadas bajo tu cadera. Envuelve el cuello de Paulo con tus brazos y gime cerca de su oído.", s: 240 },
+                { t: "LA SILLA CABALGANTE", d: "Ella toma las riendas.", p: "Paulo: Siéntate en el borde de la cama o una silla. Sujeta la cintura de Fernanda para que no pierda el equilibrio.", f: "Fernanda: Siéntate sobre él de frente. Usa tus pies apoyados en el suelo o la cama para subir y bajar con todo tu peso.", s: 180 },
+                { t: "CUCHARITA PROFUNDA", d: "Intimidad piel con piel.", p: "Paulo: Ambos de lado. Entra por detrás muy despacio. Usa una mano para acariciar su pecho mientras la penetras.", f: "Fernanda: Empuja tu cadera hacia atrás rítmicamente. Siente el roce de su pecho contra tu espalda.", s: 200 }
             ],
             fase3: [
-                { t: "LA ARAÑA", p: "Paulo: Sentado, balancéate de lado a lado dentro de ella.", f: "Fernanda: Cruza piernas en su espalda y aprieta fuerte.", s: 300 },
-                { t: "EL MOLINILLO", p: "Paulo: Sujeta sus nalgas y búscala con fuerza desde abajo.", f: "Fernanda: De espaldas sobre él, inclínate hasta tocar tus pies.", s: 300 },
-                { t: "EL TRIÁNGULO", p: "Paulo: Penetra con potencia máxima, pies de ella al hombro.", f: "Fernanda: Manos al suelo para equilibrio.", s: 200 },
-                { t: "CLÍMAX LIBRE", p: "Paulo: Termina con ella en la posición que quieras.", f: "Fernanda: Grita y disfruta el final.", s: 600 }
+                { t: "EL MOLINILLO", d: "Giro y profundidad máxima.", p: "Paulo: Ella boca arriba. Sujeta sus nalgas con fuerza y levántalas un poco del colchón mientras entras con potencia.", f: "Fernanda: Apoya tus manos atrás para impulsarte. Intenta rotar tu cadera en círculos mientras él está adentro.", s: 300 },
+                { t: "CLÍMAX LIBRE", d: "Final explosivo.", p: "Paulo: Elige la posición que más te excite ahora mismo y busca tu final con intensidad.", f: "Fernanda: No te guardes nada. Grita, aprieta y disfruta el momento final con Paulo.", s: 600 }
             ]
         };
 
         const retos = [
-            { t: "GARGANTA PROFUNDA (PAULO RECIBE)", d: "Reto de resistencia oral extrema.", p: "Paulo: No te muevas, deja que ella controle la profundidad.", f: "Fernanda: Mete TODO a la boca y aguanta la respiración lo más que puedas sin sacarlo.", s: 120 },
-            { t: "RESISTENCIA (FERNANDA RECIBE)", d: "Reto de aguante sensorial.", p: "Paulo: Lame su clítoris con mucha intensidad sin parar.", f: "Fernanda: Aguanta la respiración 15 segundos mientras él lo hace. Repite.", s: 120 },
-            { t: "PAULO: COCINA EXTREMA", d: "Penetración en la cocina por 1 minuto.", p: "Paulo: Cárgala contra el mostrador y métela por completo durante 60 segundos sin parar.", f: "Fernanda: Envuélvelo con tus piernas y aguanta el ritmo fuerte.", s: 60 },
-            { t: "TRABALENGUAS PENETRADA", d: "Mente vs Placer.", p: "Paulo: Penétrala lo más rápido y fuerte que puedas.", f: "Fernanda: Di 'Tres tristes tigres' sin equivocarte mientras él te da duro.", s: 60 },
-            { t: "TODO ADENTRO (ORDEÑO)", d: "Control muscular interno.", p: "Paulo: Mete todo y quédate inmóvil.", f: "Fernanda: Intenta sacarlo usando solo tus músculos internos.", s: 90 },
-            { t: "NALGADAS RÍTMICAS", d: "Castigo y placer.", p: "Paulo: Da una nalgada fuerte cada vez que entres al fondo.", f: "Fernanda: Cuenta las nalgadas en voz alta sin perder el hilo.", s: 150 },
-            { t: "EL MUÑECO DE TRAPO", d: "Fuerza de Paulo.", p: "Paulo: Levántala contra la pared y penétrala sin que ella toque el suelo.", f: "Fernanda: Sujétate de su cuello y aprieta con tus piernas.", s: 120 },
-            { t: "SUMISIÓN: BOCA ABAJO", d: "Paulo toma el control total.", p: "Paulo: Ponla boca abajo, nalgas arriba. 10 nalgadas antes de entrar.", f: "Fernanda: Mantente quieta y acepta el castigo.", s: 180 },
-            { t: "SILLA: EL CABALLITO", d: "Reto en silla de cocina.", p: "Paulo: Siéntate en la silla. Deja que ella tome el control total.", f: "Fernanda: Siéntate sobre él de frente y bota con fuerza.", s: 150 },
-            { t: "RESISTENCIA FINAL", d: "Velocidad máxima.", p: "Paulo: Dale a máxima velocidad por 2 minutos.", f: "Fernanda: No puedes cerrar las piernas, mantenlas abiertas al máximo.", s: 120 }
+            { t: "EL 69 (ESTIMULACIÓN MUTUA)", d: "Placer dual invertido.", p: "Paulo: Acuéstate boca arriba. Fernanda se coloca sobre ti pero al revés, con su cara en tu entrepierna.", f: "Fernanda: Tu cara en su entrepierna, tu sexo sobre su boca. Ambos trabajen con la lengua al mismo tiempo.", s: 180 },
+            { t: "MISIONERO: TOBILLOS AL HOMBRO", d: "Ángulo de penetración extrema.", p: "Paulo: En posición misionero, sube sus pies hasta tus hombros. Esto permitirá que entres más profundo que nunca.", f: "Fernanda: Sujeta las manos de Paulo con fuerza. Levanta la pelvis para recibir cada embestida al fondo.", s: 150 },
+            { t: "LA POSICIÓN 'W'", d: "Apertura total de caderas.", p: "Paulo: Arrodíllate frente a ella. Penétrala mientras ella dobla sus rodillas hacia afuera al máximo.", f: "Fernanda: Piernas abiertas, rodillas dobladas hacia tus costados formando una W. Deja el camino totalmente libre para él.", s: 150 },
+            { t: "LA FUSIÓN (ABRAZO SEXUAL)", d: "Sexo sentado con cercanía total.", p: "Paulo: Siéntate con las piernas cruzadas. Fernanda se sienta sobre tu regazo envolviéndote con sus piernas.", f: "Fernanda: Abraza a Paulo por el cuello, pecho con pecho. Muévete subiendo y bajando mientras se besan.", s: 180 },
+            { t: "VAQUERA EN CUCLILLAS", d: "Control total de Fernanda.", p: "Paulo: Acostado boca arriba. Mantén tus manos en sus caderas para ayudarla a bajar con fuerza.", f: "Fernanda: Ponte sobre él pero apóyate solo en tus pies (en cuclillas), subiendo y bajando con un ritmo rápido.", s: 150 },
+            { t: "VAQUERA INVERTIDA INCLINADA", d: "Placer visual y profundidad.", p: "Paulo: Mira cómo su espalda se arquea dándote la espalda.", f: "Fernanda: De espaldas a Paulo, siéntate sobre él e inclina tu cuerpo hacia adelante para cambiar el ángulo interno.", s: 150 },
+            { t: "GARGANTA PROFUNDA (RETO)", d: "Entrega total oral.", p: "Paulo: Siéntate quieto. No te muevas, deja que ella decida hasta dónde llegar.", f: "Fernanda: Introduce su miembro lo más profundo posible, controlando la respiración y manteniendo la succión.", s: 120 },
+            { t: "RESISTENCIA (FERNANDA RECIBE)", d: "Reto de aguante sensorial.", p: "Paulo: Lame su clítoris con una velocidad constante y frenética sin parar ni un segundo.", f: "Fernanda: No puedes cerrar las piernas ni apartar a Paulo. Debes aguantar el placer intenso sin moverte.", s: 120 },
+            { t: "PAULO: COCINA EXTREMA", d: "Sexo en el mostrador.", p: "Paulo: Cárgala y siéntala en el mostrador de la cocina. Penétrala con fuerza bruta por un minuto entero.", f: "Fernanda: Cruza tus piernas con fuerza en su espalda para no caerte y disfruta el cambio de lugar.", s: 60 },
+            { t: "TRABALENGUAS PENETRADA", d: "Mente vs Cuerpo.", p: "Paulo: Dale con tu máximo ritmo y fuerza en posición perrito.", f: "Fernanda: Di 'Tres tristes tigres' en voz alta sin equivocarte mientras sientes sus embestidas.", s: 60 },
+            { t: "TODO ADENTRO (ORDEÑO)", d: "Succión vaginal.", p: "Paulo: Introduce todo tu miembro y quédate 100% inmóvil.", f: "Fernanda: Intenta 'ordeñar' su miembro usando solo tus músculos internos para apretarlo y tratar de sacarlo.", s: 90 },
+            { t: "NALGADAS RÍTMICAS", d: "Estímulo sonoro y físico.", p: "Paulo: Da una nalgada fuerte cada vez que entres al fondo en posición de perrito.", f: "Fernanda: Cuenta las nalgadas en voz alta. Si pierdes la cuenta, Paulo te da 5 extras.", s: 150 },
+            { t: "EL MUÑECO DE TRAPO", d: "Paulo toma el mando.", p: "Paulo: Levántala contra la pared y penétrala sin que sus pies toquen el suelo en ningún momento.", f: "Fernanda: Sujétate de su cuello. Debes mantenerte en el aire usando solo la fuerza de tus piernas sobre él.", s: 120 },
+            { t: "SUMISIÓN: BOCA ABAJO", d: "Control total de Paulo.", p: "Paulo: Ponla boca abajo, nalgas arriba. Dale 10 nalgadas antes de entrar sin avisar.", f: "Fernanda: Mantén la cara contra la almohada. Acepta el ritmo que Paulo decida imponer.", s: 180 },
+            { t: "SILLA: EL CABALLITO", d: "Vaquera rítmica.", p: "Paulo: Siéntate en una silla firme. Deja que ella tome el control del movimiento.", f: "Fernanda: Siéntate sobre él mirando hacia adelante y rebota con fuerza usando tus pies como resorte.", s: 150 },
+            { t: "RESISTENCIA FINAL", d: "Velocidad máxima.", p: "Paulo: Dale a máxima velocidad por 2 minutos sin detenerte por nada.", f: "Fernanda: No puedes cerrar las piernas, mantenlas abiertas al máximo para recibir todo el impacto.", s: 120 }
         ];
 
         function setModo(m) {
@@ -145,10 +148,7 @@
 
         function mostrar(item, color) {
             resetUI();
-            
-            // EFECTO DE GIRO: Gira 720 grados
             document.getElementById('dice').style.transform = "rotate(720deg)";
-            
             segundosPendientes = item.s;
             setTimeout(() => {
                 document.getElementById('resultado').innerHTML = `
@@ -161,7 +161,7 @@
                         </div>
                     </div>
                 `;
-                hablar(item.t + ". Acomódense y pulsen empezar.");
+                hablar(item.t);
                 document.getElementById('btn-iniciar-timer').style.display = "inline-block";
             }, 600);
         }
@@ -169,7 +169,7 @@
         function activarReloj() {
             document.getElementById('btn-iniciar-timer').style.display = "none";
             iniciarTimer(segundosPendientes);
-            hablar("¡Tiempo en marcha!");
+            hablar("¡Tiempo iniciado!");
         }
 
         function iniciarTimer(s) {
@@ -179,7 +179,7 @@
                 document.getElementById('timer').innerText = `${m}:${r<10?'0':''}${r}`;
                 if(s-- <= 0) { 
                     clearInterval(timerInterval); 
-                    hablar("¡Tiempo fuera!"); 
+                    hablar("¡Tiempo fuera! Cambio de acción."); 
                 }
             }, 1000);
         }
