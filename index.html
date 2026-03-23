@@ -167,61 +167,73 @@
             { t: "CASTIGO FERNANDA: FINAL EN NALGAS", d: "Posesión.", p: "Paulo: En perrito, termina sobre sus nalgas y espárcelo.", f: "Fernanda: Quédate quieta y siente cómo te cubre.", s: 300 }
         ];
 
- // --- BASE DE DATOS EXTENDIDA (13 POR CATEGORÍA) ---
-        const combo = {
-            acciones: [
-                "Penetración profunda", "Estocadas rápidas", "Succión de clítoris", 
-                "Mordiscos firmes", "Nalgadas rítmicas", "Lamer intensamente", 
-                "Penetración lenta y posesiva", "Chupetones marcados", "Masaje con lengua", 
-                "Dedos exploradores (Punto G)", "Embestidas salvajes", "Succión de pezones", 
-                "Fricción constante"
-            ],
-            lugares: [
-                "en posición de perrito", "en el clítoris", "en los pezones", 
-                "en la cara interna de los muslos", "en posición misionero elevado", 
-                "en las nalgas", "contra la pared", "en el cuello y nuca", 
-                "en posición de vaquera invertida", "en el monte de venus", 
-                "en los labios vaginales", "completamente adentro", "en posición de 69"
-            ],
-            intensidades: [
+function lanzarDadosCombinados() {
+            // 1. Categorías con 20 acciones cada una para máxima variedad
+            const categorias = [
+                {
+                    nombre: "PENETRACIÓN",
+                    acciones: [
+                        "Penetración profunda", "Estocadas rápidas", "Embestidas salvajes", 
+                        "Penetración lenta y posesiva", "Fricción constante", "Entradas y salidas parciales", 
+                        "Empujes rítmicos", "Penetración total", "Estocadas cortas", 
+                        "Movimientos circulares", "Penetración ruda", "Embestidas rítmicas", 
+                        "Penetración dominante", "Golpes de cadera en seco", "Penetración desde atrás",
+                        "Estocadas con pausa al fondo", "Penetración rítmica ascendente", 
+                        "Embestidas profundas y lentas", "Penetración con agarre firme", "Doble penetración (dedos + miembro)"
+                    ],
+                    lugares: [
+                        "en posición de perrito", "en misionero elevado", "contra la pared", 
+                        "en vaquera invertida", "en posición de 69 (ella arriba)", "con las piernas al hombro", 
+                        "en el borde de la cama", "de lado (cucharita)", "sentados frente a frente", 
+                        "con ella cargada", "en posición de tijera", "en el suelo", "completamente adentro"
+                    ]
+                },
+                {
+                    nombre: "ORAL, MANUAL Y JUEGO",
+                    acciones: [
+                        "Succión intensa", "Mordiscos firmes", "Lamer lentamente", "Besos húmedos", 
+                        "Chupetones marcados", "Masaje con lengua", "Succión de clítoris", "Lengua frenética", 
+                        "Dedos exploradores", "Caricias con presión", "Succión de pezones", "Pequeños mordiscos", 
+                        "Lamer de abajo hacia arriba", "Estimulación con los dedos", "Apretón fuerte", 
+                        "Succión rítmica", "Lengua en círculos", "Mordiscos en la entrepierna", 
+                        "Fricción manual rápida", "Masaje erótico profundo"
+                    ],
+                    lugares: [
+                        "en el clítoris", "en los pezones", "en la cara interna de los muslos", 
+                        "en el cuello y nuca", "en el monte de venus", "en los labios vaginales", 
+                        "en las nalgas", "en el pecho", "en la base del vientre", "detrás de las rodillas", 
+                        "en la cadera", "en toda la vulva", "en la entrada de la vagina"
+                    ]
+                }
+            ];
+
+            // 2. Selección de categoría y elementos
+            const cat = categorias[Math.floor(Math.random() * categorias.length)];
+            const accion = cat.acciones[Math.floor(Math.random() * cat.acciones.length)];
+            const lugar = cat.lugares[Math.floor(Math.random() * cat.lugares.length)];
+            
+            // 3. Intensidades variadas (20 opciones para que combinen con todo)
+            const intensidades = [
                 "con una lentitud torturante 😏", "con fuerza bruta 😈", "hasta que no aguanten más 🔥", 
                 "alternando ritmos 🎢", "de forma rápida y desesperada ⚡", "con mucha humedad 💦", 
                 "sin quitarse la mirada de los ojos 👀", "susurrando guarradas al oído 🗣️", 
                 "apretando con las manos con fuerza ✊", "de forma dominante y firme 👑", 
                 "muy suave al principio y rudo al final 📈", "con pausas para aumentar el deseo 🛑", 
-                "con una intensidad frenética 🌪️"
-            ]
-        };
+                "con una intensidad frenética 🌪️", "mientras le tapas la boca 🤫", 
+                "agarrándola del pelo con cuidado 💆‍♀️", "marcando el ritmo con nalgadas 🍑", 
+                "haciendo vibrar todo el cuerpo 🌊", "con una entrega total 🛐", 
+                "buscando el clímax inmediato 🚀", "como si fuera la última vez ⌛"
+            ];
+            const intensidad = intensidades[Math.floor(Math.random() * intensidades.length)];
 
-        function lanzarDadosCombinados() {
-            let a = combo.acciones[Math.floor(Math.random() * combo.acciones.length)];
-            let l = combo.lugares[Math.floor(Math.random() * combo.lugares.length)];
-            let i = combo.intensidades[Math.floor(Math.random() * combo.intensidades.length)];
-            
-            // FILTRO DE COHERENCIA INTELIGENTE
-            const esPenetracion = a.includes("Penetración") || a.includes("Estocadas") || a.includes("Embestidas");
-            const esZonaCuerpo = ["en el clítoris", "en los pezones", "en el cuello y nuca", "en los labios vaginales", "en el monte de venus", "en la cara interna de los muslos"].includes(l);
-            const esPosicion = ["en posición de perrito", "en posición misionero elevado", "contra la pared", "en posición de vaquera invertida", "completamente adentro", "en posición de 69"].includes(l);
-
-            // Si es penetración pero salió un lugar "externo", forzamos una posición
-            if (esPenetracion && esZonaCuerpo) {
-                const posiciones = ["en posición de perrito", "en misionero profundo", "contra la pared", "con Fernanda arriba", "en posición de 69"];
-                l = posiciones[Math.floor(Math.random() * posiciones.length)];
-            } 
-            // Si es una acción oral/manual pero salió una posición de penetración, forzamos zona del cuerpo
-            else if (!esPenetracion && esPosicion) {
-                const zonas = ["en el clítoris", "en los pezones", "en el cuello", "en los muslos", "en las nalgas"];
-                l = zonas[Math.floor(Math.random() * zonas.length)];
-            }
-
-            const fraseFinal = `${a} ${l}, ${i}`;
+            const fraseFinal = `${accion} ${lugar}, ${intensidad}`;
 
             const item = {
                 t: "🎲 DADOS COMBINADOS",
-                d: "El destino ha hablado. No hay vuelta atrás.",
+                d: "Acción coordinada. No se detengan hasta que pite el timer.",
                 p: fraseFinal,
-                f: "Abandónate al ritmo de Paulo y disfruta el castigo.",
-                s: 240 // Subimos a 4 minutos para que la intensidad sea real
+                f: "Recibe el placer y exige más si lo necesitas.",
+                s: 240
             };
             mostrar(item, '#a020f0');
         }
