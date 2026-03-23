@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>🔥 P & F: Mega Hardcore Edition 🔥</title>
     <style>
-        :root { --accent: #00f2ff; --bg: #050505; --gold: #ffd700; --deep-red: #ff0033; --green: #2ecc71; --pink: #ff1493; }
+        :root { --accent: #00f2ff; --bg: #050505; --gold: #ffd700; --deep-red: #ff0033; --green: #2ecc71; --pink: #ff1493; --purple: #a020f0; }
         
         /* Ajuste para iPhone: evita el zoom y mejora el scroll */
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
@@ -65,6 +65,7 @@
         
         .btn-main { background: linear-gradient(45deg, var(--deep-red), #8a2be2); box-shadow: 0 4px 15px rgba(255, 0, 51, 0.3); }
         .btn-challenge { background: #111; border: 2px solid var(--gold); color: var(--gold); }
+        .btn-mixed { background: linear-gradient(45deg, #222, var(--purple)); border: 1px solid var(--accent); }
         .btn-punish { background: linear-gradient(45deg, #ff8c00, var(--pink)); border: 2px solid white; box-shadow: 0 0 15px var(--pink); }
         .btn-start { background: var(--green); display: none; box-shadow: 0 0 20px var(--green); margin-top: 15px; }
 
@@ -88,6 +89,7 @@
         <div class="mode-selector">
             <div id="m-esc" class="mode-btn active" onclick="setModo('escalada')">MODO ESCALADA</div>
             <div id="m-des" class="mode-btn" onclick="setModo('desafio')">RETOS EXTREMOS</div>
+            <div id="m-mix" class="mode-btn" onclick="setModo('combinados')">DADOS COMBINADOS</div>
         </div>
         <div id="fase-tag" style="font-size: 12px; color: var(--accent); font-weight: bold; letter-spacing: 1px;">NIVEL 1: CALENTAMIENTO</div>
     </div>
@@ -99,6 +101,7 @@
     <div style="padding: 0 10px;">
         <button id="btn-escalada" class="btn btn-main" onclick="jugar()">🔥 GIRAR DADO</button>
         <button id="btn-desafio" class="btn btn-challenge" style="display:none;" onclick="lanzarReto()">😈 RETO ALEATORIO</button>
+        <button id="btn-combinados" class="btn btn-mixed" style="display:none;" onclick="lanzarDadosCombinados()">🎲 LANZAR DADOS</button>
         <button id="btn-punish" class="btn btn-punish" onclick="girarRuleta()">🎡 RULETA DE CASTIGOS</button>
     </div>
     
@@ -164,6 +167,28 @@
             { t: "CASTIGO FERNANDA: FINAL EN NALGAS", d: "Posesión.", p: "Paulo: En perrito, termina sobre sus nalgas y espárcelo.", f: "Fernanda: Quédate quieta y siente cómo te cubre.", s: 300 }
         ];
 
+        // --- NUEVA BASE DE DATOS DADOS COMBINADOS ---
+        const combo = {
+            acciones: ["Besos", "Chupetones", "Mordiscos", "Caricias", "Lamer", "Soplos calientes", "Nalgadas", "Succión"],
+            lugares: ["en el cuello", "en los pezones", "en el clítoris", "en el ombligo", "en la cara interna del muslo", "en las nalgas", "en los labios", "detrás de la oreja"],
+            intensidades: ["muy lento 😏", "con fuerza bruta 😈", "suave y tierno ☁️", "rápido y frenético ⚡", "muy caliente e intenso 🔥", "alternando ritmos 🎢"]
+        };
+
+        function lanzarDadosCombinados() {
+            const a = combo.acciones[Math.floor(Math.random() * combo.acciones.length)];
+            const l = combo.lugares[Math.floor(Math.random() * combo.lugares.length)];
+            const i = combo.intensidades[Math.floor(Math.random() * combo.intensidades.length)];
+            
+            const item = {
+                t: "🎲 DADOS COMBINADOS",
+                d: "Acción, Lugar e Intensidad aleatoria.",
+                p: `${a} ${l}, ${i}.`,
+                f: "Guía a Paulo y disfruta de la combinación.",
+                s: 120
+            };
+            mostrar(item, '#a020f0');
+        }
+
         function girarRuleta() {
             resetUI();
             document.getElementById('dice-box').style.display = "none";
@@ -188,8 +213,11 @@
         function setModo(m) {
             document.getElementById('m-esc').className = 'mode-btn ' + (m=='escalada'?'active':'');
             document.getElementById('m-des').className = 'mode-btn ' + (m=='desafio'?'active':'');
+            document.getElementById('m-mix').className = 'mode-btn ' + (m=='combinados'?'active':'');
+            
             document.getElementById('btn-escalada').style.display = m=='escalada'?'block':'none';
             document.getElementById('btn-desafio').style.display = m=='desafio'?'block':'none';
+            document.getElementById('btn-combinados').style.display = m=='combinados'?'block':'none';
             resetUI();
         }
 
@@ -242,7 +270,7 @@
                         </div>
                     </div>
                 `;
-                hablar(item.t);
+                hablar(item.t + ". " + item.p);
                 document.getElementById('btn-iniciar-timer').style.display = "block";
                 window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
             }, 600);
