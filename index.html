@@ -2,117 +2,107 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>🔥 P & F: Mega Hardcore Edition 🔥</title>
     <style>
-        :root { --accent: #00f2ff; --bg: #050505; --gold: #ffd700; --deep-red: #ff0033; --green: #2ecc71; --pink: #ff1493; --purple: #a020f0; }
-        
+        :root { 
+            --accent: #00f2ff; --bg: #050505; --card-bg: #111;
+            --gold: #ffd700; --deep-red: #ff0033; --purple: #a020f0; --pink: #ff1493; --green: #2ecc71;
+        }
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-        
         body { 
-            margin: 0; 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            background: var(--bg); 
-            color: white; 
-            text-align: center; 
-            padding-bottom: env(safe-area-inset-bottom, 50px); 
-            padding-top: env(safe-area-inset-top, 10px);
-            overflow-x: hidden;
+            margin: 0; font-family: -apple-system, system-ui, sans-serif; 
+            background: var(--bg); color: white; overflow: hidden;
+            height: 100vh; display: flex; flex-direction: column;
+        }
+        .header { 
+            padding: 45px 20px 15px; background: rgba(0,0,0,0.9); 
+            border-bottom: 2px solid var(--deep-red); position: fixed; top: 0; width: 100%; z-index: 100;
+        }
+        h1 { font-size: 20px; margin: 0; letter-spacing: 1px; text-align: center; }
+        #fase-tag { font-size: 11px; color: var(--accent); font-weight: bold; margin-top: 5px; text-align: center; }
+
+        .content { 
+            flex: 1; margin-top: 110px; margin-bottom: 85px; 
+            overflow-y: auto; padding: 20px; display: flex; flex-direction: column; align-items: center;
+        }
+        .visual-box { min-height: 130px; display: flex; align-items: center; justify-content: center; width: 100%; }
+        .dice-container { 
+            width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--accent); 
+            display: flex; align-items: center; justify-content: center; background: rgba(0,242,255,0.05);
+        }
+        #dice { font-size: 50px; transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        #roulette-box { 
+            display: none; width: 130px; height: 130px; border-radius: 50%; border: 4px solid white; 
+            transition: transform 3.2s cubic-bezier(0.1, 0, 0.2, 1);
+            background: conic-gradient(var(--pink) 0% 50%, #3498db 50% 100%);
         }
 
-        .header { padding: 20px 15px; background: #111; border-bottom: 2px solid var(--deep-red); }
-        h1 { font-size: 22px; margin: 0 0 10px 0; }
-
-        .mode-selector { display: flex; justify-content: center; gap: 8px; margin: 15px 10px; }
-        .mode-btn { 
-            padding: 12px 8px; 
-            border: 1px solid #333; 
-            background: #000; 
-            color: #666; 
-            border-radius: 12px; 
-            font-size: 10px; 
-            font-weight: bold;
-            cursor: pointer; 
-            flex: 1; 
-            text-transform: uppercase;
-        }
-        .mode-btn.active { border-color: var(--accent); color: white; box-shadow: 0 0 10px var(--accent); }
-
-        .dice-container { margin: 25px auto; width: 110px; height: 110px; border-radius: 50%; border: 4px solid var(--accent); display: flex; align-items: center; justify-content: center; background: rgba(0,242,255,0.05); }
-        #dice { font-size: 55px; transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: inline-block; }
-
-        #roulette-box { display: none; width: 140px; height: 140px; border-radius: 50%; border: 5px solid white; margin: 25px auto; position: relative; transition: transform 3.2s cubic-bezier(0.1, 0, 0.2, 1); background: conic-gradient(var(--pink) 0% 50%, #3498db 50% 100%); box-shadow: 0 0 20px rgba(255,255,255,0.2); }
-        .pointer { display: none; width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 25px solid white; margin: 0 auto; position: relative; z-index: 10; top: 15px; filter: drop-shadow(0 2px 5px black); }
-
+        #timer { font-size: 65px; font-weight: 900; margin: 10px 0; font-family: monospace; text-align: center; width: 100%; }
+        
+        .action-area { width: 100%; max-width: 350px; display: flex; flex-direction: column; align-items: center; }
         .btn { 
-            width: 92%; 
-            max-width: 380px; 
-            padding: 18px; 
-            border: none; 
-            border-radius: 18px; 
-            font-size: 17px; 
-            font-weight: 800; 
-            color: white; 
-            cursor: pointer; 
-            margin: 8px auto; 
-            display: block;
-            transition: transform 0.1s;
+            width: 100%; padding: 18px; border: none; border-radius: 20px; 
+            font-size: 16px; font-weight: 800; color: white; margin-bottom: 10px;
         }
-        .btn:active { transform: scale(0.96); opacity: 0.9; }
-        
-        .btn-main { background: linear-gradient(45deg, var(--deep-red), #8a2be2); box-shadow: 0 4px 15px rgba(255, 0, 51, 0.3); }
-        .btn-challenge { background: #111; border: 2px solid var(--gold); color: var(--gold); }
+        .btn-main { background: linear-gradient(45deg, var(--deep-red), #8a2be2); }
+        .btn-challenge { background: #000; border: 2px solid var(--gold); color: var(--gold); }
         .btn-mixed { background: linear-gradient(45deg, #222, var(--purple)); border: 1px solid var(--accent); }
-        .btn-punish { background: linear-gradient(45deg, #ff8c00, var(--pink)); border: 2px solid white; box-shadow: 0 0 15px var(--pink); }
-        .btn-start { background: var(--green); display: none; box-shadow: 0 0 20px var(--green); margin-top: 15px; }
+        .btn-punish { background: linear-gradient(45deg, #ff8c00, var(--pink)); border: 1px solid white; }
+        .btn-start { background: var(--green); display: none; box-shadow: 0 0 15px var(--green); }
 
-        #timer { font-size: 85px; font-weight: 900; margin: 15px 0; font-family: 'Courier New', monospace; color: #fff; letter-spacing: -2px; }
-        
-        #resultado { width: 92%; margin: 20px auto; padding-bottom: 30px; }
-        .card { background: #111; border-left: 6px solid var(--accent); padding: 20px; border-radius: 18px; text-align: left; margin-bottom: 20px; animation: slideIn 0.5s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .card-t { font-size: 20px; font-weight: 900; color: var(--accent); text-transform: uppercase; margin-bottom: 5px; }
-        .card-d { font-size: 14px; color: var(--gold); margin: 10px 0; font-style: italic; border-bottom: 1px solid #222; padding-bottom: 10px; line-height: 1.3; }
-        .role-box { margin-top: 15px; font-size: 15px; line-height: 1.5; }
-        .role-p { color: #5dade2; margin-bottom: 15px; }
-        .role-f { color: #ec7063; }
+        .card { 
+            background: var(--card-bg); border-left: 6px solid var(--accent); padding: 20px; 
+            border-radius: 18px; text-align: left; width: 100%; max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: slideUp 0.4s ease; margin-bottom: 20px;
+        }
+        .card-t { font-size: 20px; font-weight: 900; color: var(--accent); text-transform: uppercase; }
+        .card-d { font-size: 14px; color: var(--gold); margin: 10px 0; font-style: italic; border-bottom: 1px solid #222; padding-bottom: 10px; }
+        .role-p { color: #5dade2; margin-bottom: 12px; font-size: 15px; line-height: 1.4; }
+        .role-f { color: #ec7063; font-size: 15px; line-height: 1.4; }
 
-        @keyframes slideIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .nav-bar { 
+            position: fixed; bottom: 0; width: 100%; height: 80px; background: #111;
+            display: flex; justify-content: space-around; padding-bottom: env(safe-area-inset-bottom);
+            border-top: 1px solid #222; z-index: 100;
+        }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 9px; color: #666; font-weight: bold; }
+        .nav-item.active { color: var(--accent); }
+        .nav-item span { font-size: 22px; margin-bottom: 2px; }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
     <div class="header">
         <h1>PAULO & FERNANDA</h1>
-        <div class="mode-selector">
-            <div id="m-esc" class="mode-btn active" onclick="setModo('escalada')">MODO ESCALADA</div>
-            <div id="m-des" class="mode-btn" onclick="setModo('desafio')">RETOS EXTREMOS</div>
-            <div id="m-mix" class="mode-btn" onclick="setModo('combinados')">DADOS COMBINADOS</div>
+        <div id="fase-tag">NIVEL 1: CALENTAMIENTO</div>
+    </div>
+
+    <div class="content">
+        <div class="visual-box">
+            <div class="dice-container" id="dice-box"><div id="dice">🎲</div></div>
+            <div id="roulette-box"></div>
         </div>
-        <div id="fase-tag" style="font-size: 12px; color: var(--accent); font-weight: bold; letter-spacing: 1px;">NIVEL 1: CALENTAMIENTO</div>
+
+        <div id="action-area" class="action-area"></div>
+
+        <div id="timer">00:00</div>
+        <button id="btn-iniciar-timer" class="btn btn-start" onclick="activarReloj()">▶️ EMPEZAR AHORA</button>
+
+        <div id="resultado"></div>
     </div>
 
-    <div class="pointer" id="pointer"></div>
-    <div id="roulette-box"></div>
-    <div class="dice-container" id="dice-box"><div id="dice">🎲</div></div>
-
-    <div style="padding: 0 10px;">
-        <button id="btn-escalada" class="btn btn-main" onclick="jugar()">🔥 GIRAR DADO</button>
-        <button id="btn-desafio" class="btn btn-challenge" style="display:none;" onclick="lanzarReto()">😈 RETO ALEATORIO</button>
-        <button id="btn-combinados" class="btn btn-mixed" style="display:none;" onclick="lanzarDadosCombinados()">🎲 LANZAR DADOS</button>
-        <button id="btn-punish" class="btn btn-punish" onclick="girarRuleta()">🎡 RULETA DE CASTIGOS</button>
+    <div class="nav-bar">
+        <div class="nav-item active" onclick="setModo('escalada', this)"><span>🔥</span>ESCALADA</div>
+        <div class="nav-item" onclick="setModo('desafio', this)"><span>😈</span>RETOS</div>
+        <div class="nav-item" onclick="setModo('combinados', this)"><span>🎲</span>DADOS</div>
+        <div class="nav-item" onclick="setModo('ruleta', this)"><span>🎡</span>RULETA</div>
     </div>
-    
-    <div id="timer">00:00</div>
-    <button id="btn-iniciar-timer" class="btn btn-start" onclick="activarReloj()">▶️ EMPEZAR AHORA</button>
-
-    <div id="resultado"></div>
 
     <script>
-        let clicksEnNivel = 0;
-        let nivel = 1;
-        let timerInterval;
-        let segundosPendientes = 0;
-        let currentRotation = 0;
+        let clicksEnNivel = 0; let nivel = 1; let timerInterval; let segundosPendientes = 0; let currentRotation = 0;
 
         const acciones = {
             fase1: [
@@ -164,133 +154,58 @@
             { t: "CASTIGO FERNANDA: FINAL EN NALGAS", d: "Posesión.", p: "En perrito, termina sobre sus nalgas y espárcelo.", f: "Quédate quieta y siente cómo te cubre.", s: 300 }
         ];
 
-        function lanzarDadosCombinados() {
-            const categorias = [
-                {
-                    nombre: "PENETRACIÓN",
-                    acciones: [
-                        "Penetración profunda", "Estocadas rápidas", "Embestidas salvajes", 
-                        "Penetración lenta y posesiva", "Fricción constante", "Entradas y salidas parciales", 
-                        "Empujes rítmicos", "Penetración total", "Estocadas cortas", 
-                        "Movimientos circulares", "Penetración ruda", "Embestidas rítmicas", 
-                        "Penetración dominante", "Golpes de cadera en seco", "Penetración desde atrás",
-                        "Estocadas con pausa al fondo", "Penetración rítmica ascendente", 
-                        "Embestidas profundas y lentas", "Penetración con agarre firme", "Penetración (dedos + miembro)"
-                    ],
-                    lugares: [
-                        "en posición de perrito", "en misionero elevado", "contra la pared", 
-                        "en vaquera invertida", "en posición de 69 (ella arriba)", "con las piernas al hombro", 
-                        "en el borde de la cama", "de lado (cucharita)", "sentados frente a frente", 
-                        "con ella cargada", "en posición de tijera", "en el suelo", "completamente adentro"
-                    ]
-                },
-                {
-                    nombre: "ORAL, MANUAL Y JUEGO",
-                    acciones: [
-                        "Succión intensa", "Mordiscos firmes", "Lamer lentamente", "Besos húmedos", 
-                        "Chupetones marcados", "Masaje con lengua", "Succión de clítoris", "Lengua frenética", 
-                        "Dedos exploradores", "Caricias con presión", "Succión de pezones", "Pequeños mordiscos", 
-                        "Lamer de abajo hacia arriba", "Estimulación con los dedos", "Apretón fuerte", 
-                        "Succión rítmica", "Lengua en círculos", "Mordiscos en la entrepierna", 
-                        "Fricción manual rápida", "Masaje erótico profundo"
-                    ],
-                    lugares: [
-                        "en el clítoris", "en los pezones", "en la cara interna de los muslos", 
-                        "en el cuello y nuca", "en el monte de venus", "en los labios vaginales", 
-                        "en las nalgas", "en el pecho", "en la base del vientre", "detrás de las rodillas", 
-                        "en la cadera", "en toda la vulva", "en la entrada de la vagina"
-                    ]
-                }
-            ];
-
-            const cat = categorias[Math.floor(Math.random() * categorias.length)];
-            const accion = cat.acciones[Math.floor(Math.random() * cat.acciones.length)];
-            const lugar = cat.lugares[Math.floor(Math.random() * cat.lugares.length)];
-            
-            const intensidades = [
-                "con una lentitud torturante 😏", "con fuerza bruta 😈", "hasta que no aguanten más 🔥", 
-                "alternando ritmos 🎢", "de forma rápida y desesperada ⚡", "con mucha humedad 💦", 
-                "sin quitarse la mirada de los ojos 👀", "susurrando guarradas al oído 🗣️", 
-                "apretando con las manos con fuerza ✊", "de forma dominante y firme 👑", 
-                "muy suave al principio y rudo al final 📈", "con pausas para aumentar el deseo 🛑", 
-                "con una intensidad frenética 🌪️", "mientras le tapas la boca 🤫", 
-                "agarrándola del pelo con cuidado 💆‍♀️", "marcando el ritmo con nalgadas 🍑", 
-                "haciendo vibrar todo el cuerpo 🌊", "con una entrega total 🛐", 
-                "buscando el clímax inmediato 🚀", "como si fuera la última vez ⌛"
-            ];
-            const intensidad = intensidades[Math.floor(Math.random() * intensidades.length)];
-
-            mostrar({
-                t: "🎲 DADOS COMBINADOS",
-                d: "Acción coordinada. No se detengan hasta que pite el timer.",
-                p: `${accion} ${lugar}, ${intensidad}`,
-                f: "Recibe el placer y exige más si lo necesitas.",
-                s: 240
-            }, '#a020f0');
-        }
-
-        function setModo(m) {
-            document.getElementById('m-esc').className = 'mode-btn ' + (m=='escalada'?'active':'');
-            document.getElementById('m-des').className = 'mode-btn ' + (m=='desafio'?'active':'');
-            document.getElementById('m-mix').className = 'mode-btn ' + (m=='combinados'?'active':'');
-            
-            document.getElementById('btn-escalada').style.display = m=='escalada'?'block':'none';
-            document.getElementById('btn-desafio').style.display = m=='desafio'?'block':'none';
-            document.getElementById('btn-combinados').style.display = m=='combinados'?'block':'none';
-            
-            resetUI();
-        }
-
-        function resetUI() {
-            clearInterval(timerInterval);
-            document.getElementById('timer').innerText = "00:00";
-            document.getElementById('btn-iniciar-timer').style.display = "none";
-            document.getElementById('resultado').innerHTML = "";
-            document.getElementById('dice-box').style.display = "flex";
-            document.getElementById('roulette-box').style.display = "none";
-            document.getElementById('pointer').style.display = "none";
-            document.getElementById('dice').style.transform = "rotate(0deg)";
-        }
-
-        function hablar(texto) {
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-                const msg = new SpeechSynthesisUtterance(texto);
-                msg.lang = 'es-ES';
-                msg.rate = 0.9;
-                window.speechSynthesis.speak(msg);
+        // --- MOTOR DE DADOS COMBINADOS COMPLETO ---
+        const categoriasDados = [
+            {
+                nombre: "PENETRACIÓN",
+                acciones: ["Penetración profunda", "Estocadas rápidas", "Embestidas salvajes", "Penetración lenta y posesiva", "Fricción constante", "Entradas y salidas parciales", "Empujes rítmicos", "Penetración total", "Estocadas cortas", "Movimientos circulares", "Penetración ruda", "Embestidas rítmicas", "Penetración dominante", "Golpes de cadera en seco", "Penetración desde atrás", "Estocadas con pausa al fondo", "Penetración rítmica ascendente", "Embestidas profundas y lentas", "Penetración con agarre firme", "Penetración (dedos + miembro)"],
+                lugares: ["en posición de perrito", "en misionero elevado", "contra la pared", "en vaquera invertida", "en posición de 69 (ella arriba)", "con las piernas al hombro", "en el borde de la cama", "de lado (cucharita)", "sentados frente a frente", "con ella cargada", "en posición de tijera", "en el suelo", "completamente adentro"]
+            },
+            {
+                nombre: "ORAL Y JUEGO",
+                acciones: ["Succión intensa", "Mordiscos firmes", "Lamer lentamente", "Besos húmedos", "Chupetones marcados", "Masaje con lengua", "Succión de clítoris", "Lengua frenética", "Dedos exploradores", "Caricias con presión", "Succión de pezones", "Pequeños mordiscos", "Lamer de abajo hacia arriba", "Estimulación con los dedos", "Apretón fuerte", "Succión rítmica", "Lengua en círculos", "Mordiscos en la entrepierna", "Fricción manual rápida", "Masaje erótico profundo"],
+                lugares: ["en el clítoris", "en los pezones", "en la cara interna de los muslos", "en el cuello y nuca", "en el monte de venus", "en los labios vaginales", "en las nalgas", "en el pecho", "en la base del vientre", "detrás de las rodillas", "en la cadera", "en toda la vulva", "en la entrada de la vagina"]
             }
+        ];
+
+        const intensidades = ["con una lentitud torturante 😏", "con fuerza bruta 😈", "hasta que no aguanten más 🔥", "alternando ritmos 🎢", "de forma rápida y desesperada ⚡", "con mucha humedad 💦", "sin quitarse la mirada de los ojos 👀", "susurrando guarradas al oído 🗣️", "apretando con las manos con fuerza ✊", "de forma dominante y firme 👑", "muy suave al principio y rudo al final 📈", "con pausas para aumentar el deseo 🛑", "con una intensidad frenética 🌪️", "mientras le tapas la boca 🤫", "agarrándola del pelo con cuidado 💆‍♀️", "marcando el ritmo con nalgadas 🍑", "haciendo vibrar todo el cuerpo 🌊", "con una entrega total 🛐", "buscando el clímax inmediato 🚀", "como si fuera la última vez ⌛"];
+
+        function setModo(modo, el) {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+            resetUI();
+            const area = document.getElementById('action-area');
+            if(modo === 'escalada') area.innerHTML = '<button class="btn btn-main" onclick="jugar()">🔥 GIRAR DADO</button>';
+            if(modo === 'desafio') area.innerHTML = '<button class="btn btn-challenge" onclick="lanzarReto()">😈 RETO ALEATORIO</button>';
+            if(modo === 'combinados') area.innerHTML = '<button class="btn btn-mixed" onclick="lanzarDadosCombinados()">🎲 LANZAR DADOS</button>';
+            if(modo === 'ruleta') area.innerHTML = '<button class="btn btn-punish" onclick="girarRuleta()">🎡 RULETA DE CASTIGOS</button>';
         }
 
         function jugar() {
-            clicksEnNivel++;
-            if(clicksEnNivel > 4) { nivel++; clicksEnNivel = 0; } 
+            clicksEnNivel++; if(clicksEnNivel > 4) { nivel++; clicksEnNivel = 0; }
             let lista = nivel <= 2 ? acciones.fase1 : (nivel <= 4 ? acciones.fase2 : acciones.fase3);
-            const item = lista[Math.floor(Math.random() * lista.length)];
-            mostrar(item, '#00f2ff');
+            mostrar(lista[Math.floor(Math.random() * lista.length)], '#00f2ff');
             document.getElementById('fase-tag').innerText = "NIVEL " + (nivel > 3 ? 3 : nivel);
         }
 
-        function lanzarReto() {
-            const item = retos[Math.floor(Math.random() * retos.length)];
-            mostrar(item, '#ffd700');
+        function lanzarReto() { mostrar(retos[Math.floor(Math.random() * retos.length)], '#ffd700'); }
+
+        function lanzarDadosCombinados() {
+            const cat = categoriasDados[Math.floor(Math.random() * categoriasDados.length)];
+            const acc = cat.acciones[Math.floor(Math.random() * cat.acciones.length)];
+            const lug = cat.lugares[Math.floor(Math.random() * cat.lugares.length)];
+            const int = intensidades[Math.floor(Math.random() * intensidades.length)];
+            mostrar({ t: "DADOS COMBINADOS", d: "Acción coordinada.", p: `${acc} ${lug}, ${int}`, f: "Recibe y exige más.", s: 240 }, '#a020f0');
         }
 
         function girarRuleta() {
-            resetUI();
-            document.getElementById('dice-box').style.display = "none";
-            const wheel = document.getElementById('roulette-box');
-            const pointer = document.getElementById('pointer');
-            wheel.style.display = "block"; pointer.style.display = "block";
-
-            const extraDeg = Math.floor(Math.random() * 360) + 1440;
-            currentRotation += extraDeg;
+            resetUI(); document.getElementById('dice-box').style.display = "none";
+            const wheel = document.getElementById('roulette-box'); wheel.style.display = "block";
+            const extraDeg = Math.floor(Math.random() * 360) + 1440; currentRotation += extraDeg;
             wheel.style.transform = `rotate(${currentRotation}deg)`;
-            hablar("Girando ruleta de castigos");
-
+            hablar("Girando ruleta");
             setTimeout(() => {
-                const realDeg = currentRotation % 360;
-                let quien = (realDeg <= 180) ? "FERNANDA" : "PAULO";
+                let quien = (currentRotation % 360 <= 180) ? "FERNANDA" : "PAULO";
                 hablar("Castigo para " + quien);
                 let lista = (quien === "PAULO") ? castigosP : castigosF;
                 mostrar(lista[Math.floor(Math.random() * lista.length)], '#ff1493');
@@ -302,35 +217,39 @@
             segundosPendientes = item.s;
             setTimeout(() => {
                 document.getElementById('resultado').innerHTML = `
-                    <div class="card" style="border-color:${color}">
+                    <div class="card" style="border-left-color:${color}">
                         <div class="card-t">${item.t}</div>
                         ${item.d ? `<div class="card-d">${item.d}</div>` : ''}
-                        <div class="role-box">
-                            <div class="role-p"><b>♂ PAULO:</b> ${item.p}</div>
-                            <div class="role-f"><b>♀ FERNANDA:</b> ${item.f}</div>
-                        </div>
-                    </div>
-                `;
+                        <div class="role-p"><b>♂ PAULO:</b> ${item.p}</div>
+                        <div class="role-f"><b>♀ FERNANDA:</b> ${item.f}</div>
+                    </div>`;
                 hablar(item.t + ". " + item.p);
                 document.getElementById('btn-iniciar-timer').style.display = "block";
-                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                document.getElementById('resultado').scrollIntoView({ behavior: 'smooth' });
             }, 600);
         }
 
         function activarReloj() {
             document.getElementById('btn-iniciar-timer').style.display = "none";
-            let s = segundosPendientes;
-            hablar("Tiempo iniciado");
-            clearInterval(timerInterval);
+            let s = segundosPendientes; clearInterval(timerInterval);
             timerInterval = setInterval(() => {
                 let m = Math.floor(s/60); let r = s%60;
                 document.getElementById('timer').innerText = `${m}:${r<10?'0':''}${r}`;
-                if(s-- <= 0) { 
-                    clearInterval(timerInterval); 
-                    hablar("¡Tiempo fuera!"); 
-                }
+                if(s-- <= 0) { clearInterval(timerInterval); hablar("¡Tiempo fuera!"); }
             }, 1000);
         }
+
+        function resetUI() {
+            clearInterval(timerInterval); document.getElementById('timer').innerText = "00:00";
+            document.getElementById('btn-iniciar-timer').style.display = "none";
+            document.getElementById('resultado').innerHTML = "";
+            document.getElementById('dice-box').style.display = "flex";
+            document.getElementById('roulette-box').style.display = "none";
+        }
+
+        function hablar(t) { if ('speechSynthesis' in window) { window.speechSynthesis.cancel(); const m = new SpeechSynthesisUtterance(t); m.lang = 'es-ES'; window.speechSynthesis.speak(m); } }
+
+        setModo('escalada', document.querySelector('.nav-item'));
     </script>
 </body>
 </html>
