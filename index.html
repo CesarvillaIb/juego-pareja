@@ -272,15 +272,27 @@ body {
 
     function girarRuleta() {
         resetTodo();
+        
+        // 1. DESPERTAR VOZ (Para que se escuche en iPhone)
+        window.speechSynthesis.speak(new SpeechSynthesisUtterance(""));
+
         const wheel = document.getElementById('wheel');
         const extraDeg = Math.floor(Math.random() * 360) + 1440;
         rotation += extraDeg;
         wheel.style.transform = `rotate(${rotation}deg)`;
+
         setTimeout(() => {
             let finalDeg = rotation % 360;
             let quien = (finalDeg <= 180) ? "PAULO" : "FERNANDA";
+            
+            // 2. LOGICA AL AZAR (Sustituye al [0])
+            const lista = (quien === "PAULO") ? castigosP : castigosF;
+            const castigoAzar = lista[Math.floor(Math.random() * lista.length)];
+
             burst(quien === "PAULO" ? '#3498db' : 'var(--pink)');
-            mostrar(quien === "PAULO" ? castigosP[0] : castigosF[0], 'var(--pink)');
+            
+            // 3. MOSTRAR RESULTADO
+            mostrar(castigoAzar, (quien === "PAULO" ? '#3498db' : 'var(--pink)'));
         }, 3500);
     }
 
