@@ -10,11 +10,21 @@
             --gold: #ffd700; --deep-red: #ff0033; --purple: #a020f0; --pink: #ff1493; --green: #2ecc71;
         }
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-        body { 
-            margin: 0; font-family: -apple-system, system-ui, sans-serif; 
-            background: var(--bg); color: white; height: 100vh; 
-            display: flex; flex-direction: column; overflow: hidden;
-        }
+body { 
+    margin: 0; 
+    font-family: -apple-system, system-ui, sans-serif; 
+    background: var(--bg); 
+    color: white; 
+    /* CAMBIO 1: min-height permite que crezca si hay mucho texto */
+    min-height: 100vh; 
+    display: flex; 
+    flex-direction: column; 
+    /* CAMBIO 2: Cambiamos hidden por auto para que puedas deslizar */
+    overflow-y: auto; 
+    /* CAMBIO 3: Evita rebotes raros en iPhone */
+    overflow-x: hidden; 
+    -webkit-overflow-scrolling: touch;
+}
         .header { 
             padding: 45px 20px 15px; background: rgba(0,0,0,0.95); 
             border-bottom: 2px solid var(--deep-red); position: fixed; top: 0; width: 100%; z-index: 100;
