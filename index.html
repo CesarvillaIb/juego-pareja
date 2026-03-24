@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>🔥 PAULO & FERNANDA: FULL 🔥</title>
+    <title>🔥 PAULO & FERNANDA 🔥</title>
     <style>
         :root { 
             --accent: #00f2ff; --bg: #050505; --card-bg: #111;
@@ -24,35 +24,51 @@
             overflow-y: auto; -webkit-overflow-scrolling: touch;
             padding: 20px; display: flex; flex-direction: column; align-items: center;
         }
-        .icon-viewer { 
-            width: 100px; height: 100px; border-radius: 50%; 
-            border: 2px solid var(--accent); display: flex; 
-            align-items: center; justify-content: center; 
-            font-size: 50px; margin-bottom: 15px;
+        
+        /* CONTENEDOR DE ICONOS Y RULETA */
+        .visual-container { position: relative; height: 180px; display: flex; align-items: center; justify-content: center; width: 100%; }
+        
+        .icon-circle { 
+            width: 100px; height: 100px; border-radius: 50%; border: 2px solid var(--accent);
+            display: flex; align-items: center; justify-content: center; font-size: 50px;
             background: radial-gradient(circle, rgba(0,242,255,0.1) 0%, transparent 70%);
         }
-        #timer { font-size: 55px; font-weight: 900; margin: 10px 0; font-family: monospace; color: white; }
+
+        /* RULETA MEJORADA */
+        .ruleta-box { display: none; position: relative; width: 150px; height: 150px; }
+        .flecha { 
+            position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+            width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent;
+            border-top: 20px solid var(--deep-red); z-index: 10;
+        }
+        #wheel { 
+            width: 100%; height: 100%; border-radius: 50%; border: 4px solid white;
+            transition: transform 3s cubic-bezier(0.1, 0, 0.2, 1);
+            background: conic-gradient(#3498db 0% 50%, var(--pink) 50% 100%);
+        }
+
+        #timer { font-size: 55px; font-weight: 900; margin: 10px 0; font-family: monospace; }
         .btn { width: 100%; max-width: 320px; padding: 18px; border: none; border-radius: 20px; font-size: 16px; font-weight: 800; color: white; margin-bottom: 10px; }
         .btn-main { background: linear-gradient(45deg, var(--deep-red), var(--purple)); }
         .btn-start { background: var(--green); display: none; box-shadow: 0 0 15px var(--green); }
-        
+
         .card { 
             background: var(--card-bg); border-left: 6px solid var(--accent); padding: 20px; 
             border-radius: 18px; text-align: left; width: 100%; max-width: 400px; margin-top: 15px;
             animation: slideUp 0.3s ease;
         }
-        .card-t { font-size: 19px; font-weight: 900; color: var(--accent); text-transform: uppercase; margin-bottom: 5px; }
-        .role-p { color: #5dade2; margin-top: 10px; font-size: 15px; border-bottom: 1px solid #222; padding-bottom: 10px; line-height: 1.4; }
-        .role-f { color: #ec7063; margin-top: 10px; font-size: 15px; line-height: 1.4; }
-        
+        .card-t { font-size: 19px; font-weight: 900; color: var(--accent); text-transform: uppercase; }
+        .role-p { color: #5dade2; margin-top: 10px; font-size: 15px; border-bottom: 1px solid #222; padding-bottom: 8px; }
+        .role-f { color: #ec7063; margin-top: 10px; font-size: 15px; }
+
         .nav-bar { 
             position: fixed; bottom: 0; width: 100%; height: 85px; background: #000;
-            display: flex; justify-content: space-around; border-top: 1px solid #222; z-index: 100;
+            display: flex; justify-content: space-around; border-top: 1px solid #222;
         }
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; color: #444; }
         .nav-item.active { color: var(--accent); }
         .nav-item span { font-size: 24px; margin-bottom: 3px; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -63,10 +79,19 @@
     </div>
 
     <div class="content" id="main-scroll">
-        <div class="icon-viewer" id="main-icon">🔥</div>
+        <div class="visual-container">
+            <div class="icon-circle" id="mode-icon">🔥</div>
+            <div class="ruleta-box" id="ruleta-ui">
+                <div class="flecha"></div>
+                <div id="wheel"></div>
+            </div>
+        </div>
+
         <div id="action-area" style="width:100%; display:flex; flex-direction:column; align-items:center;"></div>
+
         <div id="timer">00:00</div>
         <button id="btn-timer" class="btn btn-start" onclick="activarReloj()">▶️ INICIAR TIEMPO</button>
+
         <div id="resultado"></div>
     </div>
 
@@ -77,160 +102,156 @@
         <div class="nav-item" onclick="setModo('ruleta', this)"><span>🎡</span>RULETA</div>
     </div>
 
-    <script>
-        let nivel = 1; let clicksEnNivel = 0; let timerInterval; let segundosPendientes = 0;
+<script>
+    let nivel = 1; let clicksNivel = 0; let timerInterval; let segundosPendientes = 0; let rotation = 0;
 
-        // --- TUS LISTAS INTACTAS ---
-        const acciones = {
-            fase1: [
-                { t: "MASAJE CON LENGUA", d: "Exploración sensorial de la espalda.", p: "Fernanda boca abajo. Lame desde su nuca, bajando por cada vértebra hasta el coxis, alternando besos húmedos con soplos de aire.", f: "Mantén los brazos estirados hacia adelante, cierra los ojos y arquea la espalda lentamente al sentir su lengua.", s: 120 },
-                { t: "SUCCIÓN DE PEZONES", d: "Estimulación de puntos altos.", p: "Succiona un pezón con suavidad mientras masajeas el otro con los dedos. Aumenta la intensidad y muerde muy levemente.", f: "Cruza tus piernas sobre la espalda de Paulo y mastúrbalo con un ritmo constante mientras él te saborea.", s: 180 },
-                { t: "DEDOS EXPLORADORES (PUNTO G)", d: "Búsqueda del placer interno.", p: "Introduce dos dedos con la palma hacia arriba. Haz el movimiento de 'ven aquí' buscando la zona rugosa superior interna.", f: "Aprieta tus músculos vaginales sobre sus dedos cada vez que él presione. No dejes de mirarlo.", s: 240 },
-                { t: "MORDISCO EN MUSLOS", d: "Apertura y control.", p: "Sujeta sus rodillas y ábrelas al máximo. Da mordiscos firmes en la cara interna del muslo, acercándote a su entrepierna sin tocarla aún.", f: "Agárrate de las sábanas, respira fuerte y mantén el contacto visual con Paulo mientras él te marca.", s: 120 },
-                { t: "LENGUA MARIPOSA", d: "Roce externo ultra sensible.", p: "Usa la punta de tu lengua solo en el clítoris, con movimientos rápidos y suaves como el aleteo de una mariposa.", f: "Guía la cabeza de Paulo con tus manos si necesitas más o menos presión. No cierres las piernas.", s: 150 }
-            ],
-            fase2: [
-                { t: "PERRITO DE RODILLAS", d: "Penetración profunda y animal.", p: "Arrodillado erguido detrás de ella. Penétrala con empujes largos, llegando al fondo en cada movimiento.", f: "Apoya los codos en la cama y baja el pecho. Sube el trasero lo más que puedas para facilitar la entrada profunda.", s: 180 },
-                { t: "MISIONERO ELEVADO", d: "Conexión total y visual.", p: "Colócate sobre ella. Sujeta sus tobillos y súbelos hasta que sus rodillas queden cerca de sus orejas antes de entrar.", f: "Pon almohadas bajo tu cadera. Envuelve el cuello de Paulo con tus brazos y gime cerca de su oído.", s: 240 },
-                { t: "LA SILLA CABALGANTE", d: "Ella toma las riendas.", p: "Siéntate en el borde de la cama o una silla. Sujeta la cintura de Fernanda para que no pierda el equilibrio.", f: "Siéntate sobre él de frente. Usa tus pies apoyados en el suelo o la cama para subir y bajar con todo tu peso.", s: 180 },
-                { t: "CUCHARITA PROFUNDA", d: "Intimidad piel con piel.", p: "Ambos de lado. Entra por detrás muy despacio. Usa una mano para acariciar su pecho mientras la penetras.", f: "Empuja tu cadera hacia atrás rítmicamente. Siente el roce de su pecho contra tu espalda.", s: 200 }
-            ],
-            fase3: [
-                { t: "EL MOLINILLO", d: "Giro y profundidad máxima.", p: "Ella boca arriba. Sujeta sus nalgas con fuerza y levántalas un poco del colchón mientras entras con potencia.", f: "Apoya tus manos atrás para impulsarte. Intenta rotar tu cadera en círculos mientras él está adentro.", s: 300 },
-                { t: "CLÍMAX LIBRE", d: "Final explosivo.", p: "Elige la posición que más te excite ahora mismo y busca tu final con intensidad.", f: "No te guardes nada. Grita, aprieta y disfruta el momento final con Paulo.", s: 600 }
-            ]
-        };
+    const acciones = {
+        fase1: [
+            { t: "MASAJE CON LENGUA", d: "Exploración sensorial de la espalda.", p: "Fernanda boca abajo. Lame desde su nuca, bajando por cada vértebra hasta el coxis, alternando besos húmedos con soplos de aire.", f: "Mantén los brazos estirados hacia adelante, cierra los ojos y arquea la espalda lentamente al sentir su lengua.", s: 120 },
+            { t: "SUCCIÓN DE PEZONES", d: "Estimulación de puntos altos.", p: "Succiona un pezón con suavidad mientras masajeas el otro con los dedos. Aumenta la intensidad y muerde muy levemente.", f: "Cruza tus piernas sobre la espalda de Paulo y mastúrbalo con un ritmo constante mientras él te saborea.", s: 180 },
+            { t: "DEDOS EXPLORADORES (PUNTO G)", d: "Búsqueda del placer interno.", p: "Introduce dos dedos con la palma hacia arriba. Haz el movimiento de 'ven aquí' buscando la zona rugosa superior interna.", f: "Aprieta tus músculos vaginales sobre sus dedos cada vez que él presione. No dejes de mirarlo.", s: 240 },
+            { t: "MORDISCO EN MUSLOS", d: "Apertura y control.", p: "Sujeta sus rodillas y ábrelas al máximo. Da mordiscos firmes en la cara interna del muslo, acercándote a su entrepierna sin tocarla aún.", f: "Agárrate de las sábanas, respira fuerte y mantén el contacto visual con Paulo mientras él te marca.", s: 120 },
+            { t: "LENGUA MARIPOSA", d: "Roce externo ultra sensible.", p: "Usa la punta de tu lengua solo en el clítoris, con movimientos rápidos y suaves como el aleteo de una mariposa.", f: "Guía la cabeza de Paulo con tus manos si necesitas más o menos presión. No cierres las piernas.", s: 150 }
+        ],
+        fase2: [
+            { t: "PERRITO DE RODILLAS", d: "Penetración profunda y animal.", p: "Arrodillado erguido detrás de ella. Penétrala con empujes largos, llegando al fondo en cada movimiento.", f: "Apoya los codos en la cama y baja el pecho. Sube el trasero lo más que puedas para facilitar la entrada profunda.", s: 180 },
+            { t: "MISIONERO ELEVADO", d: "Conexión total y visual.", p: "Colócate sobre ella. Sujeta sus tobillos y súbelos hasta que sus rodillas queden cerca de sus orejas antes de entrar.", f: "Pon almohadas bajo tu cadera. Envuelve el cuello de Paulo con tus brazos y gime cerca de su oído.", s: 240 },
+            { t: "LA SILLA CABALGANTE", d: "Ella toma las riendas.", p: "Siéntate en el borde de la cama o una silla. Sujeta la cintura de Fernanda para que no pierda el equilibrio.", f: "Siéntate sobre él de frente. Usa tus pies apoyados en el suelo o la cama para subir y bajar con todo tu peso.", s: 180 },
+            { t: "CUCHARITA PROFUNDA", d: "Intimidad piel con piel.", p: "Ambos de lado. Entra por detrás muy despacio. Usa una mano para acariciar su pecho mientras la penetras.", f: "Empuja tu cadera hacia atrás rítmicamente. Siente el roce de su pecho contra tu espalda.", s: 200 }
+        ],
+        fase3: [
+            { t: "EL MOLINILLO", d: "Giro y profundidad máxima.", p: "Ella boca arriba. Sujeta sus nalgas con fuerza y levántalas un poco del colchón mientras entras con potencia.", f: "Apoya tus manos atrás para impulsarte. Intenta rotar tu cadera en círculos mientras él está adentro.", s: 300 },
+            { t: "CLÍMAX LIBRE", d: "Final explosivo.", p: "Elige la posición que más te excite ahora mismo y busca tu final con intensidad.", f: "No te guardes nada. Grita, aprieta y disfruta el momento final con Paulo.", s: 600 }
+        ]
+    };
 
-        const retos = [
-            { t: "EL 69", d: "Placer dual invertido.", p: "Acuéstate boca arriba. Fernanda se coloca sobre ti pero al revés.", f: "Tu cara en su entrepierna, tu sexo sobre su boca. Trabajen juntos.", s: 180 },
-            { t: "MISIONERO: TOBILLOS AL HOMBRO", d: "Ángulo de penetración extrema.", p: "Sube sus pies hasta tus hombros. Esto permitirá entrar más profundo.", f: "Sujeta sus manos. Levanta la pelvis para recibir cada embestida.", s: 150 },
-            { t: "LA POSICIÓN 'W'", d: "Apertura total de caderas.", p: "Penétrala mientras ella dobla sus rodillas hacia afuera al máximo.", f: "Piernas abiertas en W. Deja el camino totalmente libre.", s: 150 },
-            { t: "LA FUSIÓN", d: "Sexo sentado con cercanía total.", p: "Siéntate con las piernas cruzadas. Ella se sienta sobre tu regazo.", f: "Abrázalo por el cuello. Muévete subiendo y bajando.", s: 180 },
-            { t: "VAQUERA EN CUCLILLAS", d: "Control total de Fernanda.", p: "Acostado. Manos en sus caderas para ayudarla a bajar con fuerza.", f: "Ponte en cuclillas sobre él, subiendo y bajando rápido.", s: 150 },
-            { t: "VAQUERA INVERTIDA", d: "Placer visual y profundidad.", p: "Disfruta del espectáculo de su espalda arqueándose.", f: "De espaldas a Paulo, siéntate e inclina tu cuerpo hacia adelante.", s: 150 },
-            { t: "GARGANTA PROFUNDA (RETO)", d: "Entrega total oral.", p: "Quédate quieto. Deja que ella decida hasta dónde llegar.", f: "Introduce su miembro lo más profundo posible.", s: 120 },
-            { t: "RESISTENCIA (FERNANDA RECIBE)", d: "Reto de aguante sensorial.", p: "Lame su clítoris con velocidad constante y frenética.", f: "No cierres las piernas. Aguanta el placer sin moverte.", s: 120 },
-            { t: "PAULO: COCINA EXTREMA", d: "Sexo en el mostrador.", p: "Cárgala y siéntala en el mostrador. Dale con fuerza bruta.", f: "Cruza tus piernas con fuerza en su espalda.", s: 60 },
-            { t: "TRABALENGUAS PENETRADA", d: "Mente vs Cuerpo.", p: "Dale con tu máximo ritmo en posición perrito.", f: "Di 'Tres tristes tigres' sin equivocarte mientras te penetra.", s: 60 },
-            { t: "TODO ADENTRO (ORDEÑO)", d: "Succión vaginal.", p: "Introduce todo tu miembro y quédate 100% inmóvil.", f: "Intenta 'ordeñarlo' usando solo tus músculos internos.", s: 90 },
-            { t: "NALGADAS RÍTMICAS", d: "Estímulo sonoro y físico.", p: "Da una nalgada fuerte cada vez que entres al fondo.", f: "Cuenta las nalgadas en voz alta.", s: 150 },
-            { t: "EL MUÑECO DE TRAPO", d: "Paulo toma el mando.", p: "Levántala contra la pared y penétrala sin que toque el suelo.", f: "Sujétate de su cuello. Mantente en el aire con tus piernas.", s: 120 },
-            { t: "SUMISIÓN: BOCA ABAJO", d: "Control total de Paulo.", p: "Ponla boca abajo, nalgas arriba. 10 nalgadas y entra sin avisar.", f: "Cara contra la almohada. Acepta su ritmo.", s: 180 },
-            { t: "SILLA: EL CABALLITO", d: "Vaquera rítmica.", p: "Siéntate en una silla firme.", f: "Siéntate sobre él mirando hacia adelante y rebota con fuerza.", s: 150 },
-            { t: "RESISTENCIA FINAL", d: "Velocidad máxima.", p: "Dale a máxima velocidad por 2 minutos sin detenerte.", f: "Piernas abiertas al máximo para recibir todo el impacto.", s: 120 }
-        ];
+    const retos = [
+        { t: "EL 69", d: "Placer dual invertido.", p: "Acuéstate boca arriba. Fernanda se coloca sobre ti pero al revés.", f: "Tu cara en su entrepierna, tu sexo sobre su boca. Trabajen juntos.", s: 180 },
+        { t: "MISIONERO: TOBILLOS AL HOMBRO", d: "Ángulo de penetración extrema.", p: "Sube sus pies hasta tus hombros. Esto permitirá entrar más profundo.", f: "Sujeta sus manos. Levanta la pelvis para recibir cada embestida.", s: 150 },
+        { t: "LA POSICIÓN 'W'", d: "Apertura total de caderas.", p: "Penétrala mientras ella dobla sus rodillas hacia afuera al máximo.", f: "Piernas abiertas en W. Deja el camino totalmente libre.", s: 150 },
+        { t: "LA FUSIÓN", d: "Sexo sentado con cercanía total.", p: "Siéntate con las piernas cruzadas. Ella se sienta sobre tu regazo.", f: "Abrázalo por el cuello. Muévete subiendo y bajando.", s: 180 },
+        { t: "VAQUERA EN CUCLILLAS", d: "Control total de Fernanda.", p: "Acostado. Manos en sus caderas para ayudarla a bajar con fuerza.", f: "Ponte en cuclillas sobre él, subiendo y bajando rápido.", s: 150 },
+        { t: "VAQUERA INVERTIDA", d: "Placer visual y profundidad.", p: "Disfruta del espectáculo de su espalda arqueándose.", f: "De espaldas a Paulo, siéntate e inclina tu cuerpo hacia adelante.", s: 150 },
+        { t: "GARGANTA PROFUNDA (RETO)", d: "Entrega total oral.", p: "Quédate quieto. Deja que ella decida hasta dónde llegar.", f: "Introduce su miembro lo más profundo posible.", s: 120 },
+        { t: "RESISTENCIA (FERNANDA RECIBE)", d: "Reto de aguante sensorial.", p: "Lame su clítoris con velocidad constante y frenética.", f: "No cierres las piernas. Aguanta el placer sin moverte.", s: 120 },
+        { t: "PAULO: COCINA EXTREMA", d: "Sexo en el mostrador.", p: "Cárgala y siéntala en el mostrador. Dale con fuerza bruta.", f: "Cruza tus piernas con fuerza en su espalda.", s: 60 },
+        { t: "TRABALENGUAS PENETRADA", d: "Mente vs Cuerpo.", p: "Dale con tu máximo ritmo en posición perrito.", f: "Di 'Tres tristes tigres' sin equivocarte mientras te penetra.", s: 60 },
+        { t: "TODO ADENTRO (ORDEÑO)", d: "Succión vaginal.", p: "Introduce todo tu miembro y quédate 100% inmóvil.", f: "Intenta 'ordeñarlo' usando solo tus músculos internos.", s: 90 },
+        { t: "NALGADAS RÍTMICAS", d: "Estímulo sonoro y físico.", p: "Da una nalgada fuerte cada vez que entres al fondo.", f: "Cuenta las nalgadas en voz alta.", s: 150 },
+        { t: "EL MUÑECO DE TRAPO", d: "Paulo toma el mando.", p: "Levántala contra la pared y penétrala sin que toque el suelo.", f: "Sujétate de su cuello. Mantente en el aire con tus piernas.", s: 120 },
+        { t: "SUMISIÓN: BOCA ABAJO", d: "Control total de Paulo.", p: "Ponla boca abajo, nalgas arriba. 10 nalgadas y entra sin avisar.", f: "Cara contra la almohada. Acepta su ritmo.", s: 180 },
+        { t: "SILLA: EL CABALLITO", d: "Vaquera rítmica.", p: "Siéntate en una silla firme.", f: "Siéntate sobre él mirando hacia adelante y rebota con fuerza.", s: 150 },
+        { t: "RESISTENCIA FINAL", d: "Velocidad máxima.", p: "Dale a máxima velocidad por 2 minutos sin detenerte.", f: "Piernas abiertas al máximo para recibir todo el impacto.", s: 120 }
+    ];
 
-        const castigosP = [
-            { t: "CASTIGO PAULO: ESCLAVO DEL CLÍTORIS", d: "Adoración total.", p: "Solo lengua y labios. Círculos rápidos por 5 min. Manos atrás.", f: "Siéntate en su cara. Tú mandas el ritmo.", s: 300 },
-            { t: "CASTIGO PAULO: LA SILLA DE PLACER", d: "Servicio oral.", p: "Arrodillado. Úsala oralmente con intensidad buscando su clímax.", f: "Sujétalo del cabello para marcar la velocidad.", s: 300 },
-            { t: "CASTIGO PAULO: PENETRACIÓN DEDOS", d: "Punto G al límite.", p: "2 dedos palma arriba rítmicamente sin parar.", f: "Tócate el clítoris mientras Paulo te penetra con dedos.", s: 300 }
-        ];
+    const castigosP = [
+        { t: "CASTIGO PAULO: ESCLAVO DEL CLÍTORIS", d: "Adoración total.", p: "Solo lengua y labios. Círculos rápidos por 5 min. Manos atrás.", f: "Siéntate en su cara. Tú mandas el ritmo.", s: 300 },
+        { t: "CASTIGO PAULO: LA SILLA DE PLACER", d: "Servicio oral.", p: "Arrodillado. Úsala oralmente con intensidad buscando su clímax.", f: "Sujétalo del cabello para marcar la velocidad.", s: 300 },
+        { t: "CASTIGO PAULO: PENETRACIÓN DEDOS", d: "Punto G al límite.", p: "2 dedos palma arriba rítmicamente sin parar.", f: "Tócate el clítoris mientras Paulo te penetra con dedos.", s: 300 }
+    ];
 
-        const castigosF = [
-            { t: "CASTIGO FERNANDA: FINAL EN CARA", d: "Sometimiento oral.", p: "Disfruta del sexo oral que te hace Fernanda. Cuando estés a punto de llegar, retírate y termina sobre su cara.", f: "De rodillas, hazle sexo oral intenso a Paulo. Cuando él se retire para terminar, mantén las manos atrás y no te limpies hasta que él lo diga.", s: 300 },
-            { t: "CASTIGO FERNANDA: FINAL EN NALGAS", d: "Posesión.", p: "En perrito, termina sobre sus nalgas y espárcelo.", f: "Quédate quieta y siente cómo te cubre.", s: 300 }
-        ];
+    const castigosF = [
+        { t: "CASTIGO FERNANDA: FINAL EN CARA", d: "Sometimiento oral.", p: "Disfruta del sexo oral que te hace Fernanda. Cuando estés a punto de llegar, retírate y termina sobre su cara.", f: "De rodillas, hazle sexo oral intenso a Paulo. Cuando él se retire para terminar, mantén las manos atrás y no te limpies hasta que él lo diga.", s: 300 },
+        { t: "CASTIGO FERNANDA: FINAL EN NALGAS", d: "Posesión.", p: "En perrito, termina sobre sus nalgas y espárcelo.", f: "Quédate quieta y siente cómo te cubre.", s: 300 }
+    ];
 
-        const categoriasDados = [
-            {
-                nombre: "PENETRACIÓN",
-                acciones: ["Penetración profunda", "Estocadas rápidas", "Embestidas salvajes", "Penetración lenta y posesiva", "Fricción constante", "Entradas y salidas parciales", "Empujes rítmicos", "Penetración total", "Estocadas cortas", "Movimientos circulares", "Penetración ruda", "Embestidas rítmicas", "Penetración dominante", "Golpes de cadera en seco", "Penetración desde atrás", "Estocadas con pausa al fondo", "Penetración rítmica ascendente", "Embestidas profundas y lentas", "Penetración con agarre firme", "Penetración (dedos + miembro)"],
-                lugares: ["en posición de perrito", "en misionero elevado", "contra la pared", "en vaquera invertida", "en posición de 69 (ella arriba)", "con las piernas al hombro", "en el borde de la cama", "de lado (cucharita)", "sentados frente a frente", "con ella cargada", "en posición de tijera", "en el suelo", "completamente adentro"]
-            },
-            {
-                nombre: "ORAL Y JUEGO",
-                acciones: ["Succión intensa", "Mordiscos firmes", "Lamer lentamente", "Besos húmedos", "Chupetones marcados", "Masaje con lengua", "Succión de clítoris", "Lengua frenética", "Dedos exploradores", "Caricias con presión", "Succión de pezones", "Pequeños mordiscos", "Lamer de abajo hacia arriba", "Estimulación con los dedos", "Apretón fuerte", "Succión rítmica", "Lengua en círculos", "Mordiscos en la entrepierna", "Fricción manual rápida", "Masaje erótico profundo"],
-                lugares: ["en el clítoris", "en los pezones", "en la cara interna de los muslos", "en el cuello y nuca", "en el monte de venus", "en los labios vaginales", "en las nalgas", "en el pecho", "en la base del vientre", "detrás de las rodillas", "en la cadera", "en toda la vulva", "en la entrada de la vagina"]
-            }
-        ];
+    const categoriasDados = [
+        { nombre: "PENETRACIÓN", acciones: ["Penetración profunda", "Estocadas rápidas", "Embestidas salvajes", "Fricción constante"], lugares: ["en perrito", "en el borde de la cama", "contra la pared"] },
+        { nombre: "ORAL Y JUEGO", acciones: ["Succión intensa", "Mordiscos firmes", "Lamer lentamente"], lugares: ["en el clítoris", "en los pezones", "en los muslos"] }
+    ];
 
-        const intensidades = ["con una lentitud torturante 😏", "con fuerza bruta 😈", "hasta que no aguanten más 🔥", "alternando ritmos 🎢", "de forma rápida y desesperada ⚡", "con mucha humedad 💦", "sin quitarse la mirada de los ojos 👀", "susurrando guarradas al oído 🗣️", "apretando con las manos con fuerza ✊", "de forma dominante y firme 👑", "muy suave al principio y rudo al final 📈", "con pausas para aumentar el deseo 🛑", "con una intensidad frenética 🌪️", "mientras le tapas la boca 🤫", "agarrándola del pelo con cuidado 💆‍♀️", "marcando el ritmo con nalgadas 🍑", "haciendo vibrar todo el cuerpo 🌊", "con una entrega total 🛐", "buscando el clímax inmediato 🚀", "como si fuera la última vez ⌛"];
+    const intensidades = ["con fuerza bruta 😈", "con lentitud torturante 😏", "rápido y desesperado ⚡", "marcando el ritmo con nalgadas 🍑"];
 
-        // --- LÓGICA DE CONTROL ---
-        function setModo(modo, el) {
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            el.classList.add('active');
-            resetUI();
-            const icon = document.getElementById('main-icon');
-            const area = document.getElementById('action-area');
-            
-            if(modo === 'escalada') {
-                icon.innerText = "🔥";
-                area.innerHTML = '<button class="btn btn-main" onclick="jugar()">🔥 SIGUIENTE PASO</button>';
-                jugar();
-            } else if(modo === 'desafio') {
-                icon.innerText = "😈";
-                area.innerHTML = '<button class="btn btn-main" style="background:var(--gold);color:black" onclick="lanzarReto()">😈 OTRO RETO</button>';
-                lanzarReto();
-            } else if(modo === 'combinados') {
-                icon.innerText = "🎲";
-                area.innerHTML = '<button class="btn btn-main" style="background:var(--purple)" onclick="lanzarDados()">🎲 NUEVA MEZCLA</button>';
-                lanzarDados();
-            } else if(modo === 'ruleta') {
-                icon.innerText = "🎡";
-                area.innerHTML = '<button class="btn btn-main" style="background:var(--pink)" onclick="ejecutarRuleta()">🎡 SORTEO DE CASTIGO</button>';
-                ejecutarRuleta();
-            }
+    // --- LÓGICA DE CONTROL ---
+    function setModo(modo, el) {
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        el.classList.add('active');
+        resetTodo(); // LIMPIA TODO AL CAMBIAR
+
+        const icon = document.getElementById('mode-icon');
+        const ruleta = document.getElementById('ruleta-ui');
+        const area = document.getElementById('action-area');
+        
+        if(modo === 'escalada') {
+            icon.style.display = "flex"; ruleta.style.display = "none"; icon.innerText = "🔥";
+            area.innerHTML = '<button class="btn btn-main" onclick="jugar()">🔥 SIGUIENTE PASO</button>';
+        } else if(modo === 'desafio') {
+            icon.style.display = "flex"; ruleta.style.display = "none"; icon.innerText = "😈";
+            area.innerHTML = '<button class="btn btn-main" style="background:var(--gold);color:black" onclick="lanzarReto()">😈 OTRO RETO</button>';
+        } else if(modo === 'combinados') {
+            icon.style.display = "flex"; ruleta.style.display = "none"; icon.innerText = "🎲";
+            area.innerHTML = '<button class="btn btn-main" style="background:var(--purple)" onclick="lanzarDados()">🎲 NUEVA MEZCLA</button>';
+        } else if(modo === 'ruleta') {
+            icon.style.display = "none"; ruleta.style.display = "block";
+            area.innerHTML = '<button class="btn btn-main" style="background:var(--pink)" onclick="girarRuleta()">🎡 GIRAR RULETA</button>';
         }
+    }
 
-        function resetUI() {
-            clearInterval(timerInterval);
-            document.getElementById('timer').innerText = "00:00";
-            document.getElementById('btn-timer').style.display = "none";
-            document.getElementById('resultado').innerHTML = "";
-        }
+    function resetTodo() {
+        clearInterval(timerInterval);
+        document.getElementById('timer').innerText = "00:00";
+        document.getElementById('btn-timer').style.display = "none";
+        document.getElementById('resultado').innerHTML = "";
+    }
 
-        function jugar() {
-            clicksEnNivel++; if(clicksEnNivel > 5) { nivel++; clicksEnNivel = 0; }
-            let lista = nivel == 1 ? acciones.fase1 : (nivel == 2 ? acciones.fase2 : acciones.fase3);
-            mostrar(lista[Math.floor(Math.random() * lista.length)], '#00f2ff');
-            document.getElementById('fase-tag').innerText = "NIVEL " + (nivel > 3 ? 3 : nivel);
-        }
+    function jugar() {
+        resetTodo();
+        clicksNivel++; if(clicksNivel > 5) { nivel++; clicksNivel = 0; }
+        let lista = nivel == 1 ? acciones.fase1 : (nivel == 2 ? acciones.fase2 : acciones.fase3);
+        mostrar(lista[Math.floor(Math.random() * lista.length)], '#00f2ff');
+        document.getElementById('fase-tag').innerText = "NIVEL " + (nivel > 3 ? 3 : nivel);
+    }
 
-        function lanzarReto() {
-            mostrar(retos[Math.floor(Math.random() * retos.length)], '#ffd700');
-        }
+    function lanzarReto() {
+        resetTodo();
+        mostrar(retos[Math.floor(Math.random() * retos.length)], '#ffd700');
+    }
 
-        function lanzarDados() {
-            const cat = categoriasDados[Math.floor(Math.random() * categoriasDados.length)];
-            const accion = cat.acciones[Math.floor(Math.random() * cat.acciones.length)];
-            const lugar = cat.lugares[Math.floor(Math.random() * cat.lugares.length)];
-            const intens = intensidades[Math.floor(Math.random() * intensidades.length)];
-            const item = { t: "DADOS: " + cat.nombre, d: "Combinación libre.", p: `${accion} ${lugar}, ${intens}`, f: "Sigue el ritmo de Paulo.", s: 180 };
-            mostrar(item, '#a020f0');
-        }
+    function lanzarDados() {
+        resetTodo();
+        const cat = categoriasDados[Math.floor(Math.random() * 2)];
+        const item = { t: "DADOS: " + cat.nombre, d: "Combinación libre.", p: `${cat.acciones[Math.floor(Math.random()*3)]} ${cat.lugares[Math.floor(Math.random()*3)]}, ${intensidades[Math.floor(Math.random()*4)]}`, f: "Sigue el ritmo.", s: 180 };
+        mostrar(item, '#a020f0');
+    }
 
-        function ejecutarRuleta() {
-            const quien = Math.random() > 0.5 ? "PAULO" : "FERNANDA";
-            const lista = quien === "PAULO" ? castigosP : castigosF;
-            const item = lista[Math.floor(Math.random() * lista.length)];
-            document.getElementById('main-icon').innerText = "👤";
-            mostrar(item, '#ff1493');
-        }
+    function girarRuleta() {
+        resetTodo();
+        const wheel = document.getElementById('wheel');
+        const extraDeg = Math.floor(Math.random() * 360) + 1440;
+        rotation += extraDeg;
+        wheel.style.transform = `rotate(${rotation}deg)`;
+        
+        setTimeout(() => {
+            let finalDeg = rotation % 360;
+            let quien = (finalDeg <= 180) ? "PAULO" : "FERNANDA";
+            let lista = quien === "PAULO" ? castigosP : castigosF;
+            mostrar(lista[Math.floor(Math.random() * lista.length)], '#ff1493');
+        }, 3000);
+    }
 
-        function mostrar(item, color) {
-            segundosPendientes = item.s;
-            document.getElementById('resultado').innerHTML = `
-                <div class="card" style="border-left-color:${color}">
-                    <div class="card-t">${item.t}</div>
-                    <div style="font-size:12px; color:#888; margin-bottom:10px">${item.d}</div>
-                    <div class="role-p"><b>♂ PAULO:</b> ${item.p}</div>
-                    <div class="role-f"><b>♀ FERNANDA:</b> ${item.f}</div>
-                </div>`;
-            document.getElementById('btn-timer').style.display = "block";
-        }
+    function mostrar(item, color) {
+        segundosPendientes = item.s;
+        document.getElementById('resultado').innerHTML = `
+            <div class="card" style="border-left-color:${color}">
+                <div class="card-t">${item.t}</div>
+                <div style="font-size:12px; color:#888; margin-bottom:8px">${item.d}</div>
+                <div class="role-p"><b>♂ PAULO:</b> ${item.p}</div>
+                <div class="role-f"><b>♀ FERNANDA:</b> ${item.f}</div>
+            </div>`;
+        document.getElementById('btn-timer').style.display = "block";
+    }
 
-        function activarReloj() {
-            document.getElementById('btn-timer').style.display = "none";
-            let s = segundosPendientes;
-            timerInterval = setInterval(() => {
-                let m = Math.floor(s/60); let r = s%60;
-                document.getElementById('timer').innerText = `${m}:${r<10?'0':''}${r}`;
-                if(s-- <= 0) clearInterval(timerInterval);
-            }, 1000);
-        }
+    function activarReloj() {
+        document.getElementById('btn-timer').style.display = "none";
+        let s = segundosPendientes;
+        timerInterval = setInterval(() => {
+            let m = Math.floor(s/60); let r = s%60;
+            document.getElementById('timer').innerText = `${m}:${r<10?'0':''}${r}`;
+            if(s-- <= 0) clearInterval(timerInterval);
+        }, 1000);
+    }
 
-        setModo('escalada', document.querySelector('.nav-item'));
-    </script>
+    setModo('escalada', document.querySelector('.nav-item'));
+</script>
 </body>
 </html>
