@@ -160,28 +160,28 @@ body {
         { t: "RESISTENCIA FINAL", d: "Velocidad máxima.", p: "Dale a máxima velocidad por 2 minutos sin parar.", f: "Piernas abiertas al máximo.", s: 120 }
     ];
 
-  const castigosP = [
-        { t: "CASTIGO PAULO", d: "Esclavo del clítoris.", p: "Solo lengua y labios en círculos rápidos. Manos atrás.", f: "Siéntate en su cara y manda el ritmo.", s: 300 }
+// Listas adecuadas con tus retos combinados integrados
+    const castigosP = [
+        { t: "CASTIGO PAULO", d: "Esclavo del clítoris.", p: "Solo lengua y labios en círculos rápidos. Manos atrás.", f: "Siéntate en su cara y manda el ritmo.", s: 300 },
+        { t: "EL SILENCIADOR", d: "Control de voz.", p: "Tápale la boca con tu mano o una prenda mientras la embistes con fuerza bruta.", f: "Gime contra su palma. Si haces ruido, Paulo te da 5 nalgadas.", s: 180 },
+        { t: "PERRITO CIEGO", d: "Privación sensorial.", p: "Tápale los ojos a Fernanda. Penétrala con ritmo errático: a veces lento, a veces salvaje.", f: "Con los ojos vendados, intenta adivinar la próxima embestida.", s: 180 },
+        { t: "ESTATUA DE PLACER", d: "Inmovilidad.", p: "Hazle lo que quieras: besos, mordiscos, caricias.", f: "No puedes moverte ni gemir. Si lo haces, el tiempo se reinicia.", s: 180 }
     ];
 
     const castigosF = [
-        { t: "CASTIGO FERNANDA", d: "Sometimiento oral.", p: "Termina sobre su cara.", f: "No te limpies hasta que él lo diga.", s: 300 }
+        { t: "CASTIGO FERNANDA", d: "Sometimiento oral.", p: "Termina sobre su cara.", f: "No te limpies hasta que él lo diga.", s: 300 },
+        { t: "OXÍGENO COMPARTIDO", d: "Besos de asfixia.", p: "Bésala sin soltarla ni un segundo mientras la penetras a tu máximo ritmo.", f: "Intenta respirar solo a través de sus labios. No te separes de su boca.", s: 120 },
+        { t: "EL SILENCIADOR", d: "Control de voz.", p: "Controla su voz con tu mano. Si gime muy fuerte, dale 5 nalgadas.", f: "Gime contra su palma e intenta mantener el silencio bajo su mando.", s: 180 },
+        { t: "ESTATUA DE PLACER", d: "Inmovilidad.", p: "Penétrala o elígela a tu gusto. Tienes el control total.", f: "Prohibido moverse o gemir mientras él te usa a su antojo.", s: 180 }
     ];
 
-    const combinadosIntensos = [
-        { t: "OXÍGENO COMPARTIDO", d: "Besos de asfixia.", p: "Bésala sin soltarla ni un segundo mientras la penetras a tu máximo ritmo.", f: "Intenta respirar solo a través de sus labios. No te separes de su boca por nada.", s: 120 },
-        { t: "EL SILENCIADOR", d: "Control de voz.", p: "Tápale la boca con tu mano o una prenda mientras la embistes con fuerza bruta.", f: "Gime contra su palma. Si haces demasiado ruido, detente y dale 5 nalgadas.", s: 180 },
-        { t: "PERRITO CIEGO", d: "Privación sensorial.", p: "Tápale los ojos con una prenda. Penétrala con un ritmo errático: a veces lento, a veces salvaje.", f: "Con los ojos vendados, intenta adivinar cuándo vendrá la próxima embestida fuerte.", s: 180 },
-        { t: "ESTATUA DE PLACER", d: "Inmovilidad.", p: "Penétrala o elígela a tu gusto. Hazle lo que quieras: besos, mordiscos, caricias.", f: "No puedes moverte ni gemir. Si lo haces, el tiempo se reinicia desde cero.", s: 180 }
-    ];
-
+    // Mantenemos tus intensidades para la función de Dados
     const intensidades = [
         "con fuerza bruta ", 
         "con lentitud torturante ", 
         "rápido y desesperado ", 
         "marcando el ritmo con nalgadas "
     ];
-
     // --- VOZ INTELIGENTE ---
     function hablar(item) {
         window.speechSynthesis.cancel();
