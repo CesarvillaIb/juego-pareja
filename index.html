@@ -1,108 +1,72 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>🔥 P & F: FULL EDITION 🔥</title>
+    <title>🔥 PAULO & FERNANDA: FULL 🔥</title>
     <style>
         :root { 
             --accent: #00f2ff; --bg: #050505; --card-bg: #111;
             --gold: #ffd700; --deep-red: #ff0033; --purple: #a020f0; --pink: #ff1493; --green: #2ecc71;
         }
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-        
         body { 
             margin: 0; font-family: -apple-system, system-ui, sans-serif; 
             background: var(--bg); color: white; height: 100vh; 
             display: flex; flex-direction: column; overflow: hidden;
         }
-
         .header { 
             padding: 45px 20px 15px; background: rgba(0,0,0,0.95); 
             border-bottom: 2px solid var(--deep-red); position: fixed; top: 0; width: 100%; z-index: 100;
         }
-        h1 { font-size: 18px; margin: 0; letter-spacing: 2px; text-align: center; }
-
-        /* ARREGLO DE SCROLL PARA CELULAR */
         .content { 
             flex: 1; margin-top: 100px; margin-bottom: 85px; 
-            overflow-y: auto; 
-            -webkit-overflow-scrolling: touch;
+            overflow-y: auto; -webkit-overflow-scrolling: touch;
             padding: 20px; display: flex; flex-direction: column; align-items: center;
         }
-
-        .visual-box { position: relative; min-height: 160px; display: flex; align-items: center; justify-content: center; width: 100%; }
-        
-        /* RULETA CON FLECHA INDICADORA */
-        .ruleta-wrapper { position: relative; display: none; }
-        .flecha { 
-            position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
-            width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent;
-            border-top: 25px solid var(--deep-red); z-index: 30;
+        .icon-viewer { 
+            width: 100px; height: 100px; border-radius: 50%; 
+            border: 2px solid var(--accent); display: flex; 
+            align-items: center; justify-content: center; 
+            font-size: 50px; margin-bottom: 15px;
+            background: radial-gradient(circle, rgba(0,242,255,0.1) 0%, transparent 70%);
         }
-        #roulette-box { 
-            width: 140px; height: 140px; border-radius: 50%; border: 4px solid white; 
-            transition: transform 3.5s cubic-bezier(0.1, 0, 0.2, 1);
-            background: conic-gradient(var(--pink) 0% 50%, #3498db 50% 100%);
-        }
-
-        .dice-container { width: 90px; height: 90px; border-radius: 50%; border: 2px solid var(--accent); display: flex; align-items: center; justify-content: center; }
-        #dice { font-size: 45px; transition: transform 0.6s ease-out; }
-
         #timer { font-size: 55px; font-weight: 900; margin: 10px 0; font-family: monospace; color: white; }
-        
-        .action-area { width: 100%; max-width: 350px; text-align: center; }
-        .btn { width: 100%; padding: 18px; border: none; border-radius: 20px; font-size: 16px; font-weight: 800; color: white; margin-bottom: 10px; }
+        .btn { width: 100%; max-width: 320px; padding: 18px; border: none; border-radius: 20px; font-size: 16px; font-weight: 800; color: white; margin-bottom: 10px; }
         .btn-main { background: linear-gradient(45deg, var(--deep-red), var(--purple)); }
-        .btn-challenge { background: #000; border: 2px solid var(--gold); color: var(--gold); }
-        .btn-mixed { background: linear-gradient(45deg, #222, var(--purple)); border: 1px solid var(--accent); }
-        .btn-punish { background: linear-gradient(45deg, #ff8c00, var(--pink)); }
-        .btn-start { background: var(--green); display: none; margin-top: 5px; box-shadow: 0 0 15px var(--green); }
-
+        .btn-start { background: var(--green); display: none; box-shadow: 0 0 15px var(--green); }
+        
         .card { 
             background: var(--card-bg); border-left: 6px solid var(--accent); padding: 20px; 
-            border-radius: 18px; text-align: left; width: 100%; max-width: 400px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: slideUp 0.4s ease; margin-top: 15px;
+            border-radius: 18px; text-align: left; width: 100%; max-width: 400px; margin-top: 15px;
+            animation: slideUp 0.3s ease;
         }
         .card-t { font-size: 19px; font-weight: 900; color: var(--accent); text-transform: uppercase; margin-bottom: 5px; }
-        .card-d { font-size: 13px; color: #888; margin-bottom: 10px; font-style: italic; }
         .role-p { color: #5dade2; margin-top: 10px; font-size: 15px; border-bottom: 1px solid #222; padding-bottom: 10px; line-height: 1.4; }
         .role-f { color: #ec7063; margin-top: 10px; font-size: 15px; line-height: 1.4; }
-
+        
         .nav-bar { 
             position: fixed; bottom: 0; width: 100%; height: 85px; background: #000;
-            display: flex; justify-content: space-around; padding-bottom: env(safe-area-inset-bottom);
-            border-top: 1px solid #222; z-index: 100;
+            display: flex; justify-content: space-around; border-top: 1px solid #222; z-index: 100;
         }
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; color: #444; }
         .nav-item.active { color: var(--accent); }
         .nav-item span { font-size: 24px; margin-bottom: 3px; }
-
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1>PAULO & FERNANDA</h1>
-        <div id="fase-tag" style="text-align:center; font-size:10px; color:var(--accent)">MODO PREPARADO</div>
+        <h1 style="text-align:center; font-size:18px; margin:0;">PAULO & FERNANDA</h1>
+        <div id="fase-tag" style="text-align:center; font-size:10px; color:var(--accent)">NIVEL 1</div>
     </div>
 
     <div class="content" id="main-scroll">
-        <div class="visual-box">
-            <div class="dice-container" id="dice-box"><div id="dice">🎲</div></div>
-            <div class="ruleta-wrapper" id="ruleta-ui">
-                <div class="flecha"></div>
-                <div id="roulette-box"></div>
-            </div>
-        </div>
-
-        <div id="action-area" class="action-area"></div>
-
+        <div class="icon-viewer" id="main-icon">🔥</div>
+        <div id="action-area" style="width:100%; display:flex; flex-direction:column; align-items:center;"></div>
         <div id="timer">00:00</div>
-        <button id="btn-start-timer" class="btn btn-start" onclick="activarReloj()">▶️ INICIAR TIEMPO</button>
-
+        <button id="btn-timer" class="btn btn-start" onclick="activarReloj()">▶️ INICIAR TIEMPO</button>
         <div id="resultado"></div>
     </div>
 
@@ -114,9 +78,9 @@
     </div>
 
     <script>
-        // TU SCRIPT ORIGINAL ÍNTEGRO
-        let clicksEnNivel = 0; let nivel = 1; let timerInterval; let segundosPendientes = 0; let currentRotation = 0;
+        let nivel = 1; let clicksEnNivel = 0; let timerInterval; let segundosPendientes = 0;
 
+        // --- TUS LISTAS INTACTAS ---
         const acciones = {
             fase1: [
                 { t: "MASAJE CON LENGUA", d: "Exploración sensorial de la espalda.", p: "Fernanda boca abajo. Lame desde su nuca, bajando por cada vértebra hasta el coxis, alternando besos húmedos con soplos de aire.", f: "Mantén los brazos estirados hacia adelante, cierra los ojos y arquea la espalda lentamente al sentir su lengua.", s: 120 },
@@ -182,105 +146,87 @@
 
         const intensidades = ["con una lentitud torturante 😏", "con fuerza bruta 😈", "hasta que no aguanten más 🔥", "alternando ritmos 🎢", "de forma rápida y desesperada ⚡", "con mucha humedad 💦", "sin quitarse la mirada de los ojos 👀", "susurrando guarradas al oído 🗣️", "apretando con las manos con fuerza ✊", "de forma dominante y firme 👑", "muy suave al principio y rudo al final 📈", "con pausas para aumentar el deseo 🛑", "con una intensidad frenética 🌪️", "mientras le tapas la boca 🤫", "agarrándola del pelo con cuidado 💆‍♀️", "marcando el ritmo con nalgadas 🍑", "haciendo vibrar todo el cuerpo 🌊", "con una entrega total 🛐", "buscando el clímax inmediato 🚀", "como si fuera la última vez ⌛"];
 
-        // LÓGICA DE LA INTERFAZ MEJORADA
+        // --- LÓGICA DE CONTROL ---
         function setModo(modo, el) {
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
             resetUI();
+            const icon = document.getElementById('main-icon');
             const area = document.getElementById('action-area');
-            if(modo === 'escalada') area.innerHTML = '<button class="btn btn-main" onclick="jugar()">🔥 GIRAR DADO</button>';
-            if(modo === 'desafio') area.innerHTML = '<button class="btn btn-challenge" onclick="lanzarReto()">😈 RETO ALEATORIO</button>';
-            if(modo === 'combinados') area.innerHTML = '<button class="btn btn-mixed" onclick="lanzarDadosCombinados()">🎲 LANZAR DADOS</button>';
-            if(modo === 'ruleta') area.innerHTML = '<button class="btn btn-punish" onclick="girarRuleta()">🎡 RULETA DE CASTIGOS</button>';
+            
+            if(modo === 'escalada') {
+                icon.innerText = "🔥";
+                area.innerHTML = '<button class="btn btn-main" onclick="jugar()">🔥 SIGUIENTE PASO</button>';
+                jugar();
+            } else if(modo === 'desafio') {
+                icon.innerText = "😈";
+                area.innerHTML = '<button class="btn btn-main" style="background:var(--gold);color:black" onclick="lanzarReto()">😈 OTRO RETO</button>';
+                lanzarReto();
+            } else if(modo === 'combinados') {
+                icon.innerText = "🎲";
+                area.innerHTML = '<button class="btn btn-main" style="background:var(--purple)" onclick="lanzarDados()">🎲 NUEVA MEZCLA</button>';
+                lanzarDados();
+            } else if(modo === 'ruleta') {
+                icon.innerText = "🎡";
+                area.innerHTML = '<button class="btn btn-main" style="background:var(--pink)" onclick="ejecutarRuleta()">🎡 SORTEO DE CASTIGO</button>';
+                ejecutarRuleta();
+            }
         }
 
         function resetUI() {
             clearInterval(timerInterval);
             document.getElementById('timer').innerText = "00:00";
-            document.getElementById('btn-start-timer').style.display = "none";
+            document.getElementById('btn-timer').style.display = "none";
             document.getElementById('resultado').innerHTML = "";
-            document.getElementById('dice-box').style.display = "flex";
-            document.getElementById('ruleta-ui').style.display = "none";
         }
 
         function jugar() {
-            resetUI();
-            clicksEnNivel++; 
-            if(clicksEnNivel > 5) { nivel++; clicksEnNivel = 0; }
+            clicksEnNivel++; if(clicksEnNivel > 5) { nivel++; clicksEnNivel = 0; }
             let lista = nivel == 1 ? acciones.fase1 : (nivel == 2 ? acciones.fase2 : acciones.fase3);
             mostrar(lista[Math.floor(Math.random() * lista.length)], '#00f2ff');
             document.getElementById('fase-tag').innerText = "NIVEL " + (nivel > 3 ? 3 : nivel);
         }
 
         function lanzarReto() {
-            resetUI();
             mostrar(retos[Math.floor(Math.random() * retos.length)], '#ffd700');
         }
 
-        function lanzarDadosCombinados() {
-            resetUI();
+        function lanzarDados() {
             const cat = categoriasDados[Math.floor(Math.random() * categoriasDados.length)];
             const accion = cat.acciones[Math.floor(Math.random() * cat.acciones.length)];
             const lugar = cat.lugares[Math.floor(Math.random() * cat.lugares.length)];
             const intens = intensidades[Math.floor(Math.random() * intensidades.length)];
-            
-            const item = {
-                t: "DADOS MIXTOS: " + cat.nombre,
-                d: "Combinación aleatoria extrema.",
-                p: `${accion} ${lugar}, ${intens}`,
-                f: "Abandónate al ritmo y disfruta la sensación.",
-                s: 180
-            };
+            const item = { t: "DADOS: " + cat.nombre, d: "Combinación libre.", p: `${accion} ${lugar}, ${intens}`, f: "Sigue el ritmo de Paulo.", s: 180 };
             mostrar(item, '#a020f0');
         }
 
-        function girarRuleta() {
-            resetUI();
-            document.getElementById('dice-box').style.display = "none";
-            document.getElementById('ruleta-ui').style.display = "block";
-            const wheel = document.getElementById('roulette-box');
-            const giroExtra = Math.floor(Math.random() * 360) + 1440;
-            currentRotation += giroExtra;
-            wheel.style.transform = `rotate(${currentRotation}deg)`;
-            
-            setTimeout(() => {
-                let finalDeg = currentRotation % 360;
-                let quien = (finalDeg <= 180) ? "FERNANDA" : "PAULO";
-                let lista = (quien === "PAULO") ? castigosP : castigosF;
-                mostrar(lista[Math.floor(Math.random() * lista.length)], '#ff1493');
-            }, 3500);
+        function ejecutarRuleta() {
+            const quien = Math.random() > 0.5 ? "PAULO" : "FERNANDA";
+            const lista = quien === "PAULO" ? castigosP : castigosF;
+            const item = lista[Math.floor(Math.random() * lista.length)];
+            document.getElementById('main-icon').innerText = "👤";
+            mostrar(item, '#ff1493');
         }
 
         function mostrar(item, color) {
-            document.getElementById('dice').style.transform = "rotate(720deg)";
             segundosPendientes = item.s;
-            setTimeout(() => {
-                document.getElementById('resultado').innerHTML = `
-                    <div class="card" style="border-left-color:${color}">
-                        <div class="card-t">${item.t}</div>
-                        <div class="card-d">${item.d}</div>
-                        <div class="role-p"><b>♂ PAULO:</b> ${item.p}</div>
-                        <div class="role-f"><b>♀ FERNANDA:</b> ${item.f}</div>
-                    </div>`;
-                document.getElementById('btn-start-timer').style.display = "block";
-                document.getElementById('main-scroll').scrollTo({ top: 350, behavior: 'smooth' });
-                if ('speechSynthesis' in window) {
-                    window.speechSynthesis.cancel();
-                    window.speechSynthesis.speak(new SpeechSynthesisUtterance(item.t));
-                }
-            }, 600);
+            document.getElementById('resultado').innerHTML = `
+                <div class="card" style="border-left-color:${color}">
+                    <div class="card-t">${item.t}</div>
+                    <div style="font-size:12px; color:#888; margin-bottom:10px">${item.d}</div>
+                    <div class="role-p"><b>♂ PAULO:</b> ${item.p}</div>
+                    <div class="role-f"><b>♀ FERNANDA:</b> ${item.f}</div>
+                </div>`;
+            document.getElementById('btn-timer').style.display = "block";
         }
 
         function activarReloj() {
-            document.getElementById('btn-start-timer').style.display = "none";
+            document.getElementById('btn-timer').style.display = "none";
             let s = segundosPendientes;
             timerInterval = setInterval(() => {
                 let m = Math.floor(s/60); let r = s%60;
                 document.getElementById('timer').innerText = `${m}:${r<10?'0':''}${r}`;
-                if(s-- <= 0) { 
-                    clearInterval(timerInterval); 
-                    if ('speechSynthesis' in window) window.speechSynthesis.speak(new SpeechSynthesisUtterance("Tiempo terminado"));
-                }
+                if(s-- <= 0) clearInterval(timerInterval);
             }, 1000);
         }
 
