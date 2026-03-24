@@ -227,8 +227,36 @@
     }
 
     function lanzarDados() {
-        resetTodo(); burst('var(--purple)');
-        const item = { t: "DADOS MIXTOS", d: "Combinación salvaje.", p: `Penetración profunda, ${intensidades[Math.floor(Math.random()*4)]}`, f: "Arquea la espalda y déjate llevar.", s: 180 };
+        resetTodo(); 
+        burst('var(--purple)');
+        
+        // 1. Las 10 variaciones de movimiento físico
+        const movimientos = [
+            "Penetración profunda y constante, ",
+            "Embestidas cortas y rápidas sin salir, ",
+            "Entra y sale por completo en cada movimiento, ",
+            "Círculos con la cadera mientras estás adentro, ",
+            "Tres empujes lentos y uno fuerte al fondo, ",
+            "Cárgala contra la pared y mantén el ritmo, ",
+            "Apóyala en los bordes y entra con todo, ",
+            "Sujeta sus nalgas y sacúdela con cada golpe, ",
+            "Penetración lateral (cucharita) muy rítmica, ",
+            "Ritmo errático: cambia de velocidad cada 10 segundos, "
+        ];
+
+        // 2. Selección al azar de Movimiento e Intensidad
+        const mov = movimientos[Math.floor(Math.random() * movimientos.length)];
+        const int = intensidades[Math.floor(Math.random() * intensidades.length)];
+        
+        // 3. Lo que se IMPRIME en la tarjeta morada
+        const item = { 
+            t: "DADOS MIXTOS", 
+            d: "COMBINACIÓN SALVAJE", 
+            p: mov + int.toUpperCase(), 
+            f: "Arquea la espalda, gime fuerte y guía su cadera.", 
+            s: 180 
+        };
+
         mostrar(item, 'var(--purple)');
     }
 
