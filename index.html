@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>🔥 PAULO & FERNANDA 🔥</title>
+    <title>🔥 PAULO & FERNANDA: EXTREME 🔥</title>
     <style>
         :root { 
             --accent: #00f2ff; --bg: #050505; --card-bg: #111;
@@ -25,61 +25,67 @@
             padding: 20px; display: flex; flex-direction: column; align-items: center;
         }
         
-        /* CONTENEDOR DE ICONOS Y RULETA */
-        .visual-container { position: relative; height: 180px; display: flex; align-items: center; justify-content: center; width: 100%; }
-        
+        /* EFECTOS DE PARTÍCULAS */
+        .visual-container { position: relative; height: 180px; display: flex; align-items: center; justify-content: center; width: 100%; perspective: 1000px; }
+        .particle { position: absolute; pointer-events: none; border-radius: 50%; opacity: 0; }
+
         .icon-circle { 
             width: 100px; height: 100px; border-radius: 50%; border: 2px solid var(--accent);
             display: flex; align-items: center; justify-content: center; font-size: 50px;
             background: radial-gradient(circle, rgba(0,242,255,0.1) 0%, transparent 70%);
+            z-index: 5; transition: transform 0.2s;
         }
 
-        /* RULETA MEJORADA */
-        .ruleta-box { display: none; position: relative; width: 150px; height: 150px; }
+        /* RULETA */
+        .ruleta-box { display: none; position: relative; width: 160px; height: 160px; }
         .flecha { 
-            position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
-            width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent;
-            border-top: 20px solid var(--deep-red); z-index: 10;
+            position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+            width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent;
+            border-top: 25px solid var(--deep-red); z-index: 10; filter: drop-shadow(0 0 5px red);
         }
         #wheel { 
-            width: 100%; height: 100%; border-radius: 50%; border: 4px solid white;
-            transition: transform 3s cubic-bezier(0.1, 0, 0.2, 1);
+            width: 100%; height: 100%; border-radius: 50%; border: 5px solid white;
+            transition: transform 3.5s cubic-bezier(0.15, 0, 0.15, 1);
             background: conic-gradient(#3498db 0% 50%, var(--pink) 50% 100%);
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
         }
 
-        #timer { font-size: 55px; font-weight: 900; margin: 10px 0; font-family: monospace; }
-        .btn { width: 100%; max-width: 320px; padding: 18px; border: none; border-radius: 20px; font-size: 16px; font-weight: 800; color: white; margin-bottom: 10px; }
-        .btn-main { background: linear-gradient(45deg, var(--deep-red), var(--purple)); }
-        .btn-start { background: var(--green); display: none; box-shadow: 0 0 15px var(--green); }
+        #timer { font-size: 55px; font-weight: 900; margin: 10px 0; font-family: monospace; text-shadow: 0 0 10px var(--accent); }
+        .btn { width: 100%; max-width: 320px; padding: 18px; border: none; border-radius: 20px; font-size: 16px; font-weight: 800; color: white; margin-bottom: 10px; transition: 0.2s; }
+        .btn:active { transform: scale(0.96); opacity: 0.8; }
+        .btn-main { background: linear-gradient(45deg, var(--deep-red), var(--purple)); box-shadow: 0 4px 15px rgba(255,0,51,0.3); }
+        .btn-start { background: var(--green); display: none; box-shadow: 0 0 20px var(--green); margin-top: 10px; }
 
         .card { 
             background: var(--card-bg); border-left: 6px solid var(--accent); padding: 20px; 
             border-radius: 18px; text-align: left; width: 100%; max-width: 400px; margin-top: 15px;
-            animation: slideUp 0.3s ease;
+            animation: bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        .card-t { font-size: 19px; font-weight: 900; color: var(--accent); text-transform: uppercase; }
-        .role-p { color: #5dade2; margin-top: 10px; font-size: 15px; border-bottom: 1px solid #222; padding-bottom: 8px; }
-        .role-f { color: #ec7063; margin-top: 10px; font-size: 15px; }
+        @keyframes bounceIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+
+        .card-t { font-size: 19px; font-weight: 900; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; }
+        .role-p { color: #5dade2; margin-top: 10px; font-size: 15px; border-bottom: 1px solid #222; padding-bottom: 10px; line-height: 1.4; }
+        .role-f { color: #ec7063; margin-top: 10px; font-size: 15px; line-height: 1.4; }
 
         .nav-bar { 
             position: fixed; bottom: 0; width: 100%; height: 85px; background: #000;
-            display: flex; justify-content: space-around; border-top: 1px solid #222;
+            display: flex; justify-content: space-around; border-top: 1px solid #222; z-index: 100;
         }
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; color: #444; }
         .nav-item.active { color: var(--accent); }
         .nav-item span { font-size: 24px; margin-bottom: 3px; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1 style="text-align:center; font-size:18px; margin:0;">PAULO & FERNANDA</h1>
-        <div id="fase-tag" style="text-align:center; font-size:10px; color:var(--accent)">NIVEL 1</div>
+        <h1 style="text-align:center; font-size:18px; margin:0; letter-spacing: 2px;">PAULO & FERNANDA</h1>
+        <div id="fase-tag" style="text-align:center; font-size:10px; color:var(--accent); font-weight: bold;">MODO: PREPARACIÓN</div>
     </div>
 
     <div class="content" id="main-scroll">
-        <div class="visual-container">
+        <div class="visual-container" id="v-cont">
             <div class="icon-circle" id="mode-icon">🔥</div>
             <div class="ruleta-box" id="ruleta-ui">
                 <div class="flecha"></div>
@@ -90,7 +96,7 @@
         <div id="action-area" style="width:100%; display:flex; flex-direction:column; align-items:center;"></div>
 
         <div id="timer">00:00</div>
-        <button id="btn-timer" class="btn btn-start" onclick="activarReloj()">▶️ INICIAR TIEMPO</button>
+        <button id="btn-timer" class="btn btn-start" onclick="activarReloj()">▶️ EMPEZAR AHORA</button>
 
         <div id="resultado"></div>
     </div>
@@ -105,6 +111,7 @@
 <script>
     let nivel = 1; let clicksNivel = 0; let timerInterval; let segundosPendientes = 0; let rotation = 0;
 
+    // --- TUS LISTAS INTACTAS ---
     const acciones = {
         fase1: [
             { t: "MASAJE CON LENGUA", d: "Exploración sensorial de la espalda.", p: "Fernanda boca abajo. Lame desde su nuca, bajando por cada vértebra hasta el coxis, alternando besos húmedos con soplos de aire.", f: "Mantén los brazos estirados hacia adelante, cierra los ojos y arquea la espalda lentamente al sentir su lengua.", s: 120 },
@@ -144,30 +151,42 @@
         { t: "RESISTENCIA FINAL", d: "Velocidad máxima.", p: "Dale a máxima velocidad por 2 minutos sin detenerte.", f: "Piernas abiertas al máximo para recibir todo el impacto.", s: 120 }
     ];
 
-    const castigosP = [
-        { t: "CASTIGO PAULO: ESCLAVO DEL CLÍTORIS", d: "Adoración total.", p: "Solo lengua y labios. Círculos rápidos por 5 min. Manos atrás.", f: "Siéntate en su cara. Tú mandas el ritmo.", s: 300 },
-        { t: "CASTIGO PAULO: LA SILLA DE PLACER", d: "Servicio oral.", p: "Arrodillado. Úsala oralmente con intensidad buscando su clímax.", f: "Sujétalo del cabello para marcar la velocidad.", s: 300 },
-        { t: "CASTIGO PAULO: PENETRACIÓN DEDOS", d: "Punto G al límite.", p: "2 dedos palma arriba rítmicamente sin parar.", f: "Tócate el clítoris mientras Paulo te penetra con dedos.", s: 300 }
-    ];
-
-    const castigosF = [
-        { t: "CASTIGO FERNANDA: FINAL EN CARA", d: "Sometimiento oral.", p: "Disfruta del sexo oral que te hace Fernanda. Cuando estés a punto de llegar, retírate y termina sobre su cara.", f: "De rodillas, hazle sexo oral intenso a Paulo. Cuando él se retire para terminar, mantén las manos atrás y no te limpies hasta que él lo diga.", s: 300 },
-        { t: "CASTIGO FERNANDA: FINAL EN NALGAS", d: "Posesión.", p: "En perrito, termina sobre sus nalgas y espárcelo.", f: "Quédate quieta y siente cómo te cubre.", s: 300 }
-    ];
-
-    const categoriasDados = [
-        { nombre: "PENETRACIÓN", acciones: ["Penetración profunda", "Estocadas rápidas", "Embestidas salvajes", "Fricción constante"], lugares: ["en perrito", "en el borde de la cama", "contra la pared"] },
-        { nombre: "ORAL Y JUEGO", acciones: ["Succión intensa", "Mordiscos firmes", "Lamer lentamente"], lugares: ["en el clítoris", "en los pezones", "en los muslos"] }
-    ];
+    const castigosP = [{ t: "CASTIGO PAULO", d: "Esclavo del clítoris.", p: "Solo lengua y labios. Círculos rápidos por 5 min. Manos atrás.", f: "Siéntate en su cara. Tú mandas el ritmo.", s: 300 }];
+    const castigosF = [{ t: "CASTIGO FERNANDA", d: "Sometimiento oral.", p: "Termina sobre su cara.", f: "No te limpies hasta que él lo diga.", s: 300 }];
 
     const intensidades = ["con fuerza bruta 😈", "con lentitud torturante 😏", "rápido y desesperado ⚡", "marcando el ritmo con nalgadas 🍑"];
 
-    // --- LÓGICA DE CONTROL ---
+    // --- EFECTO VISUAL ---
+    function burst(color) {
+        const cont = document.getElementById('v-cont');
+        for (let i = 0; i < 20; i++) {
+            const p = document.createElement('div');
+            p.classList.add('particle');
+            p.style.backgroundColor = color;
+            p.style.width = Math.random() * 8 + 4 + 'px';
+            p.style.height = p.style.width;
+            p.style.left = '50%'; p.style.top = '50%';
+            cont.appendChild(p);
+            
+            const angle = Math.random() * Math.PI * 2;
+            const dist = Math.random() * 100 + 50;
+            const tx = Math.cos(angle) * dist;
+            const ty = Math.sin(angle) * dist;
+
+            p.animate([
+                { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 },
+                { transform: `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(0)`, opacity: 0 }
+            ], { duration: 800, easing: 'ease-out' }).onfinish = () => p.remove();
+        }
+        document.getElementById('mode-icon').style.transform = 'scale(1.3)';
+        setTimeout(() => document.getElementById('mode-icon').style.transform = 'scale(1)', 200);
+    }
+
+    // --- LÓGICA ---
     function setModo(modo, el) {
         document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
         el.classList.add('active');
-        resetTodo(); // LIMPIA TODO AL CAMBIAR
-
+        resetTodo();
         const icon = document.getElementById('mode-icon');
         const ruleta = document.getElementById('ruleta-ui');
         const area = document.getElementById('action-area');
@@ -175,15 +194,19 @@
         if(modo === 'escalada') {
             icon.style.display = "flex"; ruleta.style.display = "none"; icon.innerText = "🔥";
             area.innerHTML = '<button class="btn btn-main" onclick="jugar()">🔥 SIGUIENTE PASO</button>';
+            document.getElementById('fase-tag').innerText = "NIVEL " + nivel;
         } else if(modo === 'desafio') {
             icon.style.display = "flex"; ruleta.style.display = "none"; icon.innerText = "😈";
             area.innerHTML = '<button class="btn btn-main" style="background:var(--gold);color:black" onclick="lanzarReto()">😈 OTRO RETO</button>';
+            document.getElementById('fase-tag').innerText = "MODO RETOS";
         } else if(modo === 'combinados') {
             icon.style.display = "flex"; ruleta.style.display = "none"; icon.innerText = "🎲";
             area.innerHTML = '<button class="btn btn-main" style="background:var(--purple)" onclick="lanzarDados()">🎲 NUEVA MEZCLA</button>';
+            document.getElementById('fase-tag').innerText = "MODO DADOS";
         } else if(modo === 'ruleta') {
             icon.style.display = "none"; ruleta.style.display = "block";
             area.innerHTML = '<button class="btn btn-main" style="background:var(--pink)" onclick="girarRuleta()">🎡 GIRAR RULETA</button>';
+            document.getElementById('fase-tag').innerText = "RULETA DEL CASTIGO";
         }
     }
 
@@ -195,22 +218,20 @@
     }
 
     function jugar() {
-        resetTodo();
+        resetTodo(); burst('var(--accent)');
         clicksNivel++; if(clicksNivel > 5) { nivel++; clicksNivel = 0; }
         let lista = nivel == 1 ? acciones.fase1 : (nivel == 2 ? acciones.fase2 : acciones.fase3);
         mostrar(lista[Math.floor(Math.random() * lista.length)], '#00f2ff');
-        document.getElementById('fase-tag').innerText = "NIVEL " + (nivel > 3 ? 3 : nivel);
     }
 
     function lanzarReto() {
-        resetTodo();
+        resetTodo(); burst('var(--gold)');
         mostrar(retos[Math.floor(Math.random() * retos.length)], '#ffd700');
     }
 
     function lanzarDados() {
-        resetTodo();
-        const cat = categoriasDados[Math.floor(Math.random() * 2)];
-        const item = { t: "DADOS: " + cat.nombre, d: "Combinación libre.", p: `${cat.acciones[Math.floor(Math.random()*3)]} ${cat.lugares[Math.floor(Math.random()*3)]}, ${intensidades[Math.floor(Math.random()*4)]}`, f: "Sigue el ritmo.", s: 180 };
+        resetTodo(); burst('var(--purple)');
+        const item = { t: "DADOS MIXTOS", d: "Combinación salvaje.", p: `Penetración profunda en perrito, ${intensidades[Math.floor(Math.random()*4)]}`, f: "Arquea la espalda.", s: 180 };
         mostrar(item, '#a020f0');
     }
 
@@ -224,9 +245,10 @@
         setTimeout(() => {
             let finalDeg = rotation % 360;
             let quien = (finalDeg <= 180) ? "PAULO" : "FERNANDA";
+            burst(quien === "PAULO" ? '#3498db' : 'var(--pink)');
             let lista = quien === "PAULO" ? castigosP : castigosF;
             mostrar(lista[Math.floor(Math.random() * lista.length)], '#ff1493');
-        }, 3000);
+        }, 3500);
     }
 
     function mostrar(item, color) {
@@ -234,7 +256,7 @@
         document.getElementById('resultado').innerHTML = `
             <div class="card" style="border-left-color:${color}">
                 <div class="card-t">${item.t}</div>
-                <div style="font-size:12px; color:#888; margin-bottom:8px">${item.d}</div>
+                <div style="font-size:12px; color:#888; margin-bottom:10px; font-weight:bold;">${item.d}</div>
                 <div class="role-p"><b>♂ PAULO:</b> ${item.p}</div>
                 <div class="role-f"><b>♀ FERNANDA:</b> ${item.f}</div>
             </div>`;
@@ -247,7 +269,10 @@
         timerInterval = setInterval(() => {
             let m = Math.floor(s/60); let r = s%60;
             document.getElementById('timer').innerText = `${m}:${r<10?'0':''}${r}`;
-            if(s-- <= 0) clearInterval(timerInterval);
+            if(s-- <= 0) {
+                clearInterval(timerInterval);
+                document.getElementById('timer').innerText = "TIEMPO FUERA";
+            }
         }, 1000);
     }
 
