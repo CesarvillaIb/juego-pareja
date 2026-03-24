@@ -8,8 +8,9 @@
         :root { 
             --accent: #00f2ff; --bg: #050505; --card-bg: #111;
             --gold: #ffd700; --deep-red: #ff0033; --purple: #a020f0; --pink: #ff1493; --green: #2ecc71;
+            --flash: #ff0000;
         }
-        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; }
         body { 
             margin: 0; font-family: -apple-system, system-ui, sans-serif; 
             background: var(--bg); color: white; height: 100vh; 
@@ -25,15 +26,15 @@
             padding: 20px; display: flex; flex-direction: column; align-items: center;
         }
         
-        /* EFECTOS DE PARTÍCULAS */
-        .visual-container { position: relative; height: 180px; display: flex; align-items: center; justify-content: center; width: 100%; perspective: 1000px; }
-        .particle { position: absolute; pointer-events: none; border-radius: 50%; opacity: 0; }
+        /* CONTENEDOR DE ANIMACIONES */
+        .visual-container { position: relative; height: 150px; display: flex; align-items: center; justify-content: center; width: 100%; }
+        .particle { position: absolute; pointer-events: none; border-radius: 50%; opacity: 0; z-index: 1; }
 
         .icon-circle { 
             width: 100px; height: 100px; border-radius: 50%; border: 2px solid var(--accent);
             display: flex; align-items: center; justify-content: center; font-size: 50px;
             background: radial-gradient(circle, rgba(0,242,255,0.1) 0%, transparent 70%);
-            z-index: 5; transition: transform 0.2s;
+            z-index: 5; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         /* RULETA */
@@ -41,40 +42,49 @@
         .flecha { 
             position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
             width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent;
-            border-top: 25px solid var(--deep-red); z-index: 10; filter: drop-shadow(0 0 5px red);
+            border-top: 25px solid var(--deep-red); z-index: 10;
         }
         #wheel { 
             width: 100%; height: 100%; border-radius: 50%; border: 5px solid white;
             transition: transform 3.5s cubic-bezier(0.15, 0, 0.15, 1);
             background: conic-gradient(#3498db 0% 50%, var(--pink) 50% 100%);
-            box-shadow: 0 0 20px rgba(255,255,255,0.2);
         }
 
-        #timer { font-size: 55px; font-weight: 900; margin: 10px 0; font-family: monospace; text-shadow: 0 0 10px var(--accent); }
-        .btn { width: 100%; max-width: 320px; padding: 18px; border: none; border-radius: 20px; font-size: 16px; font-weight: 800; color: white; margin-bottom: 10px; transition: 0.2s; }
-        .btn:active { transform: scale(0.96); opacity: 0.8; }
+        /* UI CONTROLES */
+        #timer { font-size: 60px; font-weight: 900; margin: 10px 0; font-family: 'Courier New', monospace; text-shadow: 0 0 15px var(--accent); }
+        .btn { width: 100%; max-width: 320px; padding: 18px; border: none; border-radius: 20px; font-size: 16px; font-weight: 800; color: white; margin-bottom: 10px; transition: 0.2s; text-transform: uppercase; }
+        .btn:active { transform: scale(0.95); opacity: 0.9; }
+        
         .btn-main { background: linear-gradient(45deg, var(--deep-red), var(--purple)); box-shadow: 0 4px 15px rgba(255,0,51,0.3); }
+        .btn-flash { background: linear-gradient(45deg, #f00, #b00); box-shadow: 0 0 20px rgba(255,0,0,0.5); animation: pulseFlash 1.5s infinite; }
         .btn-start { background: var(--green); display: none; box-shadow: 0 0 20px var(--green); margin-top: 10px; }
 
+        @keyframes pulseFlash { 0% { box-shadow: 0 0 10px #f00; } 50% { box-shadow: 0 0 25px #f00; } 100% { box-shadow: 0 0 10px #f00; } }
+
+        /* TARJETAS */
         .card { 
             background: var(--card-bg); border-left: 6px solid var(--accent); padding: 20px; 
             border-radius: 18px; text-align: left; width: 100%; max-width: 400px; margin-top: 15px;
             animation: bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
         }
+        .flash-active { background: #200 !important; border: 2px solid var(--flash) !important; border-left: 6px solid var(--flash) !important; }
+
         @keyframes bounceIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
 
         .card-t { font-size: 19px; font-weight: 900; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; }
         .role-p { color: #5dade2; margin-top: 10px; font-size: 15px; border-bottom: 1px solid #222; padding-bottom: 10px; line-height: 1.4; }
         .role-f { color: #ec7063; margin-top: 10px; font-size: 15px; line-height: 1.4; }
 
+        /* NAV */
         .nav-bar { 
             position: fixed; bottom: 0; width: 100%; height: 85px; background: #000;
             display: flex; justify-content: space-around; border-top: 1px solid #222; z-index: 100;
         }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; color: #444; }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 9px; color: #444; }
         .nav-item.active { color: var(--accent); }
-        .nav-item span { font-size: 24px; margin-bottom: 3px; }
+        .nav-item.special { color: var(--flash); font-weight: bold; }
+        .nav-item span { font-size: 22px; margin-bottom: 4px; }
     </style>
 </head>
 <body>
@@ -104,6 +114,7 @@
     <div class="nav-bar">
         <div class="nav-item active" onclick="setModo('escalada', this)"><span>🔥</span>ESCALADA</div>
         <div class="nav-item" onclick="setModo('desafio', this)"><span>😈</span>RETOS</div>
+        <div class="nav-item special" onclick="setModo('flash', this)"><span>⚡</span>FLASH</div>
         <div class="nav-item" onclick="setModo('combinados', this)"><span>🎲</span>DADOS</div>
         <div class="nav-item" onclick="setModo('ruleta', this)"><span>🎡</span>RULETA</div>
     </div>
@@ -111,7 +122,7 @@
 <script>
     let nivel = 1; let clicksNivel = 0; let timerInterval; let segundosPendientes = 0; let rotation = 0;
 
-    // --- TUS LISTAS INTACTAS ---
+    // --- TUS LISTAS DE ACCIONES (INTACTAS) ---
     const acciones = {
         fase1: [
             { t: "MASAJE CON LENGUA", d: "Exploración sensorial de la espalda.", p: "Fernanda boca abajo. Lame desde su nuca, bajando por cada vértebra hasta el coxis, alternando besos húmedos con soplos de aire.", f: "Mantén los brazos estirados hacia adelante, cierra los ojos y arquea la espalda lentamente al sentir su lengua.", s: 120 },
@@ -156,98 +167,98 @@
 
     const intensidades = ["con fuerza bruta 😈", "con lentitud torturante 😏", "rápido y desesperado ⚡", "marcando el ritmo con nalgadas 🍑"];
 
-    // --- EFECTO VISUAL ---
+    // --- MODO FLASH ADRENALINA ---
+    const lugaresFlash = ["en el SOFÁ", "en la MESA", "en el SUELO", "contra la PARED", "en la CAMA"];
+    const accionesFlash = ["Sexo rudo", "Oral intenso", "Perrito profundo", "Vaquera salvaje", "69 urgente", "Nalgadas y penetración"];
+
+    // --- SISTEMA DE ANIMACIÓN ---
     function burst(color) {
         const cont = document.getElementById('v-cont');
         for (let i = 0; i < 20; i++) {
             const p = document.createElement('div');
-            p.classList.add('particle');
-            p.style.backgroundColor = color;
-            p.style.width = Math.random() * 8 + 4 + 'px';
-            p.style.height = p.style.width;
+            p.classList.add('particle'); p.style.backgroundColor = color;
+            p.style.width = p.style.height = Math.random() * 8 + 4 + 'px';
             p.style.left = '50%'; p.style.top = '50%';
             cont.appendChild(p);
-            
-            const angle = Math.random() * Math.PI * 2;
-            const dist = Math.random() * 100 + 50;
-            const tx = Math.cos(angle) * dist;
-            const ty = Math.sin(angle) * dist;
-
-            p.animate([
-                { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 },
-                { transform: `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(0)`, opacity: 0 }
-            ], { duration: 800, easing: 'ease-out' }).onfinish = () => p.remove();
+            const angle = Math.random() * Math.PI * 2; const dist = Math.random() * 120 + 40;
+            p.animate([{ transform: 'translate(-50%, -50%) scale(1)', opacity: 1 }, 
+                       { transform: `translate(calc(-50% + ${Math.cos(angle)*dist}px), calc(-50% + ${Math.sin(angle)*dist}px)) scale(0)`, opacity: 0 }], 
+                       { duration: 800, easing: 'ease-out' }).onfinish = () => p.remove();
         }
         document.getElementById('mode-icon').style.transform = 'scale(1.3)';
         setTimeout(() => document.getElementById('mode-icon').style.transform = 'scale(1)', 200);
     }
 
-    // --- LÓGICA ---
+    // --- LÓGICA DE MODOS ---
     function setModo(modo, el) {
         document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-        el.classList.add('active');
-        resetTodo();
-        const icon = document.getElementById('mode-icon');
-        const ruleta = document.getElementById('ruleta-ui');
-        const area = document.getElementById('action-area');
+        el.classList.add('active'); resetTodo();
+        const icon = document.getElementById('mode-icon'); const ruleta = document.getElementById('ruleta-ui'); const area = document.getElementById('action-area');
         
-        if(modo === 'escalada') {
-            icon.style.display = "flex"; ruleta.style.display = "none"; icon.innerText = "🔥";
+        icon.style.display = modo === 'ruleta' ? "none" : "flex";
+        ruleta.style.display = modo === 'ruleta' ? "block" : "none";
+
+        if(modo === 'flash') {
+            icon.innerText = "⚡"; icon.style.borderColor = "var(--flash)";
+            area.innerHTML = '<button class="btn btn-flash" onclick="lanzarFlash()">⚡ ACCIÓN FLASH AHORA</button>';
+            document.getElementById('fase-tag').innerText = "MODO FLASH: SIN TIEMPO";
+        } else if(modo === 'escalada') {
+            icon.innerText = "🔥"; icon.style.borderColor = "var(--accent)";
             area.innerHTML = '<button class="btn btn-main" onclick="jugar()">🔥 SIGUIENTE PASO</button>';
             document.getElementById('fase-tag').innerText = "NIVEL " + nivel;
         } else if(modo === 'desafio') {
-            icon.style.display = "flex"; ruleta.style.display = "none"; icon.innerText = "😈";
+            icon.innerText = "😈"; icon.style.borderColor = "var(--gold)";
             area.innerHTML = '<button class="btn btn-main" style="background:var(--gold);color:black" onclick="lanzarReto()">😈 OTRO RETO</button>';
             document.getElementById('fase-tag').innerText = "MODO RETOS";
         } else if(modo === 'combinados') {
-            icon.style.display = "flex"; ruleta.style.display = "none"; icon.innerText = "🎲";
+            icon.innerText = "🎲"; icon.style.borderColor = "var(--purple)";
             area.innerHTML = '<button class="btn btn-main" style="background:var(--purple)" onclick="lanzarDados()">🎲 NUEVA MEZCLA</button>';
             document.getElementById('fase-tag').innerText = "MODO DADOS";
         } else if(modo === 'ruleta') {
-            icon.style.display = "none"; ruleta.style.display = "block";
             area.innerHTML = '<button class="btn btn-main" style="background:var(--pink)" onclick="girarRuleta()">🎡 GIRAR RULETA</button>';
             document.getElementById('fase-tag').innerText = "RULETA DEL CASTIGO";
         }
     }
 
-    function resetTodo() {
-        clearInterval(timerInterval);
-        document.getElementById('timer').innerText = "00:00";
-        document.getElementById('btn-timer').style.display = "none";
-        document.getElementById('resultado').innerHTML = "";
+    function resetTodo() { clearInterval(timerInterval); document.getElementById('timer').innerText = "00:00"; document.getElementById('btn-timer').style.display = "none"; document.getElementById('resultado').innerHTML = ""; }
+
+    function lanzarFlash() {
+        resetTodo(); burst('#ff0000'); if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+        const a = accionesFlash[Math.floor(Math.random() * accionesFlash.length)];
+        const l = lugaresFlash[Math.floor(Math.random() * lugaresFlash.length)];
+        segundosPendientes = 60;
+        document.getElementById('resultado').innerHTML = `
+            <div class="card flash-active">
+                <div class="card-t" style="color:red">⚡ FLASH EXTREMO ⚡</div>
+                <div style="font-size:22px; color:white; font-weight:900; margin:15px 0; text-align:center;">${a.toUpperCase()}</div>
+                <div style="font-size:18px; color:var(--gold); text-align:center;">📍 EN EL/LA ${l}</div>
+            </div>`;
+        document.getElementById('btn-timer').style.display = "block";
     }
 
-    function jugar() {
-        resetTodo(); burst('var(--accent)');
-        clicksNivel++; if(clicksNivel > 5) { nivel++; clicksNivel = 0; }
+    function jugar() { 
+        resetTodo(); burst('var(--accent)'); 
         let lista = nivel == 1 ? acciones.fase1 : (nivel == 2 ? acciones.fase2 : acciones.fase3);
-        mostrar(lista[Math.floor(Math.random() * lista.length)], '#00f2ff');
+        mostrar(lista[Math.floor(Math.random() * lista.length)], 'var(--accent)');
+        clicksNivel++; if(clicksNivel > 4){ nivel++; clicksNivel = 0; document.getElementById('fase-tag').innerText = "NIVEL " + nivel; }
     }
 
-    function lanzarReto() {
-        resetTodo(); burst('var(--gold)');
-        mostrar(retos[Math.floor(Math.random() * retos.length)], '#ffd700');
-    }
+    function lanzarReto() { resetTodo(); burst('var(--gold)'); mostrar(retos[Math.floor(Math.random() * retos.length)], 'var(--gold)'); }
 
     function lanzarDados() {
         resetTodo(); burst('var(--purple)');
-        const item = { t: "DADOS MIXTOS", d: "Combinación salvaje.", p: `Penetración profunda en perrito, ${intensidades[Math.floor(Math.random()*4)]}`, f: "Arquea la espalda.", s: 180 };
-        mostrar(item, '#a020f0');
+        const item = { t: "DADOS MIXTOS", d: "Combinación salvaje.", p: `Atrévete con lo que salga, ${intensidades[Math.floor(Math.random()*4)]}`, f: "Sigue el ritmo de Paulo sin quejarte.", s: 180 };
+        mostrar(item, 'var(--purple)');
     }
 
     function girarRuleta() {
-        resetTodo();
-        const wheel = document.getElementById('wheel');
-        const extraDeg = Math.floor(Math.random() * 360) + 1440;
-        rotation += extraDeg;
-        wheel.style.transform = `rotate(${rotation}deg)`;
-        
+        resetTodo(); rotation += Math.floor(Math.random() * 360) + 1440;
+        document.getElementById('wheel').style.transform = `rotate(${rotation}deg)`;
         setTimeout(() => {
-            let finalDeg = rotation % 360;
-            let quien = (finalDeg <= 180) ? "PAULO" : "FERNANDA";
-            burst(quien === "PAULO" ? '#3498db' : 'var(--pink)');
-            let lista = quien === "PAULO" ? castigosP : castigosF;
-            mostrar(lista[Math.floor(Math.random() * lista.length)], '#ff1493');
+            let q = (rotation % 360 <= 180) ? "PAULO" : "FERNANDA";
+            burst(q === "PAULO" ? '#3498db' : 'var(--pink)');
+            const c = q === "PAULO" ? castigosP[0] : castigosF[0];
+            mostrar(c, 'var(--pink)');
         }, 3500);
     }
 
@@ -255,8 +266,8 @@
         segundosPendientes = item.s;
         document.getElementById('resultado').innerHTML = `
             <div class="card" style="border-left-color:${color}">
-                <div class="card-t">${item.t}</div>
-                <div style="font-size:12px; color:#888; margin-bottom:10px; font-weight:bold;">${item.d}</div>
+                <div class="card-t" style="color:${color}">${item.t}</div>
+                <div style="font-size:11px; color:#666; margin-bottom:10px;">${item.d}</div>
                 <div class="role-p"><b>♂ PAULO:</b> ${item.p}</div>
                 <div class="role-f"><b>♀ FERNANDA:</b> ${item.f}</div>
             </div>`;
@@ -269,9 +280,9 @@
         timerInterval = setInterval(() => {
             let m = Math.floor(s/60); let r = s%60;
             document.getElementById('timer').innerText = `${m}:${r<10?'0':''}${r}`;
-            if(s-- <= 0) {
-                clearInterval(timerInterval);
-                document.getElementById('timer').innerText = "TIEMPO FUERA";
+            if(s-- <= 0) { 
+                clearInterval(timerInterval); document.getElementById('timer').innerText = "¡TIEMPO!";
+                if (navigator.vibrate) navigator.vibrate([500, 100, 500]);
             }
         }, 1000);
     }
