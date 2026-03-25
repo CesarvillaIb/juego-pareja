@@ -184,11 +184,21 @@ body {
     ];
     // --- VOZ INTELIGENTE ---
     function hablar(item) {
+        // 1. DETENER AL INSTANTE: Cancela cualquier voz que esté hablando 
+        // o que esté en cola esperando antes de decir lo nuevo.
         window.speechSynthesis.cancel();
+
+        // 2. PREPARAR TEXTO: Estructura clara con pausas (comas) para que se entienda mejor.
         const texto = `${item.t}. Paulo: ${item.p.split('.')[0]}. Fernanda: ${item.f.split('.')[0]}.`;
+        
         const msg = new SpeechSynthesisUtterance(texto);
+        
+        // 3. CONFIGURACIÓN: Ajustamos para que sea fluido en iPhone/Android.
         msg.lang = 'es-MX';
-        msg.rate = 1.0;
+        msg.rate = 0.9;  // Un toque más lento lo hace más claro.
+        msg.pitch = 0.9; // Tono ligeramente más profundo.
+        
+        // 4. EJECUTAR: Lanza la nueva instrucción.
         window.speechSynthesis.speak(msg);
     }
 
