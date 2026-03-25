@@ -325,15 +325,23 @@ body {
         document.getElementById('resultado').innerHTML = "";
     }
 
-    function activarReloj() {
+function activarReloj() {
         document.getElementById('btn-timer').style.display = "none";
         let s = segundosPendientes;
         timerInterval = setInterval(() => {
             let m = Math.floor(s/60); let r = s%60;
             document.getElementById('timer').innerText = `${m}:${r<10?'0':''}${r}`;
+            
             if(s-- <= 0) {
                 clearInterval(timerInterval);
                 document.getElementById('timer').innerText = "¡CAMBIO!";
+                
+                // --- MEJORA: VIBRACIÓN ---
+                if ("vibrate" in navigator) {
+                    // Vibra 500ms, pausa 200ms, vibra 500ms
+                    navigator.vibrate([500, 200, 500]);
+                }
+                
                 window.speechSynthesis.speak(new SpeechSynthesisUtterance("Tiempo fuera. Siguiente acción."));
             }
         }, 1000);
